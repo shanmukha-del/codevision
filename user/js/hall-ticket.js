@@ -88,7 +88,7 @@ function initHallTicketLookup() {
   function showStatusMessage(type, title, htmlContent) {
     statusNotice.className = `status-alert-box alert-${type === 'error' ? 'rejected' : type}`;
     statusNotice.innerHTML = `
-      <div class="alert-icon">${type === 'error' ? '✕' : 'ℹ'}</div>
+      <div class="alert-icon">${type === 'error' ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'}</div>
       <div>
         <h3 style="font-size: 1.0625rem; font-weight: 700; margin-bottom: 6px;">${title}</h3>
         <div style="font-size: 0.875rem; line-height: 1.5;">${htmlContent}</div>
@@ -106,7 +106,7 @@ function initHallTicketLookup() {
     // 2. Team Logo (Custom image or preset emblem)
     const logoIcon = document.getElementById('ticketLogoIcon');
     const logoImg = document.getElementById('ticketLogoImg');
-    const teamLogo = team.teamLogo || '⚡';
+    const teamLogo = team.teamLogo || 'CV';
 
     if (teamLogo.startsWith('data:image') || teamLogo.startsWith('http')) {
       logoImg.src = teamLogo;
@@ -135,25 +135,46 @@ function initHallTicketLookup() {
     document.getElementById('ticketEmail').textContent = leader.email || team.email || '—';
     document.getElementById('ticketPhone').textContent = leader.phone || team.phone || '—';
 
-    // 4. Member 2 Details (Smaller text as instructed, or hidden if solo team)
-    const m2Card = document.getElementById('ticketMember2Card');
-    const m2NameEl = document.getElementById('ticketMember2');
+    // 4. Member 2 Details (Always present in 2-3 member teams)
+    const m2Row = document.getElementById('ticketMember2Row') || document.getElementById('ticketMember2Card');
+    const m2NameEl = document.getElementById('ticketM2Name') || document.getElementById('ticketMember2');
+    const m2RollEl = document.getElementById('ticketM2Roll') || document.getElementById('ticketMember2Roll');
+    const m2ClassEl = document.getElementById('ticketM2Class') || document.getElementById('ticketMember2Class');
+    const m2SecEl = document.getElementById('ticketM2Sec') || document.getElementById('ticketMember2Sec');
 
     const member2 = team.member2;
     const hasMember2 = member2 && (typeof member2 === 'object' ? (member2.name && member2.name.trim()) : (typeof member2 === 'string' && member2.trim()));
 
     if (hasMember2) {
-      if (m2Card) m2Card.style.display = 'block';
+      if (m2Row) m2Row.style.display = 'flex';
       const m2Obj = typeof member2 === 'object' ? member2 : { name: String(member2) };
       if (m2NameEl) m2NameEl.textContent = m2Obj.name;
-      const m2Roll = document.getElementById('ticketMember2Roll');
-      if (m2Roll) m2Roll.textContent = m2Obj.rollNo || '—';
-      const m2Class = document.getElementById('ticketMember2Class');
-      if (m2Class) m2Class.textContent = m2Obj.classYear || leader.classYear || 'III B.Tech';
-      const m2Sec = document.getElementById('ticketMember2Sec');
-      if (m2Sec) m2Sec.textContent = `Sec ${m2Obj.section || leader.section || 'A'}`;
+      if (m2RollEl) m2RollEl.textContent = m2Obj.rollNo || '—';
+      if (m2ClassEl) m2ClassEl.textContent = m2Obj.classYear || leader.classYear || 'III B.Tech';
+      if (m2SecEl) m2SecEl.textContent = `Sec ${m2Obj.section || leader.section || 'A'}`;
     } else {
-      if (m2Card) m2Card.style.display = 'none';
+      if (m2Row) m2Row.style.display = 'none';
+    }
+
+    // 5. Member 3 Details (Rendered if Trio Team)
+    const m3Row = document.getElementById('ticketMember3Row') || document.getElementById('ticketMember3Card');
+    const m3NameEl = document.getElementById('ticketM3Name') || document.getElementById('ticketMember3');
+    const m3RollEl = document.getElementById('ticketM3Roll') || document.getElementById('ticketMember3Roll');
+    const m3ClassEl = document.getElementById('ticketM3Class') || document.getElementById('ticketMember3Class');
+    const m3SecEl = document.getElementById('ticketM3Sec') || document.getElementById('ticketMember3Sec');
+
+    const member3 = team.member3;
+    const hasMember3 = member3 && (typeof member3 === 'object' ? (member3.name && member3.name.trim()) : (typeof member3 === 'string' && member3.trim()));
+
+    if (hasMember3) {
+      if (m3Row) m3Row.style.display = 'flex';
+      const m3Obj = typeof member3 === 'object' ? member3 : { name: String(member3) };
+      if (m3NameEl) m3NameEl.textContent = m3Obj.name;
+      if (m3RollEl) m3RollEl.textContent = m3Obj.rollNo || '—';
+      if (m3ClassEl) m3ClassEl.textContent = m3Obj.classYear || leader.classYear || 'III B.Tech';
+      if (m3SecEl) m3SecEl.textContent = `Sec ${m3Obj.section || leader.section || 'A'}`;
+    } else {
+      if (m3Row) m3Row.style.display = 'none';
     }
 
     // 5. College & Department
@@ -208,12 +229,29 @@ function initHallTicketLookup() {
     resultContainer.style.display = 'block';
     resultContainer.scrollIntoView({ behavior: 'smooth' });
 
+    // Setup PDF Download Button
+    const downloadPdfBtn = document.getElementById('btnDownloadPDF');
+    if (downloadPdfBtn) {
+      downloadPdfBtn.onclick = () => {
+        if (window.CodevisionEmail && window.CodevisionEmail.downloadTeamCardPDF) {
+          window.CodevisionEmail.downloadTeamCardPDF(document.getElementById('printableAdmitCard'), team.teamId);
+        } else {
+          window.print();
+        }
+      };
+    }
+
     // Setup Print Button
-    const printBtn = document.getElementById('btnPrintHallTicket');
+    const printBtn = document.getElementById('btnPrintTicket') || document.getElementById('btnPrintHallTicket');
     if (printBtn) {
       printBtn.onclick = () => {
         window.print();
       };
+    }
+
+    // Auto-dispatch confirmation email if newly registered
+    if (isNew && window.CodevisionEmail && window.CodevisionEmail.dispatchTeamConfirmation) {
+      window.CodevisionEmail.dispatchTeamConfirmation(team);
     }
   }
 }

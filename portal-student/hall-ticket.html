@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Team ID Card &amp; Gate Pass — CODEVISION 2026 | Vemu Institute of Technology</title>
-  <link rel="icon" href="assets/college-logo.png">
+  <title>Official Team ID Card — CODEVISION 2026 | Vemu Institute of Technology</title>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
 
   <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/style.css">
@@ -12,37 +13,7 @@
 </head>
 <body>
 
-  <!-- Light Theme Animated Splash Screen -->
-  <div id="codevisionSplash" class="cv-splash-screen" role="status">
-    <div class="cv-splash-backdrop">
-      <div class="cv-splash-glow cv-glow-1"></div>
-      <div class="cv-splash-glow cv-glow-2"></div>
-    </div>
-    <div class="cv-splash-content">
-      <div class="cv-splash-emblem-wrap">
-        <div class="cv-splash-pulse-ring"></div>
-        <img src="assets/college-logo.png" alt="VEMU IT" class="cv-splash-emblem">
-      </div>
-      <div class="cv-splash-header">
-        <span class="cv-splash-estd">ESTD : 2008 &bull; P.KOTHAKOTA, CHITTOOR</span>
-        <h2 class="cv-splash-college">VEMU INSTITUTE OF TECHNOLOGY</h2>
-        <span class="cv-splash-dept">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</span>
-      </div>
-      <div class="cv-splash-brand">
-        <h1 class="cv-splash-title">CODEVISION <span class="cv-splash-year">2026</span></h1>
-        <p class="cv-splash-tagline">Official Team ID Pass Portal</p>
-      </div>
-      <div class="cv-splash-loader-wrap">
-        <div class="cv-splash-track"><div class="cv-splash-bar" id="cvSplashBar"></div></div>
-        <div class="cv-splash-status">
-          <span id="cvSplashStatusText">Generating pass...</span>
-          <span id="cvSplashPercent">0%</span>
-        </div>
-      </div>
-      <button type="button" class="cv-splash-skip-btn" id="cvSplashSkipBtn">Enter &rarr;</button>
-    </div>
-  </div>
-
+  <!-- Navigation -->
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="brand-logo">
@@ -57,174 +28,199 @@
         <a href="index.html" class="nav-link">Home</a>
         <a href="index.html#format" class="nav-link">Format</a>
         <a href="index.html#schedule" class="nav-link">Schedule</a>
+        <a href="index.html#rules" class="nav-link">Rules</a>
+        <a href="index.html#themes" class="nav-link">Theme Reveal</a>
         <a href="register.html" class="nav-link">Register Team</a>
       </nav>
 
       <div class="header-actions">
-        <a href="register.html" class="btn btn-primary btn-sm">New Registration</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Register Team (Free)</a>
       </div>
     </div>
   </header>
 
-  <main class="ticket-page-wrap" style="max-width: 820px; margin: 40px auto; padding: 0 20px;">
-    
-    <div class="ticket-search-card no-print" id="searchCard" style="background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-2xl); padding: 36px; text-align: center; box-shadow: var(--shadow-sm); margin-bottom: 32px;">
-      <span class="heading-eyebrow">Credential Verification</span>
+  <!-- Main Container -->
+  <main class="hallticket-page-wrap">
+
+    <!-- Search / Access Card -->
+    <div class="ticket-search-card no-print">
+      <div class="heading-eyebrow">Digital Entry Pass &amp; Admit Card</div>
       <h1 style="font-size: 1.875rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
-        Find Your Team Pass
+        Find Your Official Team ID Card
       </h1>
-      <p style="color: var(--text-muted); font-size: 0.9375rem; max-width: 580px; margin: 0 auto 20px;">
-        Enter your unique <strong>Team ID</strong> (e.g. <code>CV26-K9X42</code>), <strong>Leader Roll Number</strong>, or registered email.
+      <p style="color: var(--text-muted); font-size: 0.9375rem; max-width: 580px; margin: 0 auto;">
+        Enter your unique <strong>Team ID</strong> (e.g. <code>CV26-K9X42</code>), <strong>Leader Roll Number</strong> (e.g. <code>234M1A0501</code>), or registered email address.
       </p>
 
-      <form class="ticket-search-form" id="hallTicketSearchForm" style="display: flex; gap: 10px; max-width: 500px; margin: 0 auto;">
-        <input type="text" id="searchQuery" class="form-input" placeholder="Team ID, Roll No, or Email..." required>
-        <button type="submit" class="btn btn-primary" id="btnSearchTicket">
-          <span>Generate Pass</span>
+      <form class="ticket-search-form" id="hallTicketSearchForm">
+        <input type="text" id="searchQuery" class="form-input" placeholder="Enter Team ID, Roll No, or Email..." required>
+        <button type="submit" class="btn btn-primary" id="btnSearchTicket" style="flex-shrink: 0;">
+          <span>Generate ID Card</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </form>
+
+      <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 12px;">
+         Registered teams get immediate ID cards. Both Team Leaders and Faculty Coordinators can print or download this card.
+      </div>
     </div>
 
-    <!-- Alert Box for New Registration -->
+    <!-- Registration Success Celebratory Alert (Shown if newly registered) -->
     <div id="newRegSuccessAlert" class="status-alert-box alert-confirmed no-print" style="display: none; margin-bottom: 24px;">
-      <div class="alert-icon" style="color: #059669;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      </div>
+      <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
       <div>
         <h3 style="font-size: 1.125rem; font-weight: 800; color: #065F46; margin-bottom: 4px;">
           Team Registered Successfully!
         </h3>
-        <p style="font-size: 0.875rem; color: #047857; margin: 0;">
-          Your team slot is confirmed with zero fees. An official confirmation email has been dispatched from <strong>kshanmukhaswaroop79@gmail.com</strong>. Below is your official <strong>CODEVISION 2026 Team Identity Card &amp; Gate Entry Pass</strong>.
+        <p style="font-size: 0.875rem; color: #047857; margin: 0; line-height: 1.5;">
+          Your team slot is confirmed with zero fees. Below is your official, architected <strong>CODEVISION 2026 Team Identity Card &amp; Gate Entry Pass</strong>. Please print or download it before attending the event!
         </p>
       </div>
     </div>
 
+    <!-- Status Notice (Error or Not Found) -->
     <div id="ticketStatusNotice" style="display: none; margin-bottom: 28px;"></div>
 
-    <div id="ticketResultSection" style="display: none; max-width: 440px; margin: 0 auto;">
-      <article class="admit-card compact-card-badge" id="printableAdmitCard">
-        <div class="card-lanyard-slot-row"><div class="card-lanyard-slot"></div></div>
+    <!-- ========================================================================
+         VIRTUAL TEAM ID CARD (SUPER DESIGNED & WELL-ARCHITECTED)
+         ======================================================================== -->
+    <!-- ========================================================================
+         VIRTUAL TEAM ID CARD (COMPACT AUTHENTIC ID CARD FORMAT)
+         ======================================================================== -->
+    <div id="ticketResultSection" style="display: none;">
 
+      <!-- The Official Printable Team ID Card -->
+      <article class="admit-card compact-card-badge" id="printableAdmitCard">
+        
+        <!-- 1. Top Lanyard Clip Punch Slot -->
+        <div class="card-lanyard-slot-row">
+          <div class="card-lanyard-slot"></div>
+        </div>
+
+        <!-- 2. Dark Official College Header -->
         <header class="card-college-header">
           <img src="assets/college-logo.png" alt="VEMU IT Logo" class="card-logo-mark-img">
           <div class="card-header-titles">
             <h2 class="card-college-name">VEMU INSTITUTE OF TECHNOLOGY</h2>
             <p class="card-dept-name">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</p>
-            <div class="card-event-badge">CODEVISION 2026 &bull; OFFICIAL TEAM PASS</div>
+            <div class="card-event-badge">CODEVISION 2026 • OFFICIAL TEAM PASS</div>
           </div>
         </header>
 
+        <!-- 3. Ribbon Bar: Status & Type -->
         <div class="card-ribbon-bar">
           <span id="ticketBadgeType" class="ribbon-type font-mono">ONLINE PASS</span>
-          <span class="ribbon-confirmed">&check; ENTRY CONFIRMED &bull; FREE</span>
+          <span class="ribbon-confirmed">&check; ENTRY CONFIRMED • FREE</span>
         </div>
 
-        <div class="card-body">
-          <div class="card-hero-row">
-            <div class="team-emblem-frame" id="ticketLogoFrame">
-              <img id="ticketLogoImg" src="" alt="Logo" style="display: none; width: 100%; height: 100%; object-fit: cover;">
-              <span id="ticketLogoIcon" style="font-weight: 800; color: var(--primary);">CV</span>
-            </div>
-            <div class="team-headline">
-              <span class="team-label-tag">REGISTERED CANDIDATE</span>
-              <h3 class="team-display-name" id="ticketTeamName">Team Name</h3>
-              <div class="team-id-badge" id="ticketTeamId">CV26-XXXX</div>
-            </div>
+        <!-- 4. Team Identity Section (Logo + Team Name + ID) -->
+        <div class="card-team-identity">
+          <div class="card-team-logo" id="ticketLogoHolder">
+            <span id="ticketLogoIcon">CV</span>
+            <img id="ticketLogoImg" src="" alt="Team Logo" style="display: none;">
           </div>
-
-          <div class="members-specs-box">
-            <div class="member-spec-row">
-              <div class="card-role-tag leader-tag">TEAM LEADER</div>
-              <div class="member-data-col">
-                <span class="member-val-name" id="ticketLeaderName">Leader Name</span>
-                <span class="member-val-meta font-mono" id="ticketLeaderRoll">ROLL NUMBER</span>
-                <span class="member-val-sub" id="ticketLeaderClass">III B.Tech</span>
-                <span class="member-val-sub" id="ticketLeaderSec">Sec A</span>
-              </div>
-            </div>
-
-            <div class="member-spec-row" id="ticketMember2Row" style="display: none;">
-              <div class="card-role-tag member2-tag">MEMBER 2</div>
-              <div class="member-data-col">
-                <span class="member-val-name" id="ticketM2Name">Member 2 Name</span>
-                <span class="member-val-meta font-mono" id="ticketM2Roll">ROLL NUMBER</span>
-                <span class="member-val-sub" id="ticketM2Class">III B.Tech</span>
-                <span class="member-val-sub" id="ticketM2Sec">Sec A</span>
-              </div>
-            </div>
-                        <div class="member-spec-row" id="ticketMember3Row" style="display: none;">
-                <div class="card-role-tag member2-tag" style="background: #F3E8FF; color: #7C3AED;">MEMBER 3</div>
-                <div class="member-data-col">
-                  <span class="member-val-name" id="ticketM3Name">Member 3 Name</span>
-                  <span class="member-val-meta font-mono" id="ticketM3Roll">ROLL NUMBER</span>
-                  <span class="member-val-sub" id="ticketM3Class">III B.Tech</span>
-                  <span class="member-val-sub" id="ticketM3Sec">Sec A</span>
-                </div>
-              </div>
-          </div>
-
-          <div class="event-brief-strip">
-            <div><span class="brief-k">Department:</span> <span class="brief-v" id="ticketDept">CSE</span></div>
-            <div><span class="brief-k">College:</span> <span class="brief-v" id="ticketCollege">Vemu IT</span></div>
-          </div>
-
-          <div class="card-footer-security">
-            <div class="security-qr-col">
-              <div id="ticketQrCodeHolder" class="qr-canvas-holder"></div>
-              <span class="qr-label font-mono">GATE SECURITY SCAN</span>
-            </div>
-            <div class="security-seal-col">
-              <div class="official-seal-mark">
-                <img src="assets/college-logo.png" alt="Seal" style="width: 38px; height: 38px; object-fit: contain;">
-              </div>
-              <span class="seal-auth-text">AUTHORIZED PASS</span>
+          <div class="card-team-info">
+            <span class="card-team-sublabel">REGISTERED TEAM NAME</span>
+            <h1 class="card-team-name" id="ticketTeamName">—</h1>
+            <div class="card-team-id-badge">
+              <span>TEAM ID:</span>
+              <strong class="font-mono" id="ticketTeamId">—</strong>
+              <span class="card-reg-pill font-mono" id="ticketRegType">ONLINE</span>
             </div>
           </div>
         </div>
+
+        <!-- 5. Team Members (Clear Hierarchy: Leader BIG, Member 2 SMALL) -->
+        <div class="card-members-section">
+          <!-- Leader Card (Prominent & Larger) -->
+          <div class="card-member-row leader-highlight">
+            <div class="card-role-tag leader-tag">TEAM LEADER</div>
+            <div class="card-member-name leader-prominent" id="ticketLeader">—</div>
+            <div class="card-member-details font-mono">
+              <span>Roll: <strong id="ticketLeaderRoll">—</strong></span>
+              <span>•</span>
+              <span id="ticketLeaderClass">—</span>
+              <span>•</span>
+              <span id="ticketLeaderSec">—</span>
+            </div>
+            <div class="card-member-contact font-mono text-xs">
+              <span id="ticketEmail">—</span> • <span id="ticketPhone">—</span>
+            </div>
+          </div>
+
+          <!-- Member 2 Card (Subdued & Smaller) -->
+          <div class="card-member-row member2-row" id="ticketMember2Card">
+            <div class="card-role-tag member2-tag">MEMBER 2</div>
+            <div class="card-member-name member2-subdued" id="ticketMember2">—</div>
+            <div class="card-member-details font-mono" id="ticketMember2Details">
+              <span>Roll: <strong id="ticketMember2Roll">—</strong></span>
+              <span>•</span>
+              <span id="ticketMember2Class">—</span>
+              <span>•</span>
+              <span id="ticketMember2Sec">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Card Footer: Logistics & Gate QR Code -->
+        <div class="card-bottom-strip">
+          <div class="card-logistics-col">
+            <div class="card-log-item">
+              <span class="log-label">Event Date:</span>
+              <span class="log-value" id="ticketEventDate">Saturday, Oct 24, 2026</span>
+            </div>
+            <div class="card-log-item">
+              <span class="log-label">Timing:</span>
+              <span class="log-value" id="ticketEventTiming">09:30 AM (10:00 AM – 3:00 PM)</span>
+            </div>
+            <div class="card-log-item">
+              <span class="log-label">Venue:</span>
+              <span class="log-value" id="ticketEventVenue">CSE Labs, Vemu IT</span>
+            </div>
+            <!-- Hidden backward-compat fields -->
+            <span id="ticketDept" style="display: none;"></span>
+            <span id="ticketCollege" style="display: none;"></span>
+          </div>
+
+          <div class="card-qr-col">
+            <div class="card-qr-frame" id="ticketQrCodeHolder"></div>
+            <span class="card-qr-caption font-mono" id="ticketQrIdLabel">CV26-XXXXX</span>
+            <span class="card-scan-tip">GATE SCAN</span>
+          </div>
+        </div>
+
+        <!-- 7. Security Micro-Stripe -->
+        <footer class="card-security-footer">
+          <span>VEMU INSTITUTE OF TECHNOLOGY • DEPARTMENT OF CSE </span>
+        </footer>
+
       </article>
 
-      <div class="ticket-action-bar no-print" style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-        <button type="button" class="btn btn-primary" id="btnDownloadPDF">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span>Download Pass PDF</span>
+      <!-- Action Controls (Hidden when printed) -->
+      <div class="ticket-actions-bar no-print">
+        <button type="button" class="btn btn-primary btn-lg" id="btnPrintHallTicket" style="flex: 1;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span>Print / Save ID Card (PDF)</span>
         </button>
-        <button type="button" class="btn btn-secondary" id="btnPrintTicket">
-          <span>Print Pass</span>
+        <button type="button" class="btn btn-secondary" id="btnToggleSearch" onclick="toggleSearchBox()">
+          <span>Find Another Team</span>
         </button>
+        <a href="register.html" class="btn btn-outline">
+          <span>+ Register Team</span>
+        </a>
       </div>
+
     </div>
   </main>
 
-  <footer class="leadership-section">
-    <div class="leadership-inner">
-      <div class="leadership-grid">
-        <div class="leadership-card">
-          <span class="leadership-role-tag">Principal</span>
-          <h4 class="leadership-name">Prof. Nithin Killari</h4>
-          <p class="leadership-designation">Principal &bull; Vemu Institute of Technology</p>
-        </div>
-        <div class="leadership-card">
-          <span class="leadership-role-tag">Head of the Department</span>
-          <h4 class="leadership-name">Dr. P. Nirupama</h4>
-          <p class="leadership-designation">Professor &amp; Head, Department of CSE &bull; Vemu IT</p>
-        </div>
-      </div>
-      <div class="leadership-bottom-bar">
-        <div>&copy; 2026 CODEVISION &bull; Vemu Institute of Technology</div>
-        <div>Helpline: <a href="mailto:kshanmukhaswaroop79@gmail.com" style="color: var(--primary);">kshanmukhaswaroop79@gmail.com</a></div>
-      </div>
-    </div>
-  </footer>
-
+  <!-- Scripts -->
+  <script src="../shared/js/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="js/supabase-config.js"></script>
-  <script src="js/db.js"></script>
   <script src="js/utils.js"></script>
+  <script src="js/db.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="js/email-dispatcher.js"></script>
-  <script src="js/splash.js"></script>
   <script src="js/hall-ticket.js"></script>
 </body>
 </html>

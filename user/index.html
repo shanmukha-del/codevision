@@ -10,7 +10,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
 
   <!-- Core & Shared Styles -->
-  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/3d-motion.css">
 </head>
@@ -30,7 +30,7 @@
       <div class="cv-splash-emblem-wrap">
         <div class="cv-splash-pulse-ring"></div>
         <div class="cv-splash-pulse-ring-outer"></div>
-        <img src="../shared/assets/college-logo.png" alt="VEMU Institute of Technology" class="cv-splash-emblem">
+        <img src="assets/college-logo.png" alt="VEMU Institute of Technology" class="cv-splash-emblem">
       </div>
 
       <!-- Institution & Event Hierarchy -->
@@ -70,7 +70,7 @@
   <header class="site-header" role="banner">
     <div class="header-inner">
       <a href="index.html" class="brand-logo" aria-label="Codevision Home">
-        <img src="../shared/assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
+        <img src="assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
         <div class="brand-text">
           <span class="brand-title">CODEVISION</span>
           <span class="brand-subtitle">VEMU IT • CSE</span>
@@ -83,7 +83,7 @@
         <a href="#schedule" class="nav-link">Schedule</a>
         <a href="#rules" class="nav-link">Rules</a>
         <a href="#themes" class="nav-link">Theme Reveal</a>
-        <a href="coordinator-badge.html" class="nav-link">Coordinators</a>
+        <a href="../portal-coordinator/index.html" class="nav-link">Coordinators</a>
         <a href="hall-ticket.html" class="nav-link">Team ID Card</a>
       </nav>
 
@@ -97,7 +97,7 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
         <button class="btn-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
-          ☰
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
       </div>
     </div>
@@ -109,10 +109,10 @@
       <a href="#schedule" class="nav-link">Schedule Timeline</a>
       <a href="#rules" class="nav-link">Official Rules</a>
       <a href="#themes" class="nav-link">Event Day Theme Reveal</a>
-      <a href="coordinator-badge.html" class="nav-link">Coordinator Badges</a>
+      <a href="../portal-coordinator/index.html" class="nav-link">Coordinator Badges</a>
       <a href="hall-ticket.html" class="nav-link" style="color: var(--primary); font-weight: 700;">Virtual Team ID Card</a>
       <a href="register.html" class="btn btn-primary" style="margin-top: 8px;">Register Your Team (Free)</a>
-      <a href="../admin/login.html" class="nav-link" style="font-size: 0.8125rem; color: var(--text-muted); text-align: center;">Admin Portal Login →</a>
+      <a href="../portal-admin/index.html" class="nav-link" style="font-size: 0.8125rem; color: var(--text-muted); text-align: center;">Admin Portal Login →</a>
     </div>
   </header>
 
@@ -129,7 +129,7 @@
         <!-- Left Content -->
         <div class="hero-content">
           <div class="college-pill">
-            <img src="../shared/assets/college-logo.png" alt="VEMU IT Emblem" style="width: 22px; height: 22px; object-fit: contain; border-radius: 50%; background: #FFFFFF; flex-shrink: 0;">
+            <img src="assets/college-logo.png" alt="VEMU IT Emblem" style="width: 22px; height: 22px; object-fit: contain; border-radius: 50%; background: #FFFFFF; flex-shrink: 0;">
             <span><strong>VEMU INSTITUTE OF TECHNOLOGY</strong> • CSE DEPARTMENT PRESENTS</span>
           </div>
 
@@ -214,7 +214,7 @@
           </div>
 
           <div class="float-symbol float-badge animate-float-3" style="top: 25%; right: -25px;">
-            <span class="float-badge-icon icon-violet">⚡</span>
+            <span class="float-badge-icon icon-violet"></span>
             <span id="heroDurationBadge">5 Hours Live</span>
           </div>
 
@@ -276,28 +276,28 @@
 
       <div class="format-grid">
         <div class="format-card tilt-card reveal">
-          <div class="format-icon" style="background: var(--primary-light); color: var(--primary);">💻</div>
+          <div class="format-icon" style="background: var(--primary-light); color: var(--primary);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
           <span class="format-label">Event Format</span>
           <div class="format-val">Frontend Challenge</div>
           <p class="format-sub">Intensive on-campus web interface hackathon with live evaluation.</p>
         </div>
 
         <div class="format-card tilt-card reveal">
-          <div class="format-icon" style="background: var(--cyan-light); color: var(--cyan);">🎨</div>
+          <div class="format-icon" style="background: var(--cyan-light); color: var(--cyan);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></div>
           <span class="format-label">Technology</span>
           <div class="format-val">HTML5 + CSS3</div>
           <p class="format-sub">Pure frontend craftsmanship. No heavy frameworks. Semantic &amp; responsive.</p>
         </div>
 
         <div class="format-card tilt-card reveal">
-          <div class="format-icon" style="background: var(--violet-light); color: var(--violet);">👥</div>
+          <div class="format-icon" style="background: var(--violet-light); color: var(--violet);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
           <span class="format-label">Team Size</span>
-          <div class="format-val">1 – 2 Members</div>
-          <p class="format-sub">Solo developers or dynamic duos. Collaborate and conquer.</p>
+          <div class="format-val">2 – 3 Members</div>
+          <p class="format-sub">Duo or Trio teams. Collaborate, architect, and conquer.</p>
         </div>
 
         <div class="format-card tilt-card reveal">
-          <div class="format-icon" style="background: #ECFDF5; color: #059669;">⏱️</div>
+          <div class="format-icon" style="background: #ECFDF5; color: #059669;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
           <span class="format-label">Event Timing</span>
           <div class="format-val" id="formatTimeDuration">10:00 AM – 3:00 PM</div>
           <p class="format-sub" id="formatSubDuration">5 hours of non-stop innovation, live mentorship, and final jury viva.</p>
@@ -463,7 +463,7 @@
       <div class="theme-reveal-card reveal">
         <div class="theme-reveal-glow"></div>
         <div class="theme-reveal-badge">
-          <span>🔒 OFFICIAL EVENT DAY REVEAL</span>
+          <span> OFFICIAL EVENT DAY REVEAL</span>
         </div>
         <h3 class="theme-reveal-heading">Problem Statements Will Be Unsealed Live</h3>
         <p class="theme-reveal-desc">
@@ -479,14 +479,14 @@
             </div>
           </div>
           <div class="reveal-highlight-item">
-            <div class="highlight-icon">🎯</div>
+            <div class="highlight-icon"></div>
             <div class="highlight-text">
               <strong>Multiple Tracks</strong>
               <span>Web Apps, UI Dashboards &amp; EdTech</span>
             </div>
           </div>
           <div class="reveal-highlight-item">
-            <div class="highlight-icon">🛡️</div>
+            <div class="highlight-icon"></div>
             <div class="highlight-text">
               <strong>Zero Pre-building</strong>
               <span>Pure live on-the-spot creation</span>
@@ -528,76 +528,54 @@
   <!-- ==========================================================================
        Footer
        ========================================================================== -->
-  <footer class="site-footer" role="contentinfo">
-    <div class="footer-inner">
-      <div class="footer-top">
-        <div>
-          <a href="index.html" class="brand-logo" style="margin-bottom: 16px;">
-            <img src="../shared/assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
-            <div class="brand-text">
-              <span class="brand-title">CODEVISION</span>
-              <span class="brand-subtitle">VEMU IT • CSE</span>
-            </div>
-          </a>
-          <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; max-width: 340px;">
-            Vemu Institute of Technology — P. Kotha Kota, Near Pakala, Chittoor District, Andhra Pradesh - 517112.
-          </p>
-          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 10px;">
-            Affiliated to JNTUA, Ananthapuramu. Approved by AICTE, New Delhi.
+  
+  <!-- ==========================================================================
+       PATRON & LEADERSHIP FOOTER (OFFICIAL & CLASSIC)
+       ========================================================================== -->
+  <footer class="leadership-section" role="contentinfo">
+    <div class="leadership-inner">
+      <div class="leadership-title-row">
+        <span class="leadership-eyebrow">Academic Governance</span>
+        <h3 class="leadership-main-title">Patronage &amp; Leadership</h3>
+      </div>
+
+      <div class="leadership-grid">
+        <div class="leadership-card">
+          <span class="leadership-role-tag">Principal</span>
+          <h4 class="leadership-name">Prof. Nithin Killari</h4>
+          <p class="leadership-designation">
+            Principal &bull; Vemu Institute of Technology<br>
+            P.Kothakota, Chittoor District, AP - 517112
           </p>
         </div>
 
-        <div>
-          <h4 class="footer-col-title">Navigation</h4>
-          <ul class="footer-links">
-            <li><a href="#about">About Event</a></li>
-            <li><a href="#format">Event Format</a></li>
-            <li><a href="#schedule">Schedule Timeline</a></li>
-            <li><a href="#rules">Rules &amp; Regulations</a></li>
-            <li><a href="#themes">Theme Reveal</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="footer-col-title">Portals</h4>
-          <ul class="footer-links">
-            <li><a href="register.html">Team Registration (Free)</a></li>
-            <li><a href="hall-ticket.html">Team ID Card Portal</a></li>
-            <li><a href="coordinator-badge.html">Coordinator Badges</a></li>
-            <li><a href="../admin/login.html" style="font-weight: 600; color: var(--primary);">Admin Portal Login</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="footer-col-title">Support &amp; Inquiries</h4>
-          <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
-            Email: <a href="mailto:cse.codevision@vemu.org">cse.codevision@vemu.org</a><br>
-            Helpline: +91 98480 22334<br>
-            Student Helpline: +91 91234 56789
+        <div class="leadership-card">
+          <span class="leadership-role-tag">Head of the Department</span>
+          <h4 class="leadership-name">Dr. P. Nirupama</h4>
+          <p class="leadership-designation">
+            Professor &amp; Head, Department of CSE<br>
+            Vemu Institute of Technology
           </p>
-          <div style="margin-top: 16px;">
-            <span class="badge badge-blue">Official CSE Portal</span>
-          </div>
         </div>
       </div>
 
-      <div class="footer-bottom">
+      <div class="leadership-bottom-bar">
         <div>
-          © 2026 CODEVISION — Department of Computer Science &amp; Engineering, Vemu Institute of Technology. All rights reserved.
+          &copy; 2026 CODEVISION &bull; Department of Computer Science &amp; Engineering, Vemu Institute of Technology.
         </div>
         <div>
-          Crafted with pure HTML5, CSS3 &amp; Vanilla JavaScript.
+          Official Helpline / Dispatcher: <a href="mailto:kshanmukhaswaroop79@gmail.com" style="color: var(--primary); text-decoration: none; font-weight: 600;">kshanmukhaswaroop79@gmail.com</a>
         </div>
       </div>
     </div>
   </footer>
 
   <!-- Scripts -->
-  <script src="../shared/js/splash.js"></script>
+  <script src="js/splash.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../shared/js/supabase-config.js"></script>
-  <script src="../shared/js/utils.js"></script>
-  <script src="../shared/js/db.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/db.js"></script>
   <script src="js/landing.js"></script>
 </body>
 </html>

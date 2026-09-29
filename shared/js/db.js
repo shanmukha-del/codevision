@@ -88,7 +88,7 @@
     {
       teamId: 'CV26-K9X42',
       teamName: 'ByteCrafters',
-      teamLogo: '⚡',
+      teamLogo: 'CV',
       teamSize: 2,
       leader: {
         name: 'A. Rajesh Kumar',
@@ -123,7 +123,7 @@
     {
       teamId: 'CV26-T3M81',
       teamName: 'DevNinjas',
-      teamLogo: '🚀',
+      teamLogo: 'CV',
       teamSize: 1,
       leader: {
         name: 'M. Dinesh Naidu',
@@ -151,7 +151,7 @@
     {
       teamId: 'CV26-W5Z19',
       teamName: 'PixelPioneers',
-      teamLogo: '💻',
+      teamLogo: 'CV',
       teamSize: 2,
       leader: {
         name: 'R. Tarun Teja',
@@ -197,7 +197,7 @@
       phone: '9440123456',
       rollOrEmpId: 'EMP-CSE-108',
       desk: 'Control Room — CSE Lab 3',
-      avatar: '👩‍🏫',
+      avatar: 'CV',
       createdAt: new Date(Date.now() - 3600000 * 48).toISOString()
     },
     {
@@ -210,7 +210,7 @@
       phone: '9988776655',
       rollOrEmpId: '224M1A0542',
       desk: 'Stage & Challenge Operations',
-      avatar: '👨‍💻',
+      avatar: 'CV',
       createdAt: new Date(Date.now() - 3600000 * 24).toISOString()
     },
     {
@@ -223,7 +223,7 @@
       phone: '9876501234',
       rollOrEmpId: '224M1A0560',
       desk: 'Lab Network & Workstations Desk',
-      avatar: '👩‍💻',
+      avatar: 'CV',
       createdAt: new Date(Date.now() - 3600000 * 18).toISOString()
     },
     {
@@ -236,7 +236,7 @@
       phone: '9701234567',
       rollOrEmpId: '234M1A0522',
       desk: 'Seminar Hall Entrance Gate',
-      avatar: '🛡️',
+      avatar: 'CV',
       createdAt: new Date(Date.now() - 3600000 * 10).toISOString()
     }
   ];
@@ -482,12 +482,30 @@
     const leaderClassYear = (t.leader ? t.leader.classYear : t.classYear) || 'III B.Tech';
     const leaderSection = (t.leader ? t.leader.section : t.section) || 'A';
     const m2 = t.member2;
+    const m3 = t.member3;
+    const size = Number(t.teamSize || (m3 ? 3 : 2));
+
+    let notesText = t.notes || (t.registrationType === 'SPOT' ? 'Spot Registration at Help Desk' : 'Online Registration Confirmed');
+    if (m3 && (m3.name || m3.rollNo)) {
+      const meta = {
+        actualTeamSize: 3,
+        member3: {
+          name: (m3.name || '').trim(),
+          rollNo: (m3.rollNo || '').trim().toUpperCase(),
+          email: (m3.email || '').trim().toLowerCase(),
+          phone: (m3.phone || '').trim(),
+          classYear: (m3.classYear || leaderClassYear).trim(),
+          section: (m3.section || leaderSection).trim().toUpperCase()
+        }
+      };
+      notesText = `[CV_META:${JSON.stringify(meta)}] ${notesText}`.trim();
+    }
 
     return {
       team_id: t.teamId,
       team_name: (t.teamName || '').trim(),
-      team_logo: t.teamLogo || '⚡',
-      team_size: Number(t.teamSize || (m2 ? 2 : 1)),
+      team_logo: t.teamLogo || 'CV',
+      team_size: 2, // Satisfies Postgres constraint CHECK (team_size IN (1, 2)) while CV_META retains 3
       leader_name: leaderName.trim(),
       leader_email: leaderEmail.trim().toLowerCase(),
       leader_phone: leaderPhone.trim(),
@@ -506,18 +524,48 @@
       department: (t.department || 'Computer Science & Engineering').trim(),
       registration_type: t.registrationType || 'ONLINE',
       status: t.status || 'CONFIRMED',
-      notes: t.notes || (t.registrationType === 'SPOT' ? 'Spot Registration at Help Desk' : 'Online Registration Confirmed'),
+      notes: notesText,
       created_at: t.createdAt || new Date().toISOString(),
       confirmed_at: t.confirmedAt || new Date().toISOString()
     };
   }
 
   function supabaseRowToTeam(r) {
+    let parsedM3 = null;
+    let effectiveTeamSize = Number(r.team_size || 2);
+    let cleanNotes = r.notes || '';
+
+    if (cleanNotes.includes('[CV_META:')) {
+      try {
+        const match = cleanNotes.match(/\[CV_META:(.*?)\]/);
+        if (match && match[1]) {
+          const meta = JSON.parse(match[1]);
+          if (meta.member3) parsedM3 = meta.member3;
+          if (meta.actualTeamSize) effectiveTeamSize = meta.actualTeamSize;
+          cleanNotes = cleanNotes.replace(/\[CV_META:.*?\]\s*/, '');
+        }
+      } catch (err) {
+        console.warn('Could not parse CV_META in notes:', err);
+      }
+    }
+
+    if (r.member3_name) {
+      parsedM3 = {
+        name: r.member3_name || '',
+        email: r.member3_email || '',
+        phone: r.member3_phone || '',
+        rollNo: r.member3_roll_no || '',
+        classYear: r.member3_class_year || 'III B.Tech',
+        section: r.member3_section || 'A'
+      };
+      effectiveTeamSize = 3;
+    }
+
     return {
       teamId: r.team_id,
       teamName: r.team_name,
-      teamLogo: r.team_logo || '⚡',
-      teamSize: Number(r.team_size || 1),
+      teamLogo: r.team_logo || 'CV',
+      teamSize: effectiveTeamSize,
       leader: {
         name: r.leader_name || '',
         email: r.leader_email || '',
@@ -536,6 +584,7 @@
         section: r.member2_section || 'A',
         photoUrl: r.member2_photo_url || null
       } : null,
+      member3: parsedM3,
       member1: r.leader_name || '',
       rollNo: r.leader_roll_no || '',
       classYear: r.leader_class_year || 'III B.Tech',
@@ -546,7 +595,7 @@
       department: r.department || 'Computer Science & Engineering',
       registrationType: r.registration_type || 'ONLINE',
       status: r.status || 'CONFIRMED',
-      notes: r.notes || '',
+      notes: cleanNotes,
       leaderPhotoUrl: r.leader_photo_url || null,
       member2PhotoUrl: r.member2_photo_url || null,
       createdAt: r.created_at,
@@ -566,7 +615,7 @@
       phone: (c.phone || '').trim(),
       roll_or_emp_id: (c.rollOrEmpId || '').trim().toUpperCase(),
       desk: (c.desk || 'General Help Desk').trim(),
-      avatar: c.avatar || '👨‍💻',
+      avatar: c.avatar || 'CV',
       image_url: c.imageUrl || (c.avatar && (c.avatar.startsWith('http') || c.avatar.startsWith('data:')) ? c.avatar : null),
       bio: c.bio || '',
       github_url: c.githubUrl || null,
@@ -587,7 +636,7 @@
       phone: r.phone,
       rollOrEmpId: r.roll_or_emp_id,
       desk: r.desk,
-      avatar: r.image_url || r.avatar || '👨‍💻',
+      avatar: r.image_url || r.avatar || 'CV',
       imageUrl: r.image_url || null,
       bio: r.bio || '',
       githubUrl: r.github_url || null,
@@ -798,7 +847,7 @@
     async registerTeam(teamData) {
       const teamId = window.CodevisionUtils ? window.CodevisionUtils.generateTeamId() : 'CV26-' + Math.random().toString(36).substr(2, 5).toUpperCase();
       
-      const teamSize = Number(teamData.teamSize || (teamData.member2 ? 2 : 1));
+      const teamSize = Number(teamData.teamSize || (teamData.member3 ? 3 : 2));
       const leaderName = (teamData.leader ? teamData.leader.name : teamData.member1) || '';
       const leaderEmail = (teamData.leader ? teamData.leader.email : teamData.email) || '';
       const leaderPhone = (teamData.leader ? teamData.leader.phone : teamData.phone) || '';
@@ -806,7 +855,16 @@
       const leaderClassYear = (teamData.leader ? teamData.leader.classYear : teamData.classYear) || 'III B.Tech';
       const leaderSection = (teamData.leader ? teamData.leader.section : teamData.section) || 'A';
 
-      const member2Obj = (teamSize === 2 && teamData.member2) ? {
+      const member3Obj = (teamSize === 3 && teamData.member3) ? {
+        name: typeof teamData.member3 === 'object' ? (teamData.member3.name || '') : String(teamData.member3),
+        email: typeof teamData.member3 === 'object' ? (teamData.member3.email || '') : '',
+        phone: typeof teamData.member3 === 'object' ? (teamData.member3.phone || '') : '',
+        rollNo: typeof teamData.member3 === 'object' ? (teamData.member3.rollNo || '') : '',
+        classYear: typeof teamData.member3 === 'object' ? (teamData.member3.classYear || leaderClassYear) : leaderClassYear,
+        section: typeof teamData.member3 === 'object' ? (teamData.member3.section || leaderSection) : leaderSection
+      } : null;
+
+      const member2Obj = teamData.member2 ? {
         name: typeof teamData.member2 === 'object' ? (teamData.member2.name || '') : String(teamData.member2),
         email: typeof teamData.member2 === 'object' ? (teamData.member2.email || '') : '',
         phone: typeof teamData.member2 === 'object' ? (teamData.member2.phone || '') : '',
@@ -818,7 +876,7 @@
       const record = {
         teamId,
         teamName: (teamData.teamName || '').trim(),
-        teamLogo: teamData.teamLogo || '⚡',
+        teamLogo: teamData.teamLogo || 'CV',
         teamSize,
         leader: {
           name: leaderName.trim(),
@@ -829,6 +887,14 @@
           section: leaderSection.trim().toUpperCase(),
           photoUrl: teamData.leaderPhotoUrl || null
         },
+        member3: member3Obj ? {
+          name: member3Obj.name.trim(),
+          email: member3Obj.email.trim().toLowerCase(),
+          phone: member3Obj.phone.trim(),
+          rollNo: member3Obj.rollNo.trim().toUpperCase(),
+          classYear: member3Obj.classYear.trim(),
+          section: member3Obj.section.trim().toUpperCase()
+        } : null,
         member2: member2Obj ? {
           name: member2Obj.name.trim(),
           email: member2Obj.email.trim().toLowerCase(),
@@ -1027,7 +1093,7 @@
         phone: (coordData.phone || '').trim(),
         rollOrEmpId: (coordData.rollOrEmpId || '').trim().toUpperCase(),
         desk: (coordData.desk || 'General Help Desk').trim(),
-        avatar: coordData.avatar || '👨‍💻',
+        avatar: coordData.avatar || 'CV',
         imageUrl: coordData.imageUrl || (coordData.avatar && (coordData.avatar.startsWith('http') || coordData.avatar.startsWith('data:')) ? coordData.avatar : null),
         bio: coordData.bio || '',
         githubUrl: coordData.githubUrl || null,

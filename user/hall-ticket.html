@@ -7,7 +7,7 @@
   
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
 
-  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/hall-ticket.css">
 </head>
@@ -17,7 +17,7 @@
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="brand-logo">
-        <img src="../shared/assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
+        <img src="assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
         <div class="brand-text">
           <span class="brand-title">CODEVISION</span>
           <span class="brand-subtitle">TEAM ID PORTAL</span>
@@ -61,13 +61,13 @@
       </form>
 
       <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 12px;">
-        💡 Registered teams get immediate ID cards. Both Team Leaders and Faculty Coordinators can print or download this card.
+         Registered teams get immediate ID cards. Both Team Leaders and Faculty Coordinators can print or download this card.
       </div>
     </div>
 
     <!-- Registration Success Celebratory Alert (Shown if newly registered) -->
     <div id="newRegSuccessAlert" class="status-alert-box alert-confirmed no-print" style="display: none; margin-bottom: 24px;">
-      <div class="alert-icon">🎉</div>
+      <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
       <div>
         <h3 style="font-size: 1.125rem; font-weight: 800; color: #065F46; margin-bottom: 4px;">
           Team Registered Successfully!
@@ -99,7 +99,7 @@
 
         <!-- 2. Dark Official College Header -->
         <header class="card-college-header">
-          <img src="../shared/assets/college-logo.png" alt="VEMU IT Logo" class="card-logo-mark-img">
+          <img src="assets/college-logo.png" alt="VEMU IT Logo" class="card-logo-mark-img">
           <div class="card-header-titles">
             <h2 class="card-college-name">VEMU INSTITUTE OF TECHNOLOGY</h2>
             <p class="card-dept-name">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</p>
@@ -110,13 +110,13 @@
         <!-- 3. Ribbon Bar: Status & Type -->
         <div class="card-ribbon-bar">
           <span id="ticketBadgeType" class="ribbon-type font-mono">ONLINE PASS</span>
-          <span class="ribbon-confirmed">✓ ENTRY CONFIRMED • FREE</span>
+          <span class="ribbon-confirmed">&check; ENTRY CONFIRMED • FREE</span>
         </div>
 
         <!-- 4. Team Identity Section (Logo + Team Name + ID) -->
         <div class="card-team-identity">
           <div class="card-team-logo" id="ticketLogoHolder">
-            <span id="ticketLogoIcon">⚡</span>
+            <span id="ticketLogoIcon">CV</span>
             <img id="ticketLogoImg" src="" alt="Team Logo" style="display: none;">
           </div>
           <div class="card-team-info">
@@ -134,7 +134,7 @@
         <div class="card-members-section">
           <!-- Leader Card (Prominent & Larger) -->
           <div class="card-member-row leader-highlight">
-            <div class="card-role-tag leader-tag">👑 TEAM LEADER</div>
+            <div class="card-role-tag leader-tag">TEAM LEADER</div>
             <div class="card-member-name leader-prominent" id="ticketLeader">—</div>
             <div class="card-member-details font-mono">
               <span>Roll: <strong id="ticketLeaderRoll">—</strong></span>
@@ -150,7 +150,7 @@
 
           <!-- Member 2 Card (Subdued & Smaller) -->
           <div class="card-member-row member2-row" id="ticketMember2Card">
-            <div class="card-role-tag member2-tag">🤝 MEMBER 2</div>
+            <div class="card-role-tag member2-tag">MEMBER 2</div>
             <div class="card-member-name member2-subdued" id="ticketMember2">—</div>
             <div class="card-member-details font-mono" id="ticketMember2Details">
               <span>Roll: <strong id="ticketMember2Roll">—</strong></span>
@@ -191,7 +191,7 @@
 
         <!-- 7. Security Micro-Stripe -->
         <footer class="card-security-footer">
-          <span>★ VEMU INSTITUTE OF TECHNOLOGY • DEPARTMENT OF CSE ★</span>
+          <span>VEMU INSTITUTE OF TECHNOLOGY • DEPARTMENT OF CSE </span>
         </footer>
 
       </article>
@@ -216,9 +216,11 @@
   <!-- Scripts -->
   <script src="../shared/js/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../shared/js/supabase-config.js"></script>
-  <script src="../shared/js/utils.js"></script>
-  <script src="../shared/js/db.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/db.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="js/email-dispatcher.js"></script>
   <script src="js/hall-ticket.js"></script>
 </body>
 </html>
