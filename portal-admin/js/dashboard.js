@@ -112,6 +112,75 @@ function initStatsAndTeams() {
     });
   }
 
+  // Export CSV
+  const exportCsvBtn = document.getElementById('btnExportCsv');
+  if (exportCsvBtn) {
+    exportCsvBtn.addEventListener('click', () => {
+      if (!allTeams || allTeams.length === 0) {
+        window.CodevisionUtils.showToast('No teams to export yet.', 'warning');
+        return;
+      }
+
+      const headers = [
+        'Team ID', 'Team Name', 'Registration Type', 'Status',
+        'Leader Name', 'Leader Email', 'Leader Phone', 'Leader Roll No', 'Leader Class', 'Leader Section',
+        'Member2 Name', 'Member2 Email', 'Member2 Phone', 'Member2 Roll No', 'Member2 Class', 'Member2 Section',
+        'Member3 Name', 'Member3 Roll No', 'Member3 Class', 'Member3 Section',
+        'College', 'Department', 'Registered At'
+      ];
+
+      function csvEscape(val) {
+        if (val === null || val === undefined) return '';
+        const str = String(val).replace(/"/g, '""');
+        return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
+      }
+
+      const rows = allTeams.map(t => {
+        const leader = t.leader || {};
+        const m2 = t.member2 || {};
+        const m3 = t.member3 || {};
+        return [
+          csvEscape(t.teamId),
+          csvEscape(t.teamName),
+          csvEscape(t.registrationType || 'ONLINE'),
+          csvEscape(t.status || 'confirmed'),
+          csvEscape(leader.name || t.leaderName || ''),
+          csvEscape(leader.email || t.leaderEmail || ''),
+          csvEscape(leader.phone || t.leaderPhone || ''),
+          csvEscape(leader.rollNo || t.leaderRollNo || ''),
+          csvEscape(leader.classYear || t.leaderClassYear || ''),
+          csvEscape(leader.section || t.leaderSection || ''),
+          csvEscape(typeof m2 === 'object' ? m2.name : (m2 || '')),
+          csvEscape(typeof m2 === 'object' ? (m2.email || '') : ''),
+          csvEscape(typeof m2 === 'object' ? (m2.phone || '') : ''),
+          csvEscape(typeof m2 === 'object' ? (m2.rollNo || '') : ''),
+          csvEscape(typeof m2 === 'object' ? (m2.classYear || '') : ''),
+          csvEscape(typeof m2 === 'object' ? (m2.section || '') : ''),
+          csvEscape(typeof m3 === 'object' ? (m3.name || '') : ''),
+          csvEscape(typeof m3 === 'object' ? (m3.rollNo || '') : ''),
+          csvEscape(typeof m3 === 'object' ? (m3.classYear || '') : ''),
+          csvEscape(typeof m3 === 'object' ? (m3.section || '') : ''),
+          csvEscape(t.college || ''),
+          csvEscape(t.department || ''),
+          csvEscape(t.createdAt ? new Date(t.createdAt).toLocaleString('en-IN') : '')
+        ].join(',');
+      });
+
+      const csvContent = [headers.join(','), ...rows].join('\r\n');
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `CODEVISION_2026_Registrations_${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      window.CodevisionUtils.showToast(`Exported ${allTeams.length} team registrations as CSV!`, 'success', 3000);
+    });
+  }
+
   // Subscribe to real-time teams stream from DB
   if (window.CodevisionDB && window.CodevisionDB.onAllTeamsChange) {
     window.CodevisionDB.onAllTeamsChange((teams) => {
@@ -781,7 +850,7 @@ window.deleteCoordConfirm = async function(coordId) {
    Dynamic Themes Track Management (Internal Coordinator Prep)
    ========================================================================== */
 function initThemeManager() {
-  const themesContainer = document.getElementById('adminThemesGrid');
+  const themesContainer = document.getElementById('adminThemesList') || document.getElementById('adminThemesGrid');
   const addThemeBtn = document.getElementById('btnOpenAddTheme');
   const themeForm = document.getElementById('themeForm');
 
@@ -797,8 +866,8 @@ function initThemeManager() {
 
     if (allThemes.length === 0) {
       themesContainer.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
-          No themes prepared yet. Click "+ Add Theme Track" to prepare secret event tracks.
+        <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+          No themes prepared yet. Click "+ Add New Theme" to prepare secret event tracks.
         </div>
       `;
       return;
