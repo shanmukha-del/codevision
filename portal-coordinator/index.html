@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coordinator Portal — CODEVISION 2026 | Vemu Institute of Technology</title>
+  <meta name="description" content="Official coordinator portal for CODEVISION 2026 — Faculty & Student Coordinator virtual badges, duty desks, and committee directory.">
+  
+  <link rel="icon" href="assets/college-logo.png">
+
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/coordinator.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       LIGHT-THEME ANIMATED SPLASH SCREEN (MOBILE & LAPTOP)
+       ========================================================================== -->
+  <div id="codevisionSplash" class="cv-splash-screen" role="status" aria-live="polite">
+    <div class="cv-splash-backdrop">
+      <div class="cv-splash-glow cv-glow-1"></div>
+      <div class="cv-splash-glow cv-glow-2"></div>
+    </div>
+    
+    <div class="cv-splash-content">
+      <div class="cv-splash-emblem-wrap">
+        <div class="cv-splash-pulse-ring"></div>
+        <div class="cv-splash-pulse-ring-outer"></div>
+        <img src="assets/college-logo.png" alt="VEMU Institute of Technology" class="cv-splash-emblem">
+      </div>
+
+      <div class="cv-splash-header">
+        <span class="cv-splash-estd">ESTD : 2008 &bull; P.KOTHAKOTA, CHITTOOR</span>
+        <h2 class="cv-splash-college">VEMU INSTITUTE OF TECHNOLOGY</h2>
+        <span class="cv-splash-dept">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</span>
+      </div>
+
+      <div class="cv-splash-brand">
+        <h1 class="cv-splash-title">CODEVISION <span class="cv-splash-year">2026</span></h1>
+        <p class="cv-splash-tagline">Official Coordinator Portal &amp; Virtual Badges</p>
+      </div>
+
+      <div class="cv-splash-loader-wrap">
+        <div class="cv-splash-track">
+          <div class="cv-splash-bar" id="cvSplashBar"></div>
+        </div>
+        <div class="cv-splash-status">
+          <span id="cvSplashStatusText">Loading Committee Records...</span>
+          <span id="cvSplashPercent">0%</span>
+        </div>
+      </div>
+
+      <button type="button" class="cv-splash-skip-btn" id="cvSplashSkipBtn">
+        Enter Portal &rarr;
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       Sticky Header Navigation
+       ========================================================================== -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="index.html" class="brand-logo" aria-label="Codevision Home">
+        <img src="assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
+        <div class="brand-text">
+          <span class="brand-title">CODEVISION</span>
+          <span class="brand-subtitle">COORDINATOR PORTAL</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" role="navigation">
+        <a href="#search-badge" class="nav-link">Find Badge</a>
+        <a href="#committee-roster" class="nav-link">Committee Directory</a>
+        <a href="#duties" class="nav-link">Event Desks</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#committee-roster" class="btn btn-secondary btn-sm">
+          <span>View Directory</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       Main Coordinator Flow
+       ========================================================================== -->
+  <main class="badge-page-wrap" id="main-content">
+
+    <!-- Search Card -->
+    <div class="badge-search-card no-print" id="search-badge">
+      <span class="heading-eyebrow">Official Event Committee</span>
+      <h1 style="font-size: 1.875rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
+        Virtual Coordinator Badges
+      </h1>
+      <p style="color: var(--text-muted); font-size: 0.9375rem; max-width: 540px; margin: 0 auto;">
+        Enter your <strong>Coordinator ID</strong> (e.g. <code>CV26-CRD-101</code>), <strong>Faculty/Student Roll ID</strong>, or registered phone number.
+      </p>
+
+      <form class="badge-search-form" id="coordSearchForm">
+        <input type="text" id="coordQuery" class="form-input" placeholder="Enter Coordinator ID, Roll ID, or Phone..." required>
+        <button type="submit" class="btn btn-primary" id="btnSearchCoord">
+          <span>View Badge</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Error notice -->
+    <div id="coordNotice" style="display: none; margin-bottom: 24px;"></div>
+
+    <!-- Virtual Badge Result -->
+    <div id="coordBadgeSection" style="display: none;">
+      
+      <div class="virtual-badge-container">
+        <article class="coord-badge-card" id="printableCoordBadge">
+          
+          <!-- Lanyard Slot -->
+          <div class="lanyard-slot-row">
+            <div class="lanyard-slot"></div>
+          </div>
+
+          <!-- Header -->
+          <div class="coord-badge-header">
+            <img src="assets/college-logo.png" alt="VEMU IT Logo" class="coord-badge-logo">
+            <div>
+              <div class="coord-badge-college">VEMU INSTITUTE OF TECHNOLOGY</div>
+              <div class="coord-badge-dept">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</div>
+              <div class="coord-badge-event">CODEVISION 2026 &bull; FRONTEND CHALLENGE</div>
+            </div>
+          </div>
+
+          <!-- Role Banner -->
+          <div class="coord-role-ribbon" id="badgeRoleTitle">
+            OFFICIAL EVENT COORDINATOR
+          </div>
+
+          <!-- Body -->
+          <div class="coord-badge-body">
+            
+            <div class="coord-avatar-frame" id="badgeAvatarFrame">
+              <span id="badgeAvatarInitial" class="coord-avatar-initial">C</span>
+              <img id="badgeAvatarImg" src="" alt="Coordinator Photo" style="display: none;">
+            </div>
+
+            <h2 class="coord-badge-name" id="badgeCoordName">Coordinator Name</h2>
+            <div class="coord-badge-desig" id="badgeCoordDesig">Faculty Coordinator &bull; CSE</div>
+
+            <div class="coord-badge-id-pill">
+              <span style="color: var(--text-muted); font-size: 0.75rem;">ID:</span>
+              <span id="badgeCoordIdPill" class="font-mono">CV26-CRD-101</span>
+            </div>
+
+            <div class="coord-duty-box" id="duties">
+              <strong>Assigned Operational Desk</strong>
+              <div class="coord-duty-val" id="badgeCoordDesk">Central Registration &amp; Labs Desk</div>
+            </div>
+
+            <div class="coord-badge-bottom">
+              <div class="coord-qr-box">
+                <div class="coord-qr-holder" id="coordQrCodeHolder"></div>
+                <span style="font-size: 0.5625rem; font-family: var(--font-mono); color: var(--text-muted); margin-top: 4px;">SECURITY TOKEN</span>
+              </div>
+
+              <div class="coord-badge-seal">
+                <div style="font-size: 0.75rem; color: #10B981; font-weight: 900;">VEMU IT</div>
+                <span>AUTHORIZED<br>COMMITTEE</span>
+              </div>
+            </div>
+
+          </div>
+        </article>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="badge-actions-bar no-print" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 48px;">
+        <button type="button" class="btn btn-primary" id="btnDownloadCoordBadgePDF">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Download Badge PDF</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="btnEmailCoordDuty">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span>Email Duty Pass</span>
+        </button>
+        <button type="button" class="btn btn-outline" id="btnPrintCoordBadge">
+          <span>Print Badge</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ==========================================================================
+         Committee Directory (Supabase Live)
+         ========================================================================== -->
+    <section class="section" id="committee-roster" style="padding-top: 20px;">
+      <div class="section-header" style="text-align: center; margin-bottom: 24px;">
+        <span class="heading-eyebrow">Organizing Committee</span>
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main);">Committee Directory</h2>
+        <p style="font-size: 0.875rem; color: var(--text-muted);">Click on any coordinator to instantly load and view their official badge pass.</p>
+      </div>
+
+      <div class="committee-grid" id="committeeRosterList">
+        <!-- Dynamically injected from Supabase coordinators table via coordinator.js -->
+        <div style="grid-column: 1 / -1; text-align: center; padding: 24px; color: var(--text-muted);">
+          Loading committee directory from Supabase...
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       PATRON & LEADERSHIP FOOTER
+       ========================================================================== -->
+  <footer class="leadership-section" role="contentinfo">
+    <div class="leadership-inner">
+      <div class="leadership-title-row">
+        <span class="leadership-eyebrow">Academic Governance</span>
+        <h3 class="leadership-main-title">Patronage &amp; Leadership</h3>
+      </div>
+
+      <div class="leadership-grid">
+        <div class="leadership-card">
+          <span class="leadership-role-tag">Principal</span>
+          <h4 class="leadership-name">Prof. Nithin Killari</h4>
+          <p class="leadership-designation">
+            Principal &bull; Vemu Institute of Technology<br>
+            P.Kothakota, Chittoor District, AP
+          </p>
+        </div>
+
+        <div class="leadership-card">
+          <span class="leadership-role-tag">Head of the Department</span>
+          <h4 class="leadership-name">Dr. P. Nirupama</h4>
+          <p class="leadership-designation">
+            Professor &amp; Head, Department of CSE<br>
+            Vemu Institute of Technology
+          </p>
+        </div>
+      </div>
+
+      <div class="leadership-bottom-bar">
+        <div>
+          &copy; 2026 CODEVISION &bull; Department of Computer Science &amp; Engineering, Vemu Institute of Technology.
+        </div>
+        <div>
+          Official Helpline / Dispatcher: <a href="mailto:kshanmukhaswaroop79@gmail.com" style="color: var(--primary); text-decoration: none; font-weight: 600;">kshanmukhaswaroop79@gmail.com</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script src="js/supabase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/email-dispatcher.js"></script>
+  <script src="js/splash.js"></script>
+  <script src="js/coordinator.js"></script>
+</body>
+</html>

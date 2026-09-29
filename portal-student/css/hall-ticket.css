@@ -1,0 +1,502 @@
+/* ==========================================================================
+   CODEVISION 2026 — OFFICIAL TEAM ID CARD & ENTRY PASS (COMPACT BADGE)
+   Authentic Event Card Format, Lanyard Slot, Member Hierarchy & Instant Print
+   ========================================================================== */
+
+.hallticket-page-wrap {
+  max-width: 500px;
+  margin: 28px auto 70px;
+  padding: 0 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Search Header Card (Minimalist & Compact)
+   -------------------------------------------------------------------------- */
+.ticket-search-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+  text-align: center;
+  transition: all var(--transition-normal);
+}
+
+.ticket-search-card .heading-eyebrow {
+  margin-bottom: 4px;
+}
+
+.ticket-search-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.ticket-search-form .form-input {
+  font-size: 0.9375rem;
+  padding: 10px 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Status & Alert Boxes
+   -------------------------------------------------------------------------- */
+.status-alert-box {
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.status-alert-box .alert-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.alert-confirmed {
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+}
+
+.alert-rejected {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+}
+
+/* ==========================================================================
+   THE COMPACT TEAM ID CARD (AUTHENTIC PHYSICAL BADGE ARCHITECTURE)
+   ========================================================================== */
+.admit-card.compact-card-badge {
+  background: #FFFFFF;
+  border: 2px solid #0F172A;
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(37, 99, 235, 0.12);
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto 24px;
+  max-width: 440px;
+  text-align: left;
+}
+
+/* 1. Lanyard Clip Punch Slot (Realistic Hanging Pass Feature) */
+.card-lanyard-slot-row {
+  background: #0F172A;
+  padding: 10px 0 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.card-lanyard-slot {
+  width: 44px;
+  height: 9px;
+  background: #FFFFFF;
+  border-radius: var(--radius-full);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+/* 2. Dark Official College Header */
+.card-college-header {
+  background: #0F172A;
+  color: #FFFFFF;
+  padding: 12px 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 2px solid #2563EB;
+}
+
+.card-logo-mark {
+  width: 40px;
+  height: 40px;
+  background: #1E293B;
+  color: #60A5FA;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 1.0625rem;
+  flex-shrink: 0;
+}
+
+.card-header-titles {
+  flex: 1;
+}
+
+.card-college-name {
+  font-size: 0.9375rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+  color: #FFFFFF;
+}
+
+.card-dept-name {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #93C5FD;
+  letter-spacing: 0.06em;
+  margin: 2px 0 0;
+  text-transform: uppercase;
+}
+
+.card-event-badge {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #FBBF24;
+  letter-spacing: 0.05em;
+  margin-top: 3px;
+}
+
+/* 3. Ribbon Bar: Pass Type & Status */
+.card-ribbon-bar {
+  background: linear-gradient(90deg, #1E40AF 0%, #2563EB 100%);
+  color: #FFFFFF;
+  padding: 6px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.card-ribbon-bar .ribbon-confirmed {
+  color: #A7F3D0;
+  font-size: 0.6875rem;
+}
+
+/* 4. Team Identity Section (Logo + Team Name + ID Pill) */
+.card-team-identity {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.card-team-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-lg);
+  background: #FFFFFF;
+  border: 2px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.card-team-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-team-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-team-sublabel {
+  font-size: 0.625rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  display: block;
+  text-transform: uppercase;
+  margin-bottom: 1px;
+}
+
+.card-team-name {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #0F172A;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 4px;
+  word-break: break-word;
+}
+
+.card-team-id-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.card-team-id-badge strong {
+  color: var(--primary);
+  font-size: 0.8125rem;
+}
+
+.card-reg-pill {
+  background: #ECFDF5;
+  color: #059669;
+  font-size: 0.625rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+}
+
+/* 5. Team Members (Prominent Leader & Smaller Member 2) */
+.card-members-section {
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-member-row {
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  transition: all var(--transition-normal);
+}
+
+/* Leader Card: Highlighted & Noticeably Larger */
+.leader-highlight {
+  background: #FAFDFE;
+  border: 1.5px solid rgba(37, 99, 235, 0.4);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.06);
+}
+
+.card-role-tag {
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.leader-tag {
+  color: var(--primary);
+}
+
+/* Leader Name: PROMINENT & LARGER */
+.leader-prominent {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+/* Member 2 Card: Subdued & Smaller */
+.member2-row {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+}
+
+.member2-tag {
+  color: var(--text-muted);
+}
+
+/* Member 2 Name: SMALLER */
+.member2-subdued {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #334155;
+  line-height: 1.2;
+  margin-bottom: 3px;
+}
+
+.card-member-details {
+  font-size: 0.75rem;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.card-member-contact {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+/* 6. Card Footer: Logistics & Gate Entry QR */
+.card-bottom-strip {
+  padding: 12px 18px;
+  background: #F8FAFC;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-logistics-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.card-log-item {
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+.card-log-item .log-label {
+  color: var(--text-muted);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: block;
+}
+
+.card-log-item .log-value {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+.card-qr-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.card-qr-frame {
+  background: #FFFFFF;
+  border: 1px solid #0F172A;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-xs);
+}
+
+.card-qr-frame canvas,
+.card-qr-frame img {
+  width: 76px;
+  height: 76px;
+  display: block;
+}
+
+.card-qr-caption {
+  font-size: 0.625rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+
+.card-scan-tip {
+  font-size: 0.5625rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* 7. Security Micro-Stripe at bottom */
+.card-security-footer {
+  background: #0F172A;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.5625rem;
+  font-weight: 800;
+  text-align: center;
+  padding: 6px 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Action Buttons (Under Card)
+   -------------------------------------------------------------------------- */
+.ticket-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.ticket-actions-bar .btn {
+  padding: 10px 18px;
+  font-size: 0.875rem;
+}
+
+/* --------------------------------------------------------------------------
+   Print Formatting: Strictly formats the compact ID Card
+   -------------------------------------------------------------------------- */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .site-header,
+  .ticket-search-card,
+  .status-alert-box,
+  .ticket-actions-bar,
+  .site-footer,
+  .no-print {
+    display: none !important;
+  }
+
+  .hallticket-page-wrap {
+    margin: 0 !important;
+    padding: 20px 0 !important;
+    max-width: 100% !important;
+  }
+
+  #ticketResultSection {
+    display: block !important;
+  }
+
+  .admit-card.compact-card-badge {
+    box-shadow: none !important;
+    border: 2px solid #000000 !important;
+    width: 390px !important;
+    max-width: 390px !important;
+    margin: 40px auto !important;
+    page-break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .card-college-header,
+  .card-lanyard-slot-row,
+  .card-security-footer {
+    background: #0F172A !important;
+    color: #FFFFFF !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .card-ribbon-bar {
+    background: #1E40AF !important;
+    color: #FFFFFF !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .leader-highlight {
+    background: #F0F9FF !important;
+    border: 1.5px solid #2563EB !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

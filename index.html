@@ -3,17 +3,286 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url=/user/index.html">
-  <title>CODEVISION 2026 — Vemu Institute of Technology</title>
+  <title>CODEVISION 2026 — Master Portals Gateway | Vemu Institute of Technology</title>
+  <meta name="description" content="Central gateway for CODEVISION 2026 — Student Registration, Coordinator Virtual Badges, and Admin Control Center.">
+  
   <link rel="icon" href="shared/assets/college-logo.png">
-  <script>
-    window.location.replace("/user/index.html");
-  </script>
+
+  <link rel="stylesheet" href="portal-student/css/common.css">
+  <link rel="stylesheet" href="portal-student/css/3d-motion.css">
+
+  <style>
+    .gateway-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .gateway-hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .portal-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px;
+      max-width: 1100px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+      perspective: 1200px;
+    }
+    .portal-select-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-2xl);
+      padding: 36px 28px;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .portal-select-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: var(--shadow-3d);
+      border-color: var(--primary);
+    }
+    .portal-badge-tag {
+      font-size: 0.6875rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+    }
+    .portal-card-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .portal-card-title {
+      font-size: 1.375rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .portal-card-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+    .deploy-guide-box {
+      background: #FFFFFF;
+      border: 1px dashed var(--border-medium);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      max-width: 860px;
+      margin: 0 auto 60px;
+      font-size: 0.875rem;
+    }
+    @media (max-width: 768px) {
+      .portal-cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body style="font-family: system-ui, -apple-system, sans-serif; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #070B14; color: #ffffff;">
-  <img src="shared/assets/college-logo.png" alt="VEMU IT Logo" style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; background: #ffffff; padding: 3px; box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4); margin-bottom: 16px;">
-  <h2 style="margin: 0 0 8px; font-size: 1.5rem; letter-spacing: -0.02em;">CODEVISION 2026</h2>
-  <p style="color: #94A3B8; font-size: 0.875rem; margin: 0 0 16px;">Vemu Institute of Technology • CSE</p>
-  <p><a href="/user/index.html" style="color: #38bdf8; text-decoration: none; font-size: 0.8125rem;">Redirecting to Experience... Click here if not redirected.</a></p>
+<body>
+
+  <!-- Light-Theme Animated Splash Screen -->
+  <div id="codevisionSplash" class="cv-splash-screen" role="status">
+    <div class="cv-splash-backdrop">
+      <div class="cv-splash-glow cv-glow-1"></div>
+      <div class="cv-splash-glow cv-glow-2"></div>
+    </div>
+    <div class="cv-splash-content">
+      <div class="cv-splash-emblem-wrap">
+        <div class="cv-splash-pulse-ring"></div>
+        <img src="shared/assets/college-logo.png" alt="VEMU IT" class="cv-splash-emblem">
+      </div>
+      <div class="cv-splash-header">
+        <span class="cv-splash-estd">ESTD : 2008 &bull; P.KOTHAKOTA, CHITTOOR</span>
+        <h2 class="cv-splash-college">VEMU INSTITUTE OF TECHNOLOGY</h2>
+        <span class="cv-splash-dept">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</span>
+      </div>
+      <div class="cv-splash-brand">
+        <h1 class="cv-splash-title">CODEVISION <span class="cv-splash-year">2026</span></h1>
+        <p class="cv-splash-tagline">National Level Frontend Challenge &bull; Portals Gateway</p>
+      </div>
+      <div class="cv-splash-loader-wrap">
+        <div class="cv-splash-track"><div class="cv-splash-bar" id="cvSplashBar"></div></div>
+        <div class="cv-splash-status">
+          <span id="cvSplashStatusText">Connecting Portals...</span>
+          <span id="cvSplashPercent">0%</span>
+        </div>
+      </div>
+      <button type="button" class="cv-splash-skip-btn" id="cvSplashSkipBtn">Enter Gateway &rarr;</button>
+    </div>
+  </div>
+
+  <div class="gateway-shell">
+    
+    <div>
+      <header class="site-header" style="background: rgba(255,255,255,0.95);">
+        <div class="header-inner">
+          <div class="brand-logo">
+            <img src="shared/assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
+            <div class="brand-text">
+              <span class="brand-title">CODEVISION</span>
+              <span class="brand-subtitle">PORTALS GATEWAY</span>
+            </div>
+          </div>
+          <div style="font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">
+            Vemu Institute of Technology &bull; CSE
+          </div>
+        </div>
+      </header>
+
+      <!-- Hero Section -->
+      <section class="gateway-hero">
+        <div class="college-pill" style="margin-bottom: 16px; display: inline-flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid var(--border); padding: 6px 16px; border-radius: var(--radius-full); box-shadow: var(--shadow-xs);">
+          <img src="shared/assets/college-logo.png" alt="VEMU IT" style="width: 22px; height: 22px; object-fit: contain;">
+          <span style="font-size: 0.8125rem; color: var(--text-main);"><strong>VEMU INSTITUTE OF TECHNOLOGY</strong> &bull; DEPARTMENT OF CSE</span>
+        </div>
+
+        <h1 style="font-size: clamp(2.25rem, 5vw, 3.25rem); font-weight: 900; letter-spacing: -0.03em; color: var(--text-main); margin-bottom: 12px; line-height: 1.1;">
+          CODEVISION <span style="color: var(--primary);">2026</span>
+        </h1>
+        <p style="font-size: 1.0625rem; color: var(--text-muted); max-width: 680px; margin: 0 auto 36px; line-height: 1.6;">
+          National Level Frontend Coding Challenge. Select your destination portal below. Each portal is completely standalone, powered by Supabase Cloud, and ready for separate Netlify deployment.
+        </p>
+      </section>
+
+      <!-- 3 Portals Grid -->
+      <div class="portal-cards-grid">
+        
+        <!-- PORTAL 1 -->
+        <a href="portal-student/index.html" class="portal-select-card card-3d">
+          <span class="portal-badge-tag" style="background: var(--primary-light); color: var(--primary);">
+            Candidates &bull; Free Registration
+          </span>
+          <div class="portal-card-icon" style="background: var(--primary-light); color: var(--primary);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h2 class="portal-card-title">Student Portal</h2>
+          <p class="portal-card-desc">
+            Candidate registration, event schedule, challenge rules, dynamic themes, instant Team ID Pass PDF generation, and automated confirmation emails.
+          </p>
+          <span class="btn btn-primary" style="width: 100%;">
+            <span>Launch Student Portal</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </a>
+
+        <!-- PORTAL 2 -->
+        <a href="portal-coordinator/index.html" class="portal-select-card card-3d">
+          <span class="portal-badge-tag" style="background: #ECFDF5; color: #059669;">
+            Event Committee &bull; Badges
+          </span>
+          <div class="portal-card-icon" style="background: #ECFDF5; color: #059669;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <h2 class="portal-card-title">Coordinator Portal</h2>
+          <p class="portal-card-desc">
+            Faculty &amp; student coordinator badge lookup, printable lanyard pass PDF download, committee directory, and duty desk assignments.
+          </p>
+          <span class="btn btn-secondary" style="width: 100%; border-color: #10B981; color: #059669;">
+            <span>Launch Coordinator Portal</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </a>
+
+        <!-- PORTAL 3 -->
+        <a href="portal-admin/index.html" class="portal-select-card card-3d">
+          <span class="portal-badge-tag" style="background: #F5F3FF; color: #7C3AED;">
+            Faculty Lead &bull; Steering Control
+          </span>
+          <div class="portal-card-icon" style="background: #F5F3FF; color: #7C3AED;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <h2 class="portal-card-title">Admin Portal</h2>
+          <p class="portal-card-desc">
+            Master control center with live Supabase telemetry, team approvals, spot registration, CSV export, coordinator management, and gate barcode verification.
+          </p>
+          <span class="btn btn-secondary" style="width: 100%; border-color: #7C3AED; color: #7C3AED;">
+            <span>Sign In to Admin</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </a>
+
+      </div>
+
+      <!-- Separate Netlify Deployment Guide -->
+      <div class="deploy-guide-box">
+        <h3 style="font-size: 1.0625rem; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
+          Instructions for Separate Netlify Deployments
+        </h3>
+        <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+          Each portal folder is completely self-contained with its own <code>index.html</code>, assets, styles, and cloud Supabase database connection:
+        </p>
+        <ul style="color: var(--text-body); padding-left: 20px; line-height: 1.8;">
+          <li><strong>Student Portal:</strong> Deploy folder <code>portal-student</code> &rarr; e.g. <code>codevision-students.netlify.app</code></li>
+          <li><strong>Coordinator Portal:</strong> Deploy folder <code>portal-coordinator</code> &rarr; e.g. <code>codevision-coordinators.netlify.app</code></li>
+          <li><strong>Admin Portal:</strong> Deploy folder <code>portal-admin</code> &rarr; e.g. <code>codevision-admin.netlify.app</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Leadership Footer -->
+    <footer class="leadership-section" role="contentinfo">
+      <div class="leadership-inner">
+        <div class="leadership-title-row">
+          <span class="leadership-eyebrow">Academic Governance</span>
+          <h3 class="leadership-main-title">Patronage &amp; Leadership</h3>
+        </div>
+
+        <div class="leadership-grid">
+          <div class="leadership-card">
+            <span class="leadership-role-tag">Principal</span>
+            <h4 class="leadership-name">Prof. Nithin Killari</h4>
+            <p class="leadership-designation">
+              Principal &bull; Vemu Institute of Technology<br>
+              P.Kothakota, Chittoor District, AP - 517112
+            </p>
+          </div>
+
+          <div class="leadership-card">
+            <span class="leadership-role-tag">Head of the Department</span>
+            <h4 class="leadership-name">Dr. P. Nirupama</h4>
+            <p class="leadership-designation">
+              Professor &amp; Head, Department of Computer Science &amp; Engineering<br>
+              Vemu Institute of Technology
+            </p>
+          </div>
+        </div>
+
+        <div class="leadership-bottom-bar">
+          <div>
+            &copy; 2026 CODEVISION &bull; Department of CSE, Vemu Institute of Technology. All rights reserved.
+          </div>
+          <div>
+            Official Helpline / Dispatcher: <a href="mailto:kshanmukhaswaroop79@gmail.com" style="color: var(--primary); text-decoration: none; font-weight: 600;">kshanmukhaswaroop79@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="portal-student/js/splash.js"></script>
 </body>
 </html>
