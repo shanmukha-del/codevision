@@ -31,7 +31,7 @@
 .poster-backdrop {
   position: absolute;
   inset: -20px;
-  background-image: url('../../shared/assets/codevision-poster.jpg');
+  background-image: url('../assets/codevision-poster.jpg');
   background-size: cover;
   background-position: center;
   filter: blur(28px) brightness(1.05) saturate(1.2);

@@ -160,7 +160,7 @@
           </div>
         </div>
 
-        <!-- SECTION 2: TEAM SIZE SELECTION -->
+        <!-- SECTION 2: TEAM COMPOSITION -->
         <div class="form-block-section">
           <h3 class="form-block-title">
             <span class="block-num">2</span>
@@ -168,24 +168,28 @@
           </h3>
 
           <div class="team-size-selector">
-            <label class="size-card-option" id="sizeOpt1">
-              <input type="radio" name="teamSize" value="1" id="radioSize1">
+            <label class="size-card-option active" id="sizeOpt2">
+              <input type="radio" name="teamSize" value="2" id="radioSize2" checked>
               <div class="size-card-content">
-                <span class="size-icon"></span>
+                <span class="size-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </span>
                 <div>
-                  <strong class="size-title">1 Member (Solo Developer)</strong>
-                  <span class="size-desc">Individual competitor building solo</span>
+                  <strong class="size-title">2 Members (Duo Team)</strong>
+                  <span class="size-desc">Team Leader + Member 2</span>
                 </div>
               </div>
             </label>
 
-            <label class="size-card-option active" id="sizeOpt2">
-              <input type="radio" name="teamSize" value="2" id="radioSize2" checked>
+            <label class="size-card-option" id="sizeOpt3">
+              <input type="radio" name="teamSize" value="3" id="radioSize3">
               <div class="size-card-content">
-                <span class="size-icon"></span>
+                <span class="size-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><circle cx="20" cy="8" r="2"/></svg>
+                </span>
                 <div>
-                  <strong class="size-title">2 Members (Duo Team)</strong>
-                  <span class="size-desc">Team Leader + Co-participant</span>
+                  <strong class="size-title">3 Members (Trio Team)</strong>
+                  <span class="size-desc">Team Leader + Member 2 + Member 3</span>
                 </div>
               </div>
             </label>
@@ -222,7 +226,7 @@
             <div class="form-group">
               <label class="form-label" for="leaderEmail">
                 <span>Leader Email Address <span class="required">*</span></span>
-                <span class="optional">ID card will be verified with this</span>
+                <span class="optional">ID card &amp; confirmations sent here</span>
               </label>
               <input type="email" id="leaderEmail" class="form-input" placeholder="leader@example.com" required>
               <span class="form-error" id="leaderEmail-error"></span>
@@ -265,7 +269,7 @@
           </div>
         </div>
 
-        <!-- SECTION 4: MEMBER 2 DETAILS (CONDITIONAL) -->
+        <!-- SECTION 4: MEMBER 2 DETAILS -->
         <div class="form-block-section" id="member2SectionBlock">
           <h3 class="form-block-title">
             <span class="block-num">4</span>
@@ -277,7 +281,7 @@
               <label class="form-label" for="member2Name">
                 <span>Member 2 Full Name <span class="required">*</span></span>
               </label>
-              <input type="text" id="member2Name" class="form-input" placeholder="Full name as in College ID">
+              <input type="text" id="member2Name" class="form-input" placeholder="Full name as in College ID" required>
               <span class="form-error" id="member2Name-error"></span>
             </div>
 
@@ -286,7 +290,7 @@
                 <span>Member 2 Roll Number / Hall Ticket No <span class="required">*</span></span>
                 <span class="optional">e.g. 234M1A0518</span>
               </label>
-              <input type="text" id="member2RollNo" class="form-input font-mono" placeholder="e.g. 234M1A0518">
+              <input type="text" id="member2RollNo" class="form-input font-mono" placeholder="e.g. 234M1A0518" required>
               <span class="form-error" id="member2RollNo-error"></span>
             </div>
           </div>
@@ -296,7 +300,7 @@
               <label class="form-label" for="member2Email">
                 <span>Member 2 Email Address <span class="required">*</span></span>
               </label>
-              <input type="email" id="member2Email" class="form-input" placeholder="member2@example.com">
+              <input type="email" id="member2Email" class="form-input" placeholder="member2@example.com" required>
               <span class="form-error" id="member2Email-error"></span>
             </div>
 
@@ -304,7 +308,7 @@
               <label class="form-label" for="member2Phone">
                 <span>Member 2 Phone Number <span class="required">*</span></span>
               </label>
-              <input type="tel" id="member2Phone" class="form-input" placeholder="e.g. 9848099881" maxlength="10">
+              <input type="tel" id="member2Phone" class="form-input" placeholder="e.g. 9848099881" maxlength="10" required>
               <span class="form-error" id="member2Phone-error"></span>
             </div>
           </div>
@@ -314,7 +318,7 @@
               <label class="form-label" for="member2Class">
                 <span>Member 2 Class / Academic Year <span class="required">*</span></span>
               </label>
-              <select id="member2Class" class="form-select">
+              <select id="member2Class" class="form-select" required>
                 <option value="">Select Academic Year</option>
                 <option value="I B.Tech">I Year B.Tech</option>
                 <option value="II B.Tech">II Year B.Tech</option>
@@ -330,17 +334,88 @@
               <label class="form-label" for="member2Section">
                 <span>Member 2 Section <span class="required">*</span></span>
               </label>
-              <input type="text" id="member2Section" class="form-input font-mono" placeholder="e.g. A, B, C..." value="A">
+              <input type="text" id="member2Section" class="form-input font-mono" placeholder="e.g. A, B, C..." value="A" required>
               <span class="form-error" id="member2Section-error"></span>
             </div>
           </div>
         </div>
 
-        <!-- SECTION 5: INSTITUTION & DEPARTMENT -->
-        <div class="form-block-section">
+        <!-- SECTION 5: MEMBER 3 DETAILS (CONDITIONAL FOR 3 MEMBERS) -->
+        <div class="form-block-section" id="member3SectionBlock" style="display: none;">
           <h3 class="form-block-title">
             <span class="block-num">5</span>
-            <span> Institution Details</span>
+            <span>Member 3 Information</span>
+          </h3>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="member3Name">
+                <span>Member 3 Full Name <span class="required">*</span></span>
+              </label>
+              <input type="text" id="member3Name" class="form-input" placeholder="Full name as in College ID">
+              <span class="form-error" id="member3Name-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member3RollNo">
+                <span>Member 3 Roll Number / Hall Ticket No <span class="required">*</span></span>
+                <span class="optional">e.g. 234M1A0525</span>
+              </label>
+              <input type="text" id="member3RollNo" class="form-input font-mono" placeholder="e.g. 234M1A0525">
+              <span class="form-error" id="member3RollNo-error"></span>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="member3Email">
+                <span>Member 3 Email Address <span class="required">*</span></span>
+              </label>
+              <input type="email" id="member3Email" class="form-input" placeholder="member3@example.com">
+              <span class="form-error" id="member3Email-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member3Phone">
+                <span>Member 3 Phone Number <span class="required">*</span></span>
+              </label>
+              <input type="tel" id="member3Phone" class="form-input" placeholder="e.g. 9848099882" maxlength="10">
+              <span class="form-error" id="member3Phone-error"></span>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="member3Class">
+                <span>Member 3 Class / Academic Year <span class="required">*</span></span>
+              </label>
+              <select id="member3Class" class="form-select">
+                <option value="">Select Academic Year</option>
+                <option value="I B.Tech">I Year B.Tech</option>
+                <option value="II B.Tech">II Year B.Tech</option>
+                <option value="III B.Tech" selected>III Year B.Tech</option>
+                <option value="IV B.Tech">IV Year B.Tech</option>
+                <option value="MCA / Postgrad">MCA / Postgraduate</option>
+                <option value="Diploma / Polytechnic">Diploma / Polytechnic</option>
+              </select>
+              <span class="form-error" id="member3Class-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member3Section">
+                <span>Member 3 Section <span class="required">*</span></span>
+              </label>
+              <input type="text" id="member3Section" class="form-input font-mono" placeholder="e.g. A, B, C..." value="A">
+              <span class="form-error" id="member3Section-error"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 6: INSTITUTION & DEPARTMENT -->
+        <div class="form-block-section">
+          <h3 class="form-block-title">
+            <span class="block-num">6</span>
+            <span>Institution Details</span>
           </h3>
 
           <div class="form-row-2">

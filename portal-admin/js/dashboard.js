@@ -410,7 +410,7 @@ window.viewTeamModal = function(teamId) {
   const modalActions = document.getElementById('teamModalActions');
   modalActions.innerHTML = `
     <button type="button" class="btn btn-secondary" onclick="closeTeamDetailModal()">Close</button>
-    <a href="../user/hall-ticket.html?teamId=${encodeURIComponent(team.teamId)}" target="_blank" class="btn btn-primary">
+    <a href="hall-ticket.html?teamId=${encodeURIComponent(team.teamId)}" target="_blank" class="btn btn-primary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       <span>Print / Open Team ID Card ↗</span>
     </a>
@@ -594,7 +594,7 @@ function initSpotRegistration() {
         form.reset();
 
         // Open Team ID Card ready for immediate print
-        window.open(`../user/hall-ticket.html?teamId=${encodeURIComponent(newTeam.teamId)}&new=1`, '_blank');
+        window.open(`hall-ticket.html?teamId=${encodeURIComponent(newTeam.teamId)}&new=1`, '_blank');
 
       } catch (err) {
         console.error(err);
@@ -812,7 +812,7 @@ window.viewCoordBadgeModal = function(coordId) {
   const printBtn = document.getElementById('btnPrintModalBadge');
   if (printBtn) {
     printBtn.onclick = () => {
-      window.open(`../user/coordinator-badge.html?coordId=${encodeURIComponent(coord.coordId)}`, '_blank');
+      window.open(`coordinator-badge.html?coordId=${encodeURIComponent(coord.coordId)}`, '_blank');
     };
   }
 
