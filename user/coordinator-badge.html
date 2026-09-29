@@ -440,8 +440,10 @@
             iconEl.style.display = 'none';
           } else {
             imgEl.style.display = 'none';
-            iconEl.style.display = 'block';
-            iconEl.textContent = coord.avatar || '👨‍💻';
+            iconEl.style.display = 'flex';
+            iconEl.style.alignItems = 'center';
+            iconEl.style.justifyContent = 'center';
+            iconEl.innerHTML = `<span style="font-weight: 800; font-size: 2.2rem; color: var(--primary);">${(coord.name || 'C').charAt(0).toUpperCase()}</span>`;
           }
 
           // QR Code

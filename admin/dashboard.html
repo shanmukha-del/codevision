@@ -735,15 +735,18 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="coordAvatar">Coordinator Badge Avatar / Icon</label>
-            <select id="coordAvatar" class="form-select">
-              <option value="👨‍💻">👨‍💻 Male Tech Lead</option>
-              <option value="👩‍💻">👩‍💻 Female Tech Lead</option>
-              <option value="👩‍🏫">👩‍🏫 Faculty Coordinator (Female)</option>
-              <option value="👨‍🏫">👨‍🏫 Faculty Coordinator (Male)</option>
-              <option value="🛡️">🛡️ Discipline / Gate Lead</option>
-              <option value="⚡">⚡ Operations Lead</option>
-            </select>
+            <label class="form-label" for="coordPhotoFile">Coordinator Profile Photo</label>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div style="width: 58px; height: 58px; border-radius: var(--radius-md); border: 2px dashed var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-surface-alt); flex-shrink: 0;" id="coordPhotoPreviewHolder">
+                <span id="coordPhotoPlaceholder" style="font-size: 1.5rem; color: var(--text-muted);">📷</span>
+                <img id="coordPhotoPreviewImg" src="" alt="Photo" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div style="flex: 1;">
+                <input type="file" id="coordPhotoFile" accept="image/png, image/jpeg, image/jpg, image/webp" class="form-input" style="padding: 6px 10px; font-size: 0.8125rem;">
+                <input type="hidden" id="coordAvatar" value="">
+                <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 4px;">Upload passport/profile photo (PNG, JPG, WEBP — saved to Supabase)</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

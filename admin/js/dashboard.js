@@ -608,7 +608,7 @@ function initCoordinatorManager() {
       const isImg = c.avatar && (c.avatar.startsWith('data:image') || c.avatar.startsWith('http'));
       const avatarHtml = isImg 
         ? `<div class="coord-card-avatar"><img src="${c.avatar}" alt="Avatar"></div>`
-        : `<div class="coord-card-avatar">${c.avatar || '👨‍💻'}</div>`;
+        : `<div class="coord-card-avatar" style="font-weight: 800; font-size: 1.25rem; color: var(--primary); background: var(--primary-light); display: flex; align-items: center; justify-content: center;">${escapeHtml((c.name || 'C').charAt(0).toUpperCase())}</div>`;
 
       return `
         <div class="coord-admin-card" data-coord-id="${c.coordId}">
@@ -647,9 +647,51 @@ function initCoordinatorManager() {
     }).join('');
   }
 
+  const photoInput = document.getElementById('coordPhotoFile');
+  const avatarHidden = document.getElementById('coordAvatar');
+  const photoPreviewImg = document.getElementById('coordPhotoPreviewImg');
+  const photoPlaceholder = document.getElementById('coordPhotoPlaceholder');
+  let selectedCoordPhoto = null;
+
+  if (photoInput) {
+    photoInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        window.CodevisionUtils.showToast('Please select a valid image file (PNG, JPG, WEBP).', 'warning');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        window.CodevisionUtils.showToast('Image size must be under 5MB.', 'warning');
+        return;
+      }
+
+      selectedCoordPhoto = file;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const base64 = evt.target.result;
+        if (avatarHidden) avatarHidden.value = base64;
+        if (photoPreviewImg && photoPlaceholder) {
+          photoPreviewImg.src = base64;
+          photoPreviewImg.style.display = 'block';
+          photoPlaceholder.style.display = 'none';
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   if (addBtn) {
     addBtn.addEventListener('click', () => {
       if (form) form.reset();
+      selectedCoordPhoto = null;
+      if (avatarHidden) avatarHidden.value = '';
+      if (photoPreviewImg && photoPlaceholder) {
+        photoPreviewImg.src = '';
+        photoPreviewImg.style.display = 'none';
+        photoPlaceholder.style.display = 'block';
+      }
       window.CodevisionUtils.openModal('coordRegModal');
     });
   }
@@ -666,7 +708,19 @@ function initCoordinatorManager() {
       const phone = document.getElementById('coordPhone').value.trim();
       const dept = document.getElementById('coordDept').value.trim();
       const desk = document.getElementById('coordDesk').value.trim();
-      const avatar = document.getElementById('coordAvatar').value;
+      let avatar = avatarHidden ? avatarHidden.value : '';
+
+      // Upload to Supabase Storage if file is chosen
+      if (selectedCoordPhoto && window.CodevisionSupabase && window.CodevisionSupabase.uploadProfileImage) {
+        try {
+          const uploadRes = await window.CodevisionSupabase.uploadProfileImage(selectedCoordPhoto, 'coordinators');
+          if (uploadRes && uploadRes.success && uploadRes.publicUrl) {
+            avatar = uploadRes.publicUrl;
+          }
+        } catch (err) {
+          console.warn("Coordinator photo upload to Supabase storage fallback", err);
+        }
+      }
 
       try {
         const newCoord = await window.CodevisionDB.addCoordinator({
@@ -701,7 +755,7 @@ window.viewCoordBadgeModal = function(coordId) {
   if (coord.avatar && (coord.avatar.startsWith('data:image') || coord.avatar.startsWith('http'))) {
     avatarEl.innerHTML = `<img src="${coord.avatar}" style="width: 100%; height: 100%; object-fit: cover;">`;
   } else {
-    avatarEl.textContent = coord.avatar || '👨‍💻';
+    avatarEl.innerHTML = `<span style="font-weight: 800; font-size: 2.2rem; color: var(--primary);">${escapeHtml((coord.name || 'C').charAt(0).toUpperCase())}</span>`;
   }
 
   // QR Code
