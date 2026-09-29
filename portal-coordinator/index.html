@@ -250,8 +250,50 @@
       }
     }
   </style>
-</head>
 <body>
+
+  <!-- ==========================================================================
+       LIGHT-THEME ANIMATED SPLASH SCREEN (MOBILE & LAPTOP)
+       ========================================================================== -->
+  <div id="codevisionSplash" class="cv-splash-screen" role="status" aria-live="polite" aria-label="Loading CODEVISION 2026">
+    <div class="cv-splash-backdrop">
+      <div class="cv-splash-glow cv-glow-1"></div>
+      <div class="cv-splash-glow cv-glow-2"></div>
+    </div>
+    
+    <div class="cv-splash-content">
+      <div class="cv-splash-emblem-wrap">
+        <div class="cv-splash-pulse-ring"></div>
+        <div class="cv-splash-pulse-ring-outer"></div>
+        <img src="assets/college-logo.png" alt="VEMU Institute of Technology" class="cv-splash-emblem">
+      </div>
+
+      <div class="cv-splash-header">
+        <span class="cv-splash-estd">ESTD : 2008 • P.KOTHAKOTA, CHITTOOR</span>
+        <h2 class="cv-splash-college">VEMU INSTITUTE OF TECHNOLOGY</h2>
+        <span class="cv-splash-dept">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</span>
+      </div>
+
+      <div class="cv-splash-brand">
+        <h1 class="cv-splash-title">CODEVISION <span class="cv-splash-year">2026</span></h1>
+        <p class="cv-splash-tagline">Coordinator &amp; Committee Portal</p>
+      </div>
+
+      <div class="cv-splash-loader-wrap">
+        <div class="cv-splash-track">
+          <div class="cv-splash-bar" id="cvSplashBar"></div>
+        </div>
+        <div class="cv-splash-status">
+          <span id="cvSplashStatusText">Loading Coordinator Network...</span>
+          <span id="cvSplashPercent">0%</span>
+        </div>
+      </div>
+
+      <button type="button" class="cv-splash-skip-btn" id="cvSplashSkipBtn" aria-label="Skip splash screen">
+        Enter Portal →
+      </button>
+    </div>
+  </div>
 
   <!-- Navigation -->
   <header class="site-header">
@@ -384,6 +426,7 @@
   <script src="js/supabase-config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/db.js"></script>
+  <script src="js/splash.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('coordSearchForm');

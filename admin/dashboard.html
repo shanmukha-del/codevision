@@ -3,25 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard — CODEVISION 2026 | Vemu IT</title>
-
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
+  <title>Admin Control Center — CODEVISION 2026 | Vemu Institute of Technology</title>
+  <meta name="description" content="Official administrative management portal for CODEVISION 2026 at Vemu Institute of Technology.">
+  
+  <link rel="icon" href="assets/college-logo.png">
 
   <!-- Core & Admin Styles -->
-  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
 
+  <!-- ==========================================================================
+       LIGHT-THEME ANIMATED SPLASH SCREEN (MOBILE & LAPTOP)
+       ========================================================================== -->
+  <div id="codevisionSplash" class="cv-splash-screen" role="status" aria-live="polite">
+    <div class="cv-splash-backdrop">
+      <div class="cv-splash-glow cv-glow-1"></div>
+      <div class="cv-splash-glow cv-glow-2"></div>
+    </div>
+    
+    <div class="cv-splash-content">
+      <div class="cv-splash-emblem-wrap">
+        <div class="cv-splash-pulse-ring"></div>
+        <div class="cv-splash-pulse-ring-outer"></div>
+        <img src="assets/college-logo.png" alt="VEMU Institute of Technology" class="cv-splash-emblem">
+      </div>
+
+      <div class="cv-splash-header">
+        <span class="cv-splash-estd">ESTD : 2008 &bull; P.KOTHAKOTA, CHITTOOR</span>
+        <h2 class="cv-splash-college">VEMU INSTITUTE OF TECHNOLOGY</h2>
+        <span class="cv-splash-dept">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</span>
+      </div>
+
+      <div class="cv-splash-brand">
+        <h1 class="cv-splash-title">CODEVISION <span class="cv-splash-year">2026</span></h1>
+        <p class="cv-splash-tagline">Administrative Control Center</p>
+      </div>
+
+      <div class="cv-splash-loader-wrap">
+        <div class="cv-splash-track">
+          <div class="cv-splash-bar" id="cvSplashBar"></div>
+        </div>
+        <div class="cv-splash-status">
+          <span id="cvSplashStatusText">Verifying Admin Session...</span>
+          <span id="cvSplashPercent">0%</span>
+        </div>
+      </div>
+
+      <button type="button" class="cv-splash-skip-btn" id="cvSplashSkipBtn">
+        Enter Center &rarr;
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MASTER DASHBOARD WORKSPACE
+       ========================================================================== -->
   <div class="admin-shell">
 
-    <!-- ==========================================================================
-         Sidebar Navigation
-         ========================================================================== -->
+    <!-- Sidebar Navigation -->
     <aside class="admin-sidebar" id="adminSidebar">
       <div class="sidebar-header">
-        <a href="dashboard.html" class="brand-logo">
-          <img src="../shared/assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
+        <a href="index.html" class="brand-logo">
+          <img src="assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
           <div class="brand-text">
             <span class="brand-title">CODEVISION</span>
             <span class="brand-subtitle">ADMIN CONTROL</span>
@@ -48,7 +93,7 @@
         </a>
 
         <a href="#themes" class="admin-nav-item" data-target="panel-themes">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <span>Event Day Themes</span>
         </a>
 
@@ -59,12 +104,7 @@
 
         <a href="#schedule" class="admin-nav-item" data-target="panel-schedule">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span>Event Schedule &amp; Timing</span>
-        </a>
-
-        <a href="#" class="admin-nav-item" id="btnOpenSettings">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          <span>Cloud / DB Settings</span>
+          <span>Event Schedule</span>
         </a>
       </nav>
 
@@ -82,372 +122,495 @@
       </div>
     </aside>
 
-    <!-- ==========================================================================
-         Main Workspace
-         ========================================================================== -->
+    <!-- Main Workspace -->
     <div class="admin-main">
 
       <!-- Topbar -->
       <header class="admin-topbar">
         <div class="topbar-left">
           <button type="button" class="mobile-sidebar-btn" id="mobileSidebarToggle" aria-label="Toggle Sidebar">
-            ☰
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
           <h1 class="page-heading" id="adminPageTitle">Dashboard Overview</h1>
         </div>
 
         <div class="topbar-right" style="display: flex; align-items: center; gap: 12px;">
-          <!-- Dedicated Spot Registration Trigger Button -->
-          <button type="button" class="btn btn-primary btn-sm" id="btnTopSpotRegister" style="background: linear-gradient(135deg, #2563EB, #1D4ED8); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+          <button type="button" class="btn btn-primary btn-sm" id="btnOpenSpotModal">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             <span>+ Spot Registration</span>
           </button>
 
-          <a href="../user/index.html" target="_blank" class="btn btn-secondary btn-sm">
-            <span>Participant Site ↗</span>
-          </a>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnExportCSV">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Export CSV</span>
+          </button>
         </div>
       </header>
 
-      <!-- Content Area -->
-      <main class="admin-content">
+      <!-- PANELS CONTAINER -->
+      <div class="admin-content-area">
 
-        <!-- ====================================================================
-             PANEL 1: DASHBOARD OVERVIEW & REGISTERED TEAMS
-             ==================================================================== -->
-        <div class="dashboard-view-panel" id="panel-overview">
-
-          <!-- 4 Stat Metric Cards (Zero payments, realistic metrics) -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-info">
-                <span class="stat-title">Total Registered Teams</span>
-                <span class="stat-value" id="statTotalTeams">0</span>
+        <!-- PANEL 1: OVERVIEW -->
+        <section class="dashboard-view-panel active" id="panel-overview">
+          <div class="kpi-grid">
+            <div class="kpi-card card-3d">
+              <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               </div>
-              <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">👥</div>
+              <div class="stat-meta">
+                <span class="stat-label">Total Registered Teams</span>
+                <span class="stat-val font-mono" id="statTotalTeams">0</span>
+              </div>
             </div>
 
-            <div class="stat-card">
-              <div class="stat-info">
-                <span class="stat-title">Online Registrations</span>
-                <span class="stat-value" id="statOnlineTeams" style="color: #059669;">0</span>
+            <div class="kpi-card card-3d">
+              <div class="stat-icon" style="background: #ECFDF5; color: #059669;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               </div>
-              <div class="stat-icon" style="background: #ECFDF5; color: #059669;">🌐</div>
+              <div class="stat-meta">
+                <span class="stat-label">Confirmed Entries</span>
+                <span class="stat-val font-mono" id="statConfirmedTeams">0</span>
+              </div>
             </div>
 
-            <div class="stat-card">
-              <div class="stat-info">
-                <span class="stat-title">Spot Registrations</span>
-                <span class="stat-value" id="statSpotTeams" style="color: #D97706;">0</span>
+            <div class="kpi-card card-3d">
+              <div class="stat-icon" style="background: #FEF3C7; color: #D97706;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
-              <div class="stat-icon" style="background: #FEF3C7; color: #D97706;">⚡</div>
+              <div class="stat-meta">
+                <span class="stat-label">Pending Verifications</span>
+                <span class="stat-val font-mono" id="statPendingTeams">0</span>
+              </div>
             </div>
 
-            <div class="stat-card">
-              <div class="stat-info">
-                <span class="stat-title">Event Coordinators</span>
-                <span class="stat-value" id="statCoordinators" style="color: #7C3AED;">0</span>
+            <div class="kpi-card card-3d">
+              <div class="stat-icon" style="background: #F5F3FF; color: #7C3AED;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               </div>
-              <div class="stat-icon" style="background: #F5F3FF; color: #7C3AED;">🛡️</div>
+              <div class="stat-meta">
+                <span class="stat-label">Active Coordinators</span>
+                <span class="stat-val font-mono" id="statTotalCoords">0</span>
+              </div>
             </div>
           </div>
 
-          <!-- Teams Management Card & Table -->
-          <div class="table-card">
-            <div class="table-toolbar">
-              <!-- Filter Tabs -->
-              <div class="filter-tabs">
-                <button type="button" class="filter-tab active" data-filter="all">
-                  All Teams <span id="filterCountAll">(0)</span>
-                </button>
-                <button type="button" class="filter-tab" data-filter="online">
-                  Online <span id="filterCountOnline">(0)</span>
-                </button>
-                <button type="button" class="filter-tab" data-filter="spot">
-                  Spot Walk-in <span id="filterCountSpot" style="color: #D97706;">(0)</span>
-                </button>
+          <!-- Quick Teams Table Preview -->
+          <div class="table-container-card" style="margin-top: 24px;">
+            <div class="table-card-header">
+              <div>
+                <h3 style="font-size: 1.125rem; font-weight: 800; color: var(--text-main);">Recent Registrations</h3>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Synchronized in real-time with Supabase cloud database</span>
               </div>
-
-              <!-- Search Input & Spot Button -->
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="search-input-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input type="text" id="teamSearchInput" placeholder="Search Team ID, Name, Roll No...">
-                </div>
-                <button type="button" class="btn btn-primary btn-sm" id="btnOpenSpotModal">
-                  + Spot Registration
-                </button>
-              </div>
+              <a href="#registrations" class="btn btn-outline btn-sm" onclick="switchPanel('panel-registrations')">
+                View All Teams &rarr;
+              </a>
             </div>
 
-            <!-- Table of Teams -->
             <div class="table-responsive">
-              <table class="admin-table">
+              <table class="admin-data-table">
                 <thead>
                   <tr>
-                    <th>Team ID</th>
-                    <th>Team Name (Click for Details)</th>
-                    <th>Team Leader</th>
-                    <th>Member 2</th>
-                    <th>College &amp; Dept</th>
-                    <th>Reg Type</th>
-                    <th>Registered At</th>
-                    <th>Actions</th>
+                    <th>Team Details</th>
+                    <th>Leader Info</th>
+                    <th>Dept &bull; College</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
-                <tbody id="teamsTableBody">
-                  <tr>
-                    <td colspan="8" style="text-align: center; padding: 40px;">
-                      <div class="spinner spinner-primary"></div>
-                      <p style="margin-top: 8px; font-size: 0.8125rem; color: var(--text-muted);">Syncing registrations from database...</p>
-                    </td>
-                  </tr>
+                <tbody id="overviewRecentTeamsTable">
+                  <tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">Loading live teams from Supabase...</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
+        </section>
 
-        </div>
-
-        <!-- ====================================================================
-             PANEL 2: REGISTERED TEAMS STANDALONE PANEL
-             ==================================================================== -->
-        <div class="dashboard-view-panel" id="panel-registrations" style="display: none;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-            <p style="color: var(--text-muted); margin: 0;">
-              Official roster of all confirmed teams. Click any team name to view complete member credentials, or print their official Team ID Card.
-            </p>
-            <button type="button" class="btn btn-primary btn-sm" onclick="openSpotRegistrationModal()">
-              + New Spot Registration
-            </button>
+        <!-- PANEL 2: TEAMS MANAGEMENT -->
+        <section class="dashboard-view-panel" id="panel-registrations">
+          <div class="filter-actions-bar">
+            <div class="search-input-wrap">
+              <input type="text" id="teamsTableSearch" class="form-input" placeholder="Search by team name, ID, leader roll, or email...">
+            </div>
+            <div class="status-tabs-wrap">
+              <button type="button" class="status-tab active" data-filter="ALL">All (<span id="cntAll">0</span>)</button>
+              <button type="button" class="status-tab" data-filter="CONFIRMED">Confirmed (<span id="cntConfirmed">0</span>)</button>
+              <button type="button" class="status-tab" data-filter="PENDING">Pending (<span id="cntPending">0</span>)</button>
+              <button type="button" class="status-tab" data-filter="REJECTED">Rejected (<span id="cntRejected">0</span>)</button>
+            </div>
           </div>
-          <div id="registrationsContainerAnchor"></div>
-        </div>
 
-        <!-- ====================================================================
-             PANEL 3: EVENT COORDINATORS MANAGEMENT (ADMIN ONLY)
-             ==================================================================== -->
-        <div class="dashboard-view-panel" id="panel-coordinators" style="display: none;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+          <div class="table-container-card">
+            <div class="table-responsive">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Team ID &bull; Name</th>
+                    <th>Leader &bull; Roll No</th>
+                    <th>Member 2</th>
+                    <th>Dept &bull; College</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="teamsMasterTableBody">
+                  <tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);">Loading records...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- PANEL 3: COORDINATORS -->
+        <section class="dashboard-view-panel" id="panel-coordinators">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div>
-              <h2 style="font-size: 1.25rem; font-weight: 800;">Event Organizing Committee &amp; Coordinators</h2>
-              <p style="font-size: 0.875rem; color: var(--text-muted);">
-                Admin-registered faculty and student coordinators. Each coordinator gets an official printable Virtual Badge.
-              </p>
+              <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main);">Event Organizing Committee</h2>
+              <span style="font-size: 0.8125rem; color: var(--text-muted);">Manage faculty and student coordinators</span>
             </div>
-            <button type="button" class="btn btn-primary" id="btnOpenAddCoord">
-              <span>+ Register New Coordinator</span>
+            <button type="button" class="btn btn-primary btn-sm" id="btnOpenCoordModal">
+              <span>+ Add Coordinator</span>
             </button>
           </div>
 
-          <!-- Coordinators Grid -->
-          <div class="coords-admin-grid" id="adminCoordsGrid">
-            <!-- Rendered dynamically -->
+          <div class="table-container-card">
+            <div class="table-responsive">
+              <table class="admin-data-table">
+                <thead>
+                  <tr>
+                    <th>Coordinator</th>
+                    <th>Role &bull; Designation</th>
+                    <th>Roll / Emp ID</th>
+                    <th>Contact</th>
+                    <th>Assigned Desk</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="coordsTableBody">
+                  <tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--text-muted);">Loading coordinators...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <!-- ====================================================================
-             PANEL 4: DYNAMIC THEMES MANAGEMENT (INTERNAL TRACK PREPARATION)
-             ==================================================================== -->
-        <div class="dashboard-view-panel" id="panel-themes" style="display: none;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+        <!-- PANEL 4: THEMES -->
+        <section class="dashboard-view-panel" id="panel-themes">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div>
-              <div class="badge badge-pending" style="margin-bottom: 8px;">
-                🔒 CONFIDENTIAL — REVEALED ON EVENT DAY (OCT 24)
-              </div>
-              <h2 style="font-size: 1.25rem; font-weight: 800;">Competition Problem Statements &amp; Themes</h2>
-              <p style="font-size: 0.875rem; color: var(--text-muted);">
-                Pre-configure challenge tracks here. Per HOD instructions, these are kept hidden from the public portal until unsealed during opening ceremony.
-              </p>
+              <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main);">Challenge Problem Tracks</h2>
+              <span style="font-size: 0.8125rem; color: var(--text-muted);">Control problem statements shown to participants</span>
             </div>
-            <button type="button" class="btn btn-primary" id="btnOpenAddTheme">
-              <span>+ Add Theme Track</span>
+            <button type="button" class="btn btn-primary btn-sm" id="btnOpenThemeModal">
+              <span>+ New Theme</span>
             </button>
           </div>
 
-          <div class="themes-admin-grid" id="adminThemesGrid">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
+          <div id="themesListAdmin" class="themes-admin-grid"></div>
+        </section>
 
-        <!-- ====================================================================
-             PANEL 5: GATE QR VERIFIER / SCANNER
-             ==================================================================== -->
-        <div class="dashboard-view-panel" id="panel-scanner" style="display: none;">
-          <div class="card" style="max-width: 680px; padding: 32px; margin: 0 auto;">
-            <div style="text-align: center; margin-bottom: 24px;">
-              <div style="width: 52px; height: 52px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 12px;">
-                🔍
-              </div>
-              <h2 style="font-size: 1.375rem; font-weight: 800; margin-bottom: 6px;">Event Venue Gate Check-in</h2>
-              <p style="font-size: 0.875rem; color: var(--text-muted);">
-                Scan barcode or paste ID string from <strong>Team ID Cards</strong> (e.g. <code>CODEVISION|CV26-K9X42</code>) or <strong>Coordinator Badges</strong> (e.g. <code>CODEVISION|COORD|CV26-CRD-101</code>).
-              </p>
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-              <input type="text" id="gateScanInput" class="form-input font-mono" placeholder="Scan or paste barcode string..." style="font-size: 1rem;">
-              <button type="button" class="btn btn-primary" id="btnVerifyScan" style="flex-shrink: 0;">
-                Verify Pass
-              </button>
-            </div>
-
-            <!-- Result Box -->
-            <div id="gateScanResult" style="display: none;"></div>
-          </div>
-        </div>
-
-        <!-- ====================================================================
-             PANEL 6: EVENT SCHEDULE, TIMING & COUNTDOWN SETTINGS (ADMIN)
-             ==================================================================== -->
-        <div class="dashboard-view-panel" id="panel-schedule" style="display: none;">
-          <div style="margin-bottom: 24px;">
-            <h2 style="font-size: 1.25rem; font-weight: 800;">Event Schedule, Timing &amp; Duration Settings</h2>
-            <p style="font-size: 0.875rem; color: var(--text-muted);">
-              Configure the official hackathon date, start time, and total duration (hours). Any updates saved here immediately sync live to the public website countdown timer, hero banners, and candidate Team ID Cards.
+        <!-- PANEL 5: GATE SCANNER -->
+        <section class="dashboard-view-panel" id="panel-scanner">
+          <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
+              Gate Verification Scanner
+            </h2>
+            <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 24px;">
+              Scan or enter barcode string from candidate Team Pass (e.g. <code>CODEVISION|CV26-XXXX</code>) or Coordinator Badge.
             </p>
+
+            <form id="scannerForm" style="display: flex; gap: 10px; margin-bottom: 24px;">
+              <input type="text" id="scannerInput" class="form-input font-mono" placeholder="Scan or paste ID..." required>
+              <button type="submit" class="btn btn-primary" id="btnVerifyScan">Verify Pass</button>
+            </form>
+
+            <div id="scannerResultBox" style="display: none;"></div>
           </div>
+        </section>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
-            <!-- Form Card -->
-            <div class="card" style="padding: 28px;">
-              <h3 style="font-size: 1.0625rem; font-weight: 800; margin-bottom: 18px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
-                <span>📅 Hackathon Date &amp; Duration</span>
-              </h3>
-
-              <form id="adminScheduleForm">
+        <!-- PANEL 6: SCHEDULE -->
+        <section class="dashboard-view-panel" id="panel-schedule">
+          <div style="max-width: 680px; margin: 0 auto;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 20px;">
+              Event Schedule Configuration
+            </h2>
+            <form id="scheduleConfigForm" class="card-3d" style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-xl); border: 1px solid var(--border);">
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" for="cfgEventDate">Event Date</label>
+                <input type="date" id="cfgEventDate" class="form-input" value="2026-10-24">
+              </div>
+              <div class="form-row-2">
                 <div class="form-group" style="margin-bottom: 16px;">
-                  <label class="form-label" for="cfgEventDate">
-                    Event Date <span class="required">*</span>
-                  </label>
-                  <input type="date" id="cfgEventDate" class="form-input" required>
-                  <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;" id="cfgEventDatePreview">Formatted: Saturday, Oct 24, 2026</span>
+                  <label class="form-label" for="cfgStartTime">Start Time</label>
+                  <input type="time" id="cfgStartTime" class="form-input" value="10:00">
                 </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                  <label class="form-label" for="cfgEndTime">End Time</label>
+                  <input type="time" id="cfgEndTime" class="form-input" value="15:00">
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label class="form-label" for="cfgVenue">Venue / Labs</label>
+                <input type="text" id="cfgVenue" class="form-input" value="CSE Department Labs, Vemu Institute of Technology">
+              </div>
+              <button type="submit" class="btn btn-primary" id="btnSaveSchedule">Save Schedule</button>
+            </form>
+          </div>
+        </section>
 
-                <div class="form-row-2">
-                  <div class="form-group">
-                    <label class="form-label" for="cfgStartTime">
-                      Start Time <span class="required">*</span>
-                    </label>
-                    <input type="time" id="cfgStartTime" class="form-input" required value="10:00">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="cfgDurationHours">
-                      Duration (Hours) <span class="required">*</span>
-                    </label>
-                    <input type="number" id="cfgDurationHours" class="form-input font-mono" min="1" max="48" step="0.5" value="5" required>
-                  </div>
-                </div>
+      </div>
 
-                <div class="form-row-2">
-                  <div class="form-group">
-                    <label class="form-label" for="cfgEndTime">
-                      End Time (Auto-calculated)
-                    </label>
-                    <input type="time" id="cfgEndTime" class="form-input font-mono" value="15:00">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="cfgReportingTime">
-                      Reporting Time (Gate Check-in)
-                    </label>
-                    <input type="time" id="cfgReportingTime" class="form-input font-mono" value="09:30">
-                  </div>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 24px;">
-                  <label class="form-label" for="cfgVenue">Event Venue</label>
-                  <input type="text" id="cfgVenue" class="form-input" value="CSE Labs, Vemu IT">
-                </div>
-
-                <div style="display: flex; gap: 12px;">
-                  <button type="submit" class="btn btn-primary" id="btnSaveSchedule" style="flex: 1;">
-                    <span>Save &amp; Broadcast Schedule</span>
-                  </button>
-                  <button type="button" class="btn btn-secondary btn-sm" id="btnResetSchedule" style="flex-shrink: 0;">
-                    Reset
-                  </button>
-                </div>
-              </form>
+      <!-- LEADERSHIP FOOTER IN ADMIN -->
+      <footer class="leadership-section" style="margin-top: 40px; padding: 24px;">
+        <div class="leadership-inner">
+          <div class="leadership-grid" style="margin-bottom: 16px;">
+            <div class="leadership-card" style="padding: 16px;">
+              <span class="leadership-role-tag">Principal</span>
+              <h4 class="leadership-name" style="font-size: 1.125rem;">Prof. Nithin Killari</h4>
+              <p class="leadership-designation" style="font-size: 0.75rem;">Principal &bull; Vemu Institute of Technology</p>
             </div>
-
-            <!-- Live Website Preview Card -->
-            <div class="card" style="padding: 28px; background: linear-gradient(135deg, #FAFDFE 0%, #EFF6FF 100%); border: 1.5px solid rgba(37, 99, 235, 0.2);">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
-                <h3 style="font-size: 1.0625rem; font-weight: 800; color: #0F172A; margin: 0;">
-                  🌐 Live Website Preview
-                </h3>
-                <span class="badge badge-confirmed" style="font-size: 0.6875rem;">AUTO-SYNCS IN REALTIME</span>
-              </div>
-
-              <!-- Preview Countdown Component -->
-              <div style="background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 18px; text-align: center;">
-                <div style="font-size: 0.6875rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;">
-                  🕒 Public Countdown Display
-                </div>
-                <div style="display: flex; justify-content: center; gap: 10px;">
-                  <div style="background: #F8FAFC; border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius-md); min-width: 58px;">
-                    <div id="adminCdDays" style="font-size: 1.375rem; font-weight: 900; color: #0F172A;">25</div>
-                    <div style="font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Days</div>
-                  </div>
-                  <div style="background: #F8FAFC; border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius-md); min-width: 58px;">
-                    <div id="adminCdHours" style="font-size: 1.375rem; font-weight: 900; color: #0F172A;">12</div>
-                    <div style="font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Hours</div>
-                  </div>
-                  <div style="background: #F8FAFC; border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius-md); min-width: 58px;">
-                    <div id="adminCdMinutes" style="font-size: 1.375rem; font-weight: 900; color: #0F172A;">54</div>
-                    <div style="font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Mins</div>
-                  </div>
-                  <div style="background: #F8FAFC; border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius-md); min-width: 58px;">
-                    <div id="adminCdSeconds" style="font-size: 1.375rem; font-weight: 900; color: var(--primary);">51</div>
-                    <div style="font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Secs</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Preview Badges Summary -->
-              <div style="background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; font-size: 0.8125rem;">
-                <div style="display: grid; grid-template-columns: 120px 1fr; row-gap: 10px;">
-                  <div style="color: var(--text-muted); font-weight: 600;">Event Date:</div>
-                  <div id="previewCardDate" style="font-weight: 700; color: #0F172A;">Saturday, Oct 24, 2026</div>
-
-                  <div style="color: var(--text-muted); font-weight: 600;">Challenge Time:</div>
-                  <div id="previewCardTime" style="font-weight: 700; color: var(--primary);">10:00 AM – 03:00 PM</div>
-
-                  <div style="color: var(--text-muted); font-weight: 600;">Total Duration:</div>
-                  <div id="previewCardHours" style="font-weight: 700; color: #059669;">5 Hours Live Challenge</div>
-
-                  <div style="color: var(--text-muted); font-weight: 600;">Gate Reporting:</div>
-                  <div id="previewCardReporting" style="font-weight: 600;">09:30 AM</div>
-
-                  <div style="color: var(--text-muted); font-weight: 600;">Venue:</div>
-                  <div id="previewCardVenue" style="font-weight: 600;">CSE Labs, Vemu IT</div>
-                </div>
-              </div>
-
+            <div class="leadership-card" style="padding: 16px;">
+              <span class="leadership-role-tag">Head of the Department</span>
+              <h4 class="leadership-name" style="font-size: 1.125rem;">Dr. P. Nirupama</h4>
+              <p class="leadership-designation" style="font-size: 0.75rem;">Professor &amp; Head, Dept of CSE &bull; Vemu IT</p>
             </div>
           </div>
+          <div class="leadership-bottom-bar" style="padding-top: 14px;">
+            <div>&copy; 2026 CODEVISION &bull; Department of CSE, Vemu Institute of Technology</div>
+            <div>Helpline: <a href="mailto:kshanmukhaswaroop79@gmail.com" style="color: var(--primary);">kshanmukhaswaroop79@gmail.com</a></div>
+          </div>
         </div>
+      </footer>
 
-      </main>
     </div>
-
   </div>
 
   <!-- ==========================================================================
-       MODAL 1: TEAM FULL DETAILS (OPENED ON CLICKING TEAM NAME)
+       SPOT REGISTRATION MODAL
        ========================================================================== -->
-  <div class="modal-backdrop" id="teamDetailModal" role="dialog" aria-modal="true">
+  <div id="spotRegModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 640px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Spot Registration (On-Site Entry)</h3>
+        <button type="button" class="modal-close" onclick="closeSpotRegistrationModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="spotRegForm">
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label" for="spotTeamName">Team Name <span class="required">*</span></label>
+            <input type="text" id="spotTeamName" class="form-input font-bold" placeholder="Team name..." required>
+          </div>
+
+          <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">TEAM COMPOSITION (2 TO 3 MEMBERS)</div>
+          <div style="display: flex; gap: 16px; margin-bottom: 14px; background: #F8FAFC; padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer;">
+              <input type="radio" name="spotTeamSize" id="spotSize2" value="2" checked>
+              <span>2 Members (Duo)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer;">
+              <input type="radio" name="spotTeamSize" id="spotSize3" value="3">
+              <span>3 Members (Trio)</span>
+            </label>
+          </div>
+          <div style="font-size: 0.75rem; font-weight: 800; color: var(--primary); margin-bottom: 8px;">TEAM LEADER DETAILS</div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="spotLeaderName">Leader Name <span class="required">*</span></label>
+              <input type="text" id="spotLeaderName" class="form-input" placeholder="Full name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="spotLeaderRoll">Roll No <span class="required">*</span></label>
+              <input type="text" id="spotLeaderRoll" class="form-input font-mono" placeholder="e.g. 234M1A0501" required>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="spotLeaderEmail">Email <span class="required">*</span></label>
+              <input type="email" id="spotLeaderEmail" class="form-input" placeholder="leader@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="spotLeaderPhone">Phone <span class="required">*</span></label>
+              <input type="tel" id="spotLeaderPhone" class="form-input" placeholder="10 Digits" required>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="spotLeaderClass">Year</label>
+              <select id="spotLeaderClass" class="form-select">
+                <option value="I B.Tech">I Year B.Tech</option>
+                <option value="II B.Tech">II Year B.Tech</option>
+                <option value="III B.Tech" selected>III Year B.Tech</option>
+                <option value="IV B.Tech">IV Year B.Tech</option>
+                <option value="MCA / Postgrad">MCA</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="spotLeaderSec">Section <span class="required">*</span></label>
+              <input type="text" id="spotLeaderSec" class="form-input font-mono" placeholder="e.g. A" value="A" required>
+            </div>
+          </div>
+
+          <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin: 12px 0 8px;">TEAM MEMBER 2 <span class="required">*</span></div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="spotM2Name">Member 2 Name</label>
+              <input type="text" id="spotM2Name" class="form-input" placeholder="Full name">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="spotM2Roll">Member 2 Roll No</label>
+              <input type="text" id="spotM2Roll" class="form-input font-mono" placeholder="Roll No">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="spotM2Class">Academic Year</label>
+              <select id="spotM2Class" class="form-select">
+                <option value="I B.Tech">I Year B.Tech</option>
+                <option value="II B.Tech">II Year B.Tech</option>
+                <option value="III B.Tech" selected>III Year B.Tech</option>
+                <option value="IV B.Tech">IV Year B.Tech</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="spotM2Sec">Section</label>
+              <input type="text" id="spotM2Sec" class="form-input font-mono" placeholder="e.g. A" value="A">
+            </div>
+          </div>
+
+          
+          <!-- Member 3 Block for Spot Reg -->
+          <div id="spotM3Block" style="display: none;">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #7C3AED; margin: 12px 0 8px;">TEAM MEMBER 3 (TRIO ENTRY) <span class="required">*</span></div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="spotM3Name">Member 3 Name <span class="required">*</span></label>
+                <input type="text" id="spotM3Name" class="form-input" placeholder="Full name">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="spotM3Roll">Member 3 Roll No <span class="required">*</span></label>
+                <input type="text" id="spotM3Roll" class="form-input font-mono" placeholder="Roll No">
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="spotM3Class">Academic Year</label>
+                <select id="spotM3Class" class="form-select">
+                  <option value="I B.Tech">I Year B.Tech</option>
+                  <option value="II B.Tech">II Year B.Tech</option>
+                  <option value="III B.Tech" selected>III Year B.Tech</option>
+                  <option value="IV B.Tech">IV Year B.Tech</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="spotM3Sec">Section</label>
+                <input type="text" id="spotM3Sec" class="form-input font-mono" placeholder="e.g. A" value="A">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="spotDept">Department</label>
+              <input type="text" id="spotDept" class="form-input" value="Computer Science & Engineering">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="spotCollege">College / Institution</label>
+              <input type="text" id="spotCollege" class="form-input" value="Vemu Institute of Technology">
+            </div>
+          </div>
+
+          <div class="modal-footer" style="padding: 16px 0 0; display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="btn btn-secondary" onclick="closeSpotRegistrationModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitSpot">Confirm Spot Entry</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       ADD COORDINATOR MODAL
+       ========================================================================== -->
+  <div id="coordModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Register Event Coordinator</h3>
+        <button type="button" class="modal-close" onclick="closeCoordRegModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="coordRegForm">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label" for="coordName">Full Name <span class="required">*</span></label>
+            <input type="text" id="coordName" class="form-input" placeholder="e.g. Dr. A. Suresh" required>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label class="form-label" for="coordRole">Role Category</label>
+              <select id="coordRole" class="form-select" required>
+                <option value="Faculty Coordinator">Faculty Coordinator</option>
+                <option value="Student Coordinator">Student Coordinator</option>
+                <option value="Technical Lead">Technical Lead</option>
+                <option value="Registration Lead">Registration Lead</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label class="form-label" for="coordId">Roll or Emp ID <span class="required">*</span></label>
+              <input type="text" id="coordId" class="form-input font-mono" placeholder="e.g. EMP-CSE-42" required>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label" for="coordDesig">Designation</label>
+            <input type="text" id="coordDesig" class="form-input" placeholder="e.g. Associate Professor, Dept of CSE" required>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label class="form-label" for="coordEmail">Email <span class="required">*</span></label>
+              <input type="email" id="coordEmail" class="form-input" placeholder="coord@vemu.org" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label class="form-label" for="coordPhone">Phone <span class="required">*</span></label>
+              <input type="tel" id="coordPhone" class="form-input" placeholder="10 Digits" required>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="coordDept">Department</label>
+              <input type="text" id="coordDept" class="form-input" value="CSE" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="coordDesk">Assigned Desk</label>
+              <input type="text" id="coordDesk" class="form-input" value="Central Registration Desk">
+            </div>
+          </div>
+          <div class="modal-footer" style="padding: 16px 0 0; display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="btn btn-secondary" onclick="closeCoordRegModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitCoord">Save Coordinator</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================================
+       MODAL: TEAM DETAILS DOSSIER
+       ========================================================================== -->
+  <div id="teamDetailModal" class="modal-backdrop" role="dialog" aria-modal="true">
     <div class="modal-container" style="max-width: 650px;">
       <div class="modal-header">
         <h3 class="modal-title">Team Registration Dossier</h3>
-        <button type="button" class="modal-close" onclick="closeTeamDetailModal()">✕</button>
+        <button type="button" class="modal-close" onclick="closeTeamDetailModal()">&times;</button>
       </div>
       <div class="modal-body">
         
         <!-- Team Identity Header -->
-        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-light);">
-          <div id="modalTeamLogoThumb" style="width: 56px; height: 56px; border-radius: var(--radius-lg); background: #EFF6FF; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 2rem; overflow: hidden; flex-shrink: 0;">
-            ⚡
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+          <div id="modalTeamLogoThumb" style="width: 56px; height: 56px; border-radius: var(--radius-lg); background: #EFF6FF; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 800; color: var(--primary); overflow: hidden; flex-shrink: 0;">
+            CV
           </div>
           <div>
             <h2 id="modalTeamName" style="font-size: 1.375rem; font-weight: 800; color: #0F172A; margin-bottom: 2px;">—</h2>
@@ -461,7 +624,7 @@
         <!-- Team Leader Dossier -->
         <div style="background: #FAFCFF; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px;">
           <div style="font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">
-            👑 Team Leader (Member 1)
+            Team Leader (Member 1)
           </div>
           <div style="display: grid; grid-template-columns: 130px 1fr; row-gap: 8px; font-size: 0.875rem;">
             <div style="color: var(--text-muted); font-weight: 600;">Full Name:</div>
@@ -484,7 +647,7 @@
         <!-- Member 2 Dossier -->
         <div id="modalMember2Box" style="background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px;">
           <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">
-            🤝 Team Member 2
+            Team Member 2
           </div>
           <div id="modalMember2Content" style="display: grid; grid-template-columns: 130px 1fr; row-gap: 8px; font-size: 0.875rem;">
             <div style="color: var(--text-muted); font-weight: 600;">Full Name:</div>
@@ -498,8 +661,25 @@
           </div>
         </div>
 
+                <!-- Member 3 Dossier -->
+        <div id="modalMember3Box" style="background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; display: none;">
+          <div style="font-size: 0.75rem; font-weight: 800; color: #7C3AED; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">
+            Team Member 3 (Trio Track)
+          </div>
+          <div id="modalMember3Content" style="display: grid; grid-template-columns: 130px 1fr; row-gap: 8px; font-size: 0.875rem;">
+            <div style="color: var(--text-muted); font-weight: 600;">Full Name:</div>
+            <div id="modalM3Name" style="font-weight: 600;">—</div>
+
+            <div style="color: var(--text-muted); font-weight: 600;">Roll Number:</div>
+            <div id="modalM3Roll" class="font-mono" style="font-weight: 700; color: #7C3AED;">—</div>
+
+            <div style="color: var(--text-muted); font-weight: 600;">Class &amp; Sec:</div>
+            <div id="modalM3ClassSec">—</div>
+          </div>
+        </div>
+
         <!-- Institution & Logistics -->
-        <div style="display: grid; grid-template-columns: 130px 1fr; row-gap: 8px; font-size: 0.8125rem; padding: 10px 0; border-top: 1px solid var(--border-light);">
+        <div style="display: grid; grid-template-columns: 130px 1fr; row-gap: 8px; font-size: 0.8125rem; padding: 10px 0; border-top: 1px solid var(--border);">
           <div style="color: var(--text-muted); font-weight: 600;">Institution:</div>
           <div id="modalCollege">—</div>
 
@@ -511,273 +691,43 @@
         </div>
 
       </div>
-      <div class="modal-footer" id="teamModalActions">
-        <!-- Rendered dynamically -->
+      <div class="modal-footer" id="teamModalActions" style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 10px;">
+        <!-- Dynamic Actions -->
       </div>
     </div>
   </div>
 
   <!-- ==========================================================================
-       MODAL 2: SPOT REGISTRATION (FOR WALK-IN TEAMS ON EVENT DAY)
+       MODAL: VIRTUAL COORDINATOR BADGE PREVIEW & PRINT
        ========================================================================== -->
-  <div class="modal-backdrop" id="spotRegModal" role="dialog" aria-modal="true">
-    <div class="modal-container" style="max-width: 680px;">
-      <div class="modal-header">
-        <h3 class="modal-title">⚡ On-The-Spot Walk-in Registration</h3>
-        <button type="button" class="modal-close" onclick="closeSpotRegistrationModal()">✕</button>
-      </div>
-      <form id="spotRegForm">
-        <div class="modal-body">
-          <div class="badge badge-spot" style="margin-bottom: 16px; display: inline-block;">
-            WALK-IN DESK REGISTRATION • FREE ENTRY
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="spotTeamName">Team Name <span class="required">*</span></label>
-              <input type="text" id="spotTeamName" class="form-input" placeholder="e.g. CodeWarriors" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="spotLogoFileInput">Team Logo / Emblem (Upload)</label>
-              <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
-                <div id="spotLogoPreviewBox" style="width: 44px; height: 44px; border-radius: var(--radius-md); background: #EFF6FF; border: 1.5px dashed var(--primary); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; font-size: 1.25rem;">
-                  <span id="spotLogoPlaceholder">⚡</span>
-                  <img id="spotLogoPreviewImg" src="" alt="Logo" style="display: none; width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <input type="file" id="spotLogoFileInput" accept="image/png, image/jpeg, image/jpg, image/svg+xml, image/webp" style="display: none;">
-                <button type="button" class="btn btn-secondary btn-sm" id="btnUploadSpotLogo">
-                  Upload Logo
-                </button>
-                <button type="button" class="btn btn-outline btn-sm" id="btnRemoveSpotLogo" style="display: none; color: var(--danger); border-color: rgba(220,38,38,0.3);">
-                  ✕
-                </button>
-                <span id="spotLogoFileName" style="font-size: 0.75rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 130px;">Default Emblem</span>
-                <input type="hidden" id="spotLogoData" value="⚡">
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Team Size <span class="required">*</span></label>
-            <div style="display: flex; gap: 16px;">
-              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600;">
-                <input type="radio" name="spotTeamSize" value="1" id="spotSize1"> 1 Member (Solo)
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600;">
-                <input type="radio" name="spotTeamSize" value="2" id="spotSize2" checked> 2 Members (Duo)
-              </label>
-            </div>
-          </div>
-
-          <!-- Leader Details -->
-          <div style="padding: 12px; background: #FAFCFF; border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 14px;">
-            <div style="font-size: 0.75rem; font-weight: 800; color: var(--primary); margin-bottom: 10px;">👑 TEAM LEADER DETAILS</div>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label class="form-label" for="spotLeaderName">Leader Name <span class="required">*</span></label>
-                <input type="text" id="spotLeaderName" class="form-input" placeholder="Full name" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="spotLeaderRoll">Roll Number <span class="required">*</span></label>
-                <input type="text" id="spotLeaderRoll" class="form-input font-mono" placeholder="e.g. 234M1A0501" required>
-              </div>
-            </div>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label class="form-label" for="spotLeaderEmail">Email Address <span class="required">*</span></label>
-                <input type="email" id="spotLeaderEmail" class="form-input" placeholder="leader@example.com" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="spotLeaderPhone">Phone Number <span class="required">*</span></label>
-                <input type="tel" id="spotLeaderPhone" class="form-input" placeholder="10-digit number" maxlength="10" required>
-              </div>
-            </div>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label class="form-label" for="spotLeaderClass">Academic Year</label>
-                <select id="spotLeaderClass" class="form-select">
-                  <option value="I B.Tech">I Year B.Tech</option>
-                  <option value="II B.Tech">II Year B.Tech</option>
-                  <option value="III B.Tech" selected>III Year B.Tech</option>
-                  <option value="IV B.Tech">IV Year B.Tech</option>
-                  <option value="MCA / Postgrad">MCA</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="spotLeaderSec">Section</label>
-                <input type="text" id="spotLeaderSec" class="form-input font-mono" placeholder="e.g. A" value="A">
-              </div>
-            </div>
-          </div>
-
-          <!-- Member 2 Details (Optional/Conditional) -->
-          <div id="spotMember2Block" style="padding: 12px; background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 14px;">
-            <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 10px;">🤝 MEMBER 2 DETAILS</div>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label class="form-label" for="spotM2Name">Member 2 Name</label>
-                <input type="text" id="spotM2Name" class="form-input" placeholder="Full name">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="spotM2Roll">Member 2 Roll No</label>
-                <input type="text" id="spotM2Roll" class="form-input font-mono" placeholder="e.g. 234M1A0518">
-              </div>
-            </div>
-            <div class="form-row-2">
-              <div class="form-group">
-                <label class="form-label" for="spotM2Class">Academic Year</label>
-                <select id="spotM2Class" class="form-select">
-                  <option value="I B.Tech">I Year B.Tech</option>
-                  <option value="II B.Tech">II Year B.Tech</option>
-                  <option value="III B.Tech" selected>III Year B.Tech</option>
-                  <option value="IV B.Tech">IV Year B.Tech</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="spotM2Sec">Section</label>
-                <input type="text" id="spotM2Sec" class="form-input font-mono" placeholder="e.g. A" value="A">
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="spotDept">Department</label>
-              <input type="text" id="spotDept" class="form-input" value="Computer Science & Engineering">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="spotCollege">College / Institution</label>
-              <input type="text" id="spotCollege" class="form-input" value="Vemu Institute of Technology">
-            </div>
-          </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeSpotRegistrationModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="btnSubmitSpotReg">
-            <span>Register Spot Team &amp; Generate ID Card</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       MODAL 3: REGISTER COORDINATOR (ADMIN ONLY)
-       ========================================================================== -->
-  <div class="modal-backdrop" id="coordRegModal" role="dialog" aria-modal="true">
-    <div class="modal-container" style="max-width: 600px;">
-      <div class="modal-header">
-        <h3 class="modal-title">Register Event Coordinator</h3>
-        <button type="button" class="modal-close" onclick="closeCoordRegModal()">✕</button>
-      </div>
-      <form id="coordRegForm">
-        <div class="modal-body">
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="coordName">Full Name <span class="required">*</span></label>
-              <input type="text" id="coordName" class="form-input" placeholder="e.g. Dr. / Prof. / Student Name" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="coordRollEmp">Roll No / Employee ID <span class="required">*</span></label>
-              <input type="text" id="coordRollEmp" class="form-input font-mono" placeholder="e.g. EMP-CSE-108 or 224M1A0542" required>
-            </div>
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="coordRole">Coordinator Role <span class="required">*</span></label>
-              <select id="coordRole" class="form-select" required>
-                <option value="Faculty Coordinator">Faculty Coordinator</option>
-                <option value="Student Lead Coordinator" selected>Student Lead Coordinator</option>
-                <option value="Technical Operations Lead">Technical Operations Lead</option>
-                <option value="Registration &amp; Gate Lead">Registration &amp; Gate Lead</option>
-                <option value="Stage &amp; Venue Lead">Stage &amp; Venue Lead</option>
-                <option value="Hospitality &amp; Refreshments Lead">Hospitality &amp; Refreshments Lead</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="coordDesig">Designation</label>
-              <input type="text" id="coordDesig" class="form-input" placeholder="e.g. IV B.Tech Lead, CSE" value="Student Lead, CSE">
-            </div>
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="coordEmail">Email Address <span class="required">*</span></label>
-              <input type="email" id="coordEmail" class="form-input" placeholder="coordinator@vemu.org" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="coordPhone">Phone Number <span class="required">*</span></label>
-              <input type="tel" id="coordPhone" class="form-input" placeholder="10-digit number" maxlength="10" required>
-            </div>
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="coordDept">Department</label>
-              <input type="text" id="coordDept" class="form-input" value="Computer Science & Engineering">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="coordDesk">Assigned Desk &amp; Venue <span class="required">*</span></label>
-              <input type="text" id="coordDesk" class="form-input" placeholder="e.g. CSE Lab 3 Control Desk" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="coordPhotoFile">Coordinator Profile Photo</label>
-            <div style="display: flex; align-items: center; gap: 14px;">
-              <div style="width: 58px; height: 58px; border-radius: var(--radius-md); border: 2px dashed var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-surface-alt); flex-shrink: 0;" id="coordPhotoPreviewHolder">
-                <span id="coordPhotoPlaceholder" style="font-size: 1.5rem; color: var(--text-muted);">📷</span>
-                <img id="coordPhotoPreviewImg" src="" alt="Photo" style="display: none; width: 100%; height: 100%; object-fit: cover;">
-              </div>
-              <div style="flex: 1;">
-                <input type="file" id="coordPhotoFile" accept="image/png, image/jpeg, image/jpg, image/webp" class="form-input" style="padding: 6px 10px; font-size: 0.8125rem;">
-                <input type="hidden" id="coordAvatar" value="">
-                <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 4px;">Upload passport/profile photo (PNG, JPG, WEBP — saved to Supabase)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeCoordRegModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save &amp; Generate Virtual Badge</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       MODAL 4: VIRTUAL COORDINATOR BADGE PREVIEW & PRINT
-       ========================================================================== -->
-  <div class="modal-backdrop" id="coordBadgeModal" role="dialog" aria-modal="true">
-    <div class="modal-container" style="max-width: 460px; background: transparent; box-shadow: none; border: none;">
-      <div style="background: #FFFFFF; border-radius: var(--radius-2xl); border: 2px solid #0F172A; overflow: hidden; box-shadow: var(--shadow-xl); text-align: center;" id="modalPrintableBadge">
+  <div id="coordBadgeModal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-container" style="max-width: 440px; background: transparent; box-shadow: none; border: none;">
+      <div style="background: #FFFFFF; border-radius: var(--radius-xl); border: 2px solid #0F172A; overflow: hidden; box-shadow: var(--shadow-xl); text-align: center;" id="modalPrintableBadge">
         
         <!-- Lanyard Slot -->
         <div style="background: #0F172A; padding: 10px 0 4px; display: flex; justify-content: center;">
-          <div style="width: 44px; height: 10px; background: #FFFFFF; border-radius: 999px;"></div>
+          <div style="width: 44px; height: 8px; background: #FFFFFF; border-radius: 999px;"></div>
         </div>
 
         <!-- College Header -->
-        <div style="background: #0F172A; color: #FFFFFF; padding: 10px 18px 16px; border-bottom: 3px solid #10B981;">
-          <div style="font-size: 1.0625rem; font-weight: 900;">VEMU INSTITUTE OF TECHNOLOGY</div>
+        <div style="background: #0F172A; color: #FFFFFF; padding: 10px 16px 14px; border-bottom: 3px solid #10B981;">
+          <div style="font-size: 1rem; font-weight: 900;">VEMU INSTITUTE OF TECHNOLOGY</div>
           <div style="font-size: 0.6875rem; color: #93C5FD; font-weight: 700; letter-spacing: 0.06em;">DEPARTMENT OF CSE</div>
           <div style="font-size: 0.75rem; color: #FBBF24; font-weight: 800; margin-top: 2px;">CODEVISION 2026</div>
         </div>
 
         <!-- Role Ribbon -->
-        <div id="modalBadgeRole" style="background: linear-gradient(90deg, #059669, #10B981); color: #FFFFFF; font-weight: 900; font-size: 0.8125rem; letter-spacing: 0.08em; padding: 6px 12px; text-transform: uppercase;">
+        <div id="modalBadgeRole" style="background: linear-gradient(90deg, #059669, #10B981); color: #FFFFFF; font-weight: 900; font-size: 0.75rem; letter-spacing: 0.08em; padding: 6px 12px; text-transform: uppercase;">
           OFFICIAL EVENT COORDINATOR
         </div>
 
         <!-- Body -->
-        <div style="padding: 20px 24px;">
-          <div id="modalBadgeAvatar" style="width: 80px; height: 80px; border-radius: 50%; background: #EFF6FF; border: 3px solid #10B981; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-            👨‍💻
+        <div style="padding: 18px 20px;">
+          <div id="modalBadgeAvatar" style="width: 72px; height: 72px; border-radius: 50%; background: #EFF6FF; border: 3px solid #10B981; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.125rem; font-weight: 800; color: #047857;">
+            CV
           </div>
 
-          <h3 id="modalBadgeName" style="font-size: 1.375rem; font-weight: 900; color: #0F172A; margin-bottom: 2px;">—</h3>
+          <h3 id="modalBadgeName" style="font-size: 1.25rem; font-weight: 900; color: #0F172A; margin-bottom: 2px;">—</h3>
           <div id="modalBadgeDesig" style="font-size: 0.8125rem; font-weight: 700; color: var(--primary); margin-bottom: 8px;">—</div>
 
           <div style="display: inline-flex; align-items: center; gap: 6px; background: var(--bg-subtle); padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px;">
@@ -785,20 +735,20 @@
             <strong class="font-mono" id="modalBadgeId">—</strong>
           </div>
 
-          <div style="background: #F8FAFC; border: 1px dashed var(--border-medium); border-radius: var(--radius-md); padding: 8px 12px; font-size: 0.75rem; text-align: left; margin-bottom: 16px;">
+          <div style="background: #F8FAFC; border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 8px 12px; font-size: 0.75rem; text-align: left; margin-bottom: 16px;">
             <span style="font-size: 0.625rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block;">Assigned Venue Desk</span>
             <strong id="modalBadgeDesk" style="color: #0F172A;">—</strong>
           </div>
 
-          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 12px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 12px;">
             <div id="modalBadgeQrHolder" style="width: 64px; height: 64px;"></div>
             <div style="border: 1.5px dashed #0F172A; padding: 4px 10px; border-radius: 4px; font-size: 0.5625rem; font-weight: 800; text-align: center;">
-              ★ VEMU IT ★<br>ORGANIZING COMMITTEE
+              VEMU IT<br>ORGANIZING COMMITTEE
             </div>
           </div>
         </div>
 
-        <div style="padding: 12px 20px; background: #F8FAFC; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end;">
+        <div style="padding: 12px 16px; background: #F8FAFC; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end;">
           <button type="button" class="btn btn-secondary btn-sm" onclick="closeCoordBadgeModal()">Close</button>
           <button type="button" class="btn btn-primary btn-sm" id="btnPrintModalBadge">
             <span>Print Badge</span>
@@ -810,13 +760,13 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL 5: ADD / EDIT THEME (INTERNAL COORDINATOR ACCESS)
+       MODAL: ADD / EDIT THEME
        ========================================================================== -->
-  <div class="modal-backdrop" id="themeModal" role="dialog" aria-modal="true">
-    <div class="modal-container">
+  <div id="themeModal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-container" style="max-width: 520px;">
       <div class="modal-header">
         <h3 class="modal-title" id="themeModalTitle">Add Competition Track</h3>
-        <button type="button" class="modal-close" onclick="CodevisionUtils.closeModal('themeModal')">✕</button>
+        <button type="button" class="modal-close" onclick="CodevisionUtils.closeModal('themeModal')">&times;</button>
       </div>
       <form id="themeForm">
         <div class="modal-body">
@@ -839,31 +789,29 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" style="margin-top: 12px;">
             <label class="form-label" for="themeTitle">Theme Title</label>
-            <input type="text" id="themeTitle" class="form-input" placeholder="e.g., Clean Mobility &amp; EV Dashboards" required>
+            <input type="text" id="themeTitle" class="form-input" placeholder="e.g. AI-Powered Campus Accessibility" required>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" style="margin-top: 12px;">
             <label class="form-label" for="themeDescription">Description / Problem Scope</label>
             <textarea id="themeDescription" class="form-textarea" rows="3" placeholder="Provide problem context for participants..." required></textarea>
           </div>
 
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="themeIcon">Visual Icon</label>
-              <select id="themeIcon" class="form-select">
-                <option value="code">Code &lt;/&gt;</option>
-                <option value="brain">Brain / AI</option>
-                <option value="building">Campus / Building</option>
-                <option value="credit-card">Fintech / Card</option>
-                <option value="leaf">Green Tech / Leaf</option>
-                <option value="shield">Security / Shield</option>
-              </select>
-            </div>
+          <div class="form-group" style="margin-top: 12px;">
+            <label class="form-label" for="themeIcon">Visual Track Type</label>
+            <select id="themeIcon" class="form-select">
+              <option value="code">Code &amp; Algorithms</option>
+              <option value="brain">Brain / AI &amp; ML</option>
+              <option value="building">Campus &amp; Smart City</option>
+              <option value="credit-card">Fintech &amp; Web3</option>
+              <option value="leaf">Green Tech &amp; Sustainability</option>
+              <option value="shield">Cybersecurity &amp; Cloud</option>
+            </select>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" style="padding: 16px 24px; display: flex; justify-content: flex-end; gap: 10px;">
           <button type="button" class="btn btn-secondary" onclick="CodevisionUtils.closeModal('themeModal')">Cancel</button>
           <button type="submit" class="btn btn-primary">Save Track</button>
         </div>
@@ -871,70 +819,13 @@
     </div>
   </div>
 
-  <!-- ==========================================================================
-       MODAL 6: CLOUD FIREBASE SETTINGS
-       ========================================================================== -->
-  <div class="modal-backdrop" id="settingsModal" role="dialog" aria-modal="true">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h3 class="modal-title">Cloud Database &amp; System Settings</h3>
-        <button type="button" class="modal-close" onclick="CodevisionUtils.closeModal('settingsModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div style="background: var(--bg-subtle); padding: 12px 16px; border-radius: var(--radius-md); font-size: 0.8125rem; margin-bottom: 20px;">
-          <strong>Active Engine:</strong> <span id="currentEngineStatus" style="color: var(--primary); font-weight: 700;">Checking...</span>
-        </div>
-
-        <p style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 16px;">
-          Optional: Connect live Firebase Cloud Firestore &amp; Auth.
-        </p>
-
-        <div class="form-group">
-          <label class="form-label" for="cfgApiKey">API Key</label>
-          <input type="text" id="cfgApiKey" class="form-input font-mono" placeholder="AIzaSy...">
-        </div>
-
-        <div class="form-row-2">
-          <div class="form-group">
-            <label class="form-label" for="cfgProjectId">Project ID</label>
-            <input type="text" id="cfgProjectId" class="form-input font-mono" placeholder="codevision-2026">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="cfgAuthDomain">Auth Domain</label>
-            <input type="text" id="cfgAuthDomain" class="form-input font-mono" placeholder="codevision-2026.firebaseapp.com">
-          </div>
-        </div>
-
-        <div class="form-row-2">
-          <div class="form-group">
-            <label class="form-label" for="cfgStorageBucket">Storage Bucket</label>
-            <input type="text" id="cfgStorageBucket" class="form-input font-mono" placeholder="codevision-2026.appspot.com">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="cfgAppId">App ID</label>
-            <input type="text" id="cfgAppId" class="form-input font-mono" placeholder="1:123456789:web:abcdef">
-          </div>
-        </div>
-
-        <input type="hidden" id="cfgMessagingSenderId">
-
-        <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.75rem; color: var(--text-muted);">Reset sample data to clean state:</span>
-          <button type="button" class="btn btn-outline btn-sm" id="btnResetSampleData">Reset Sample Data</button>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="CodevisionUtils.closeModal('settingsModal')">Close</button>
-        <button type="button" class="btn btn-primary" id="btnSaveFirebaseConfig">Save &amp; Connect Cloud</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="../shared/js/qrcode.min.js"></script>
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../shared/js/supabase-config.js"></script>
-  <script src="../shared/js/utils.js"></script>
-  <script src="../shared/js/db.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/splash.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/dashboard.js"></script>
 </body>

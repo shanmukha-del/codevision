@@ -4,14 +4,15 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const isLoginPage = window.location.pathname.endsWith('login.html');
-  const isDashboardPage = window.location.pathname.endsWith('dashboard.html');
+  const path = window.location.pathname;
+  const isLoginPage = path.endsWith('login.html') || path.endsWith('index.html') || path.endsWith('/') || path === '';
+  const isDashboardPage = path.endsWith('dashboard.html');
 
   const currentAdmin = window.CodevisionDB.getCurrentAdmin();
 
   // Route protection
   if (isDashboardPage && !currentAdmin) {
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
     return;
   }
 
@@ -113,7 +114,7 @@ function initAdminHeader(admin) {
       e.preventDefault();
       if (confirm('Are you sure you want to sign out from Codevision Admin Portal?')) {
         await window.CodevisionDB.logoutAdmin();
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
       }
     });
   });

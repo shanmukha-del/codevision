@@ -58,49 +58,9 @@
   </div>
 
   <!-- ==========================================================================
-       ADMIN SIGN-IN VIEW (Shown if unauthenticated)
+       MASTER DASHBOARD WORKSPACE
        ========================================================================== -->
-  <div id="adminLoginView" style="display: none; min-height: 100vh; align-items: center; justify-content: center; padding: 24px;">
-    <div class="login-card" style="background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-2xl); padding: 40px; width: 100%; max-width: 440px; box-shadow: var(--shadow-xl); text-align: center;">
-      
-      <img src="assets/college-logo.png" alt="VEMU IT Logo" style="width: 68px; height: 68px; object-fit: contain; border-radius: 50%; background: #FFFFFF; padding: 3px; box-shadow: 0 4px 16px rgba(37, 99, 235, 0.2); margin-bottom: 16px; border: 2px solid var(--border);">
-      
-      <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">
-        Admin Control Portal
-      </h2>
-      <p style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 24px;">
-        Vemu Institute of Technology &bull; Department of CSE
-      </p>
-
-      <div id="loginErrorBox" style="display: none; background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.8125rem; margin-bottom: 18px; text-align: left;"></div>
-
-      <form id="adminLoginForm" style="text-align: left;">
-        <div class="form-group" style="margin-bottom: 16px;">
-          <label class="form-label" for="adminUsername">Username</label>
-          <input type="text" id="adminUsername" class="form-input" placeholder="codevision" value="codevision" autocomplete="username" required>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 20px;">
-          <label class="form-label" for="adminPassword">Password</label>
-          <input type="password" id="adminPassword" class="form-input" placeholder="••••••••" value="codevision2026" autocomplete="current-password" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-lg" id="btnLoginSubmit" style="width: 100%;">
-          <span>Sign In to Control Center</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </form>
-
-      <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted);">
-        Official CSE Faculty &amp; Steering Committee Access
-      </div>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       MASTER DASHBOARD VIEW (Shown once authenticated)
-       ========================================================================== -->
-  <div class="admin-shell" id="adminDashboardView" style="display: none;">
+  <div class="admin-shell">
 
     <!-- Sidebar Navigation -->
     <aside class="admin-sidebar" id="adminSidebar">
@@ -868,54 +828,5 @@
   <script src="js/splash.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/dashboard.js"></script>
-
-  <script>
-    // Self-contained login & dashboard view switcher
-    document.addEventListener('DOMContentLoaded', () => {
-      const admin = window.CodevisionDB.getCurrentAdmin();
-      const loginView = document.getElementById('adminLoginView');
-      const dashView = document.getElementById('adminDashboardView');
-
-      if (!admin) {
-        if (loginView) loginView.style.display = 'flex';
-        if (dashView) dashView.style.display = 'none';
-      } else {
-        if (loginView) loginView.style.display = 'none';
-        if (dashView) dashView.style.display = 'flex';
-      }
-
-      // Logout handler
-      document.querySelectorAll('.btn-admin-logout').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          window.CodevisionDB.logoutAdmin();
-          window.location.reload();
-        });
-      });
-    });
-
-    function switchPanel(panelId) {
-      document.querySelectorAll('.dashboard-view-panel').forEach(p => p.classList.remove('active'));
-      const target = document.getElementById(panelId);
-      if (target) target.classList.add('active');
-
-      document.querySelectorAll('.admin-nav-item').forEach(item => {
-        if (item.getAttribute('data-target') === panelId) {
-          item.classList.add('active');
-        } else {
-          item.classList.remove('active');
-        }
-      });
-    }
-
-    function closeSpotRegistrationModal() {
-      const m = document.getElementById('spotRegModal');
-      if (m) m.classList.remove('active');
-    }
-    function closeCoordRegModal() {
-      const m = document.getElementById('coordModal');
-      if (m) m.classList.remove('active');
-    }
-  </script>
 </body>
 </html>
