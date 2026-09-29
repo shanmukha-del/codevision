@@ -623,7 +623,7 @@ window.closeSpotRegistrationModal = function() {
 function initCoordinatorManager() {
   const container = document.getElementById('adminCoordsGrid');
   const addBtn = document.getElementById('btnOpenAddCoord');
-  const form = document.getElementById('coordRegForm');
+  const form = document.getElementById('coordForm');
 
   if (window.CodevisionDB && window.CodevisionDB.onCoordinatorsChange) {
     window.CodevisionDB.onCoordinatorsChange((coords) => {
@@ -646,7 +646,7 @@ function initCoordinatorManager() {
 
     container.innerHTML = allCoordinators.map(c => {
       const isImg = c.avatar && (c.avatar.startsWith('data:image') || c.avatar.startsWith('http'));
-      const avatarHtml = isImg 
+      const avatarHtml = isImg
         ? `<div class="coord-card-avatar"><img src="${c.avatar}" alt="Avatar"></div>`
         : `<div class="coord-card-avatar" style="font-weight: 800; font-size: 1.25rem; color: var(--primary); background: var(--primary-light); display: flex; align-items: center; justify-content: center;">${escapeHtml((c.name || 'C').charAt(0).toUpperCase())}</div>`;
 
@@ -684,51 +684,9 @@ function initCoordinatorManager() {
     }).join('');
   }
 
-  const photoInput = document.getElementById('coordPhotoFile');
-  const avatarHidden = document.getElementById('coordAvatar');
-  const photoPreviewImg = document.getElementById('coordPhotoPreviewImg');
-  const photoPlaceholder = document.getElementById('coordPhotoPlaceholder');
-  let selectedCoordPhoto = null;
-
-  if (photoInput) {
-    photoInput.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-
-      if (!file.type.startsWith('image/')) {
-        window.CodevisionUtils.showToast('Please select a valid image file (PNG, JPG, WEBP).', 'warning');
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        window.CodevisionUtils.showToast('Image size must be under 5MB.', 'warning');
-        return;
-      }
-
-      selectedCoordPhoto = file;
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        const base64 = evt.target.result;
-        if (avatarHidden) avatarHidden.value = base64;
-        if (photoPreviewImg && photoPlaceholder) {
-          photoPreviewImg.src = base64;
-          photoPreviewImg.style.display = 'block';
-          photoPlaceholder.style.display = 'none';
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
   if (addBtn) {
     addBtn.addEventListener('click', () => {
       if (form) form.reset();
-      selectedCoordPhoto = null;
-      if (avatarHidden) avatarHidden.value = '';
-      if (photoPreviewImg && photoPlaceholder) {
-        photoPreviewImg.src = '';
-        photoPreviewImg.style.display = 'none';
-        photoPlaceholder.style.display = 'block';
-      }
       window.CodevisionUtils.openModal('coordRegModal');
     });
   }
@@ -737,27 +695,24 @@ function initCoordinatorManager() {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const name = document.getElementById('coordName').value.trim();
-      const rollOrEmpId = document.getElementById('coordRollEmp').value.trim().toUpperCase();
-      const role = document.getElementById('coordRole').value;
-      const designation = document.getElementById('coordDesig').value.trim();
-      const email = document.getElementById('coordEmail').value.trim().toLowerCase();
-      const phone = document.getElementById('coordPhone').value.trim();
-      const dept = document.getElementById('coordDept').value.trim();
-      const desk = document.getElementById('coordDesk').value.trim();
-      let avatar = avatarHidden ? avatarHidden.value : '';
+      const name = document.getElementById('coordName') ? document.getElementById('coordName').value.trim() : '';
+      const rollOrEmpId = document.getElementById('coordRollEmpId') ? document.getElementById('coordRollEmpId').value.trim().toUpperCase() : '';
+      const role = document.getElementById('coordCategory') ? document.getElementById('coordCategory').value : 'Event Coordinator';
+      const designation = document.getElementById('coordDesignation') ? document.getElementById('coordDesignation').value.trim() : '';
+      const email = document.getElementById('coordEmail') ? document.getElementById('coordEmail').value.trim().toLowerCase() : '';
+      const phone = document.getElementById('coordPhone') ? document.getElementById('coordPhone').value.trim() : '';
+      const dept = document.getElementById('coordDept') ? document.getElementById('coordDept').value.trim() : 'Computer Science & Engineering';
+      const desk = document.getElementById('coordDesk') ? document.getElementById('coordDesk').value.trim() : '';
+      const avatarEl = document.getElementById('coordAvatarData');
+      const avatar = avatarEl && avatarEl.value ? avatarEl.value : '';
 
-      // Upload to Supabase Storage if file is chosen
-      if (selectedCoordPhoto && window.CodevisionSupabase && window.CodevisionSupabase.uploadProfileImage) {
-        try {
-          const uploadRes = await window.CodevisionSupabase.uploadProfileImage(selectedCoordPhoto, 'coordinators');
-          if (uploadRes && uploadRes.success && uploadRes.publicUrl) {
-            avatar = uploadRes.publicUrl;
-          }
-        } catch (err) {
-          console.warn("Coordinator photo upload to Supabase storage fallback", err);
-        }
+      if (!name || !email) {
+        window.CodevisionUtils.showToast('Please fill in Name and Email.', 'warning');
+        return;
       }
+
+      const submitBtn = document.getElementById('btnSaveCoord');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saving...'; }
 
       try {
         const newCoord = await window.CodevisionDB.addCoordinator({
@@ -769,6 +724,8 @@ function initCoordinatorManager() {
       } catch (err) {
         console.error(err);
         window.CodevisionUtils.showToast('Failed to register coordinator', 'error');
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Save Coordinator'; }
       }
     });
   }
@@ -782,31 +739,16 @@ window.viewCoordBadgeModal = function(coordId) {
   const coord = allCoordinators.find(c => c.coordId === coordId);
   if (!coord) return;
 
-  document.getElementById('modalBadgeRole').textContent = (coord.role || 'Event Coordinator').toUpperCase();
-  document.getElementById('modalBadgeName').textContent = coord.name;
-  document.getElementById('modalBadgeDesig').textContent = `${coord.designation || 'Coordinator'} • ${coord.department || 'CSE'}`;
-  document.getElementById('modalBadgeId').textContent = coord.coordId;
-  document.getElementById('modalBadgeDesk').textContent = coord.desk || 'General Event Operations Desk';
+  // Use actual HTML IDs from the badge modal card
+  const nameEl = document.getElementById('modalCoordName');
+  const desigEl = document.getElementById('modalCoordDesig');
+  const idEl = document.getElementById('modalCoordId');
+  const deskEl = document.getElementById('modalCoordDesk');
 
-  const avatarEl = document.getElementById('modalBadgeAvatar');
-  if (coord.avatar && (coord.avatar.startsWith('data:image') || coord.avatar.startsWith('http'))) {
-    avatarEl.innerHTML = `<img src="${coord.avatar}" style="width: 100%; height: 100%; object-fit: cover;">`;
-  } else {
-    avatarEl.innerHTML = `<span style="font-weight: 800; font-size: 2.2rem; color: var(--primary);">${escapeHtml((coord.name || 'C').charAt(0).toUpperCase())}</span>`;
-  }
-
-  // QR Code
-  const qrHolder = document.getElementById('modalBadgeQrHolder');
-  if (qrHolder && window.QRCode) {
-    qrHolder.innerHTML = '';
-    new window.QRCode(qrHolder, {
-      text: `CODEVISION|COORD|${coord.coordId}`,
-      width: 64,
-      height: 64,
-      colorDark: '#0F172A',
-      colorLight: '#FFFFFF'
-    });
-  }
+  if (nameEl) nameEl.textContent = coord.name;
+  if (desigEl) desigEl.textContent = `${coord.designation || coord.role || 'Coordinator'} • ${coord.department || 'CSE'}`;
+  if (idEl) idEl.textContent = coord.coordId;
+  if (deskEl) deskEl.textContent = coord.desk || 'General Event Operations Desk';
 
   // Print button
   const printBtn = document.getElementById('btnPrintModalBadge');
@@ -892,9 +834,10 @@ function initThemeManager() {
   if (addThemeBtn) {
     addThemeBtn.addEventListener('click', () => {
       activeEditingThemeId = null;
-      document.getElementById('themeModalTitle').textContent = 'Add Competition Track';
-      themeForm.reset();
-      document.getElementById('themeNumber').value = String(allThemes.length + 1).padStart(2, '0');
+      if (document.getElementById('themeModalTitle')) {
+        document.getElementById('themeModalTitle').textContent = 'Add Competition Track';
+      }
+      if (themeForm) themeForm.reset();
       window.CodevisionUtils.openModal('themeModal');
     });
   }
@@ -902,14 +845,29 @@ function initThemeManager() {
   if (themeForm) {
     themeForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const title = document.getElementById('themeTitle') ? document.getElementById('themeTitle').value.trim() : '';
+      const description = document.getElementById('themeDescription') ? document.getElementById('themeDescription').value.trim() : '';
+      const difficulty = document.getElementById('themeDifficulty') ? document.getElementById('themeDifficulty').value : 'Intermediate';
+      // themeCategory maps to icon; fallback to 'code'
+      const iconEl = document.getElementById('themeCategory') || document.getElementById('themeIcon');
+      const icon = iconEl ? (iconEl.value || 'code') : 'code';
+
+      if (!title || !description) {
+        window.CodevisionUtils.showToast('Please enter Theme Title and Description.', 'warning');
+        return;
+      }
+
       const themeData = {
-        number: document.getElementById('themeNumber').value.trim(),
-        title: document.getElementById('themeTitle').value.trim(),
-        description: document.getElementById('themeDescription').value.trim(),
-        icon: document.getElementById('themeIcon').value,
-        difficulty: document.getElementById('themeDifficulty').value,
+        number: String(allThemes.length + 1).padStart(2, '0'),
+        title,
+        description,
+        icon,
+        difficulty,
         active: true
       };
+
+      const submitBtn = document.getElementById('btnSaveTheme');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saving...'; }
 
       try {
         await window.CodevisionDB.addTheme(themeData);
@@ -918,6 +876,8 @@ function initThemeManager() {
       } catch (err) {
         console.error(err);
         window.CodevisionUtils.showToast('Failed to save track', 'error');
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Save Track'; }
       }
     });
   }
@@ -938,126 +898,123 @@ window.deleteThemeConfirm = async function(themeId) {
    Gate Check-in QR Verifier (Supports Teams & Coordinators)
    ========================================================================== */
 function initGateScanner() {
-  const scanInput = document.getElementById('gateScanInput');
-  const verifyBtn = document.getElementById('btnVerifyScan');
-  const resultBox = document.getElementById('gateScanResult');
+  const scanForm = document.getElementById('manualScanForm');
+  const scanInput = document.getElementById('manualQrInput');
+  const resultBox = document.getElementById('scanResultNotice');
 
-  if (verifyBtn && scanInput) {
-    verifyBtn.addEventListener('click', () => {
-      const raw = scanInput.value.trim();
-      if (!raw) return;
+  function processVerification(raw) {
+    if (!raw || !resultBox) return;
 
-      resultBox.style.display = 'block';
+    resultBox.style.display = 'block';
 
-      // Check if it's a coordinator barcode: CODEVISION|COORD|CV26-CRD-XXX
-      if (raw.includes('COORD')) {
-        const parts = raw.split('|');
-        const coordId = (parts[parts.length - 1] || '').trim();
-        const coord = allCoordinators.find(c => c.coordId.toUpperCase() === coordId.toUpperCase());
+    // Check if it's a coordinator barcode: CODEVISION|COORD|CV26-CRD-XXX
+    if (raw.includes('COORD')) {
+      const parts = raw.split('|');
+      const coordId = (parts[parts.length - 1] || '').trim();
+      const coord = allCoordinators.find(c => c.coordId.toUpperCase() === coordId.toUpperCase());
 
-        if (coord) {
-          resultBox.className = 'status-alert-box alert-confirmed';
-          resultBox.innerHTML = `
-            <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div>
-              <h3 style="font-weight: 800; color: #065F46; font-size: 1.25rem;">COORDINATOR VIP GATE ACCESS APPROVED</h3>
-              <div style="font-size: 0.9375rem; margin-top: 6px; color: #047857; line-height: 1.6;">
-                <strong>Coordinator:</strong> ${escapeHtml(coord.name)} (${coord.coordId})<br>
-                <strong>Role:</strong> ${escapeHtml(coord.role)} • ${escapeHtml(coord.designation)}<br>
-                <strong>Assigned Venue:</strong> <span style="background: #D1FAE5; padding: 2px 8px; border-radius: 4px; font-weight: 700;">${escapeHtml(coord.desk)}</span>
-              </div>
-            </div>
-          `;
-          return;
-        }
-      }
-
-      // Check if it's a team pass: CODEVISION|CV26-XXXXX or CV26-XXXXX
-      let teamId = raw;
-      if (raw.includes('|')) {
-        const parts = raw.split('|');
-        teamId = parts[parts.length - 1].trim();
-      }
-
-      const team = allTeams.find(t => t.teamId.toUpperCase() === teamId.toUpperCase());
-
-      if (!team) {
-        resultBox.className = 'status-alert-box alert-rejected';
+      if (coord) {
+        resultBox.className = 'status-alert-box alert-confirmed';
         resultBox.innerHTML = `
-          <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
           <div>
-            <h3 style="font-weight: 700; color: #991B1B;">INVALID ENTRY / PASS NOT RECOGNIZED</h3>
-            <p style="font-size: 0.875rem;">No registered team or coordinator matches barcode "<strong>${escapeHtml(raw)}</strong>". Direct candidate to Spot Registration Desk.</p>
+            <h3 style="font-weight: 800; color: #065F46; font-size: 1.25rem;">COORDINATOR VIP GATE ACCESS APPROVED</h3>
+            <div style="font-size: 0.9375rem; margin-top: 6px; color: #047857; line-height: 1.6;">
+              <strong>Coordinator:</strong> ${escapeHtml(coord.name)} (${coord.coordId})<br>
+              <strong>Role:</strong> ${escapeHtml(coord.role)} • ${escapeHtml(coord.designation || '')}<br>
+              <strong>Assigned Venue:</strong> <span style="background: #D1FAE5; padding: 2px 8px; border-radius: 4px; font-weight: 700;">${escapeHtml(coord.desk)}</span>
+            </div>
           </div>
         `;
         return;
       }
+    }
 
-      const leader = team.leader || { name: team.member1 || '', rollNo: team.rollNo || '' };
-      const m2 = team.member2;
-      const m2Name = m2 ? (typeof m2 === 'object' ? m2.name : m2) : null;
-      const regType = (team.registrationType || 'ONLINE').toUpperCase();
+    // Check if it's a team pass: CODEVISION|CV26-XXXXX or CV26-XXXXX
+    let teamId = raw;
+    if (raw.includes('|')) {
+      const parts = raw.split('|');
+      teamId = parts[parts.length - 1].trim();
+    }
 
-      resultBox.className = 'status-alert-box alert-confirmed';
+    const team = allTeams.find(t => t.teamId.toUpperCase() === teamId.toUpperCase());
+
+    if (!team) {
+      resultBox.className = 'status-alert-box alert-rejected';
       resultBox.innerHTML = `
-        <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
         <div>
-          <h3 style="font-weight: 800; color: #065F46; font-size: 1.25rem;">GATE ADMISSION CONFIRMED (${regType})</h3>
-          <div style="font-size: 0.9375rem; margin-top: 6px; color: #047857; line-height: 1.6;">
-            <strong>Team Name:</strong> ${escapeHtml(team.teamName)} (${team.teamId})<br>
-            <strong>Leader:</strong> ${escapeHtml(leader.name)} (${escapeHtml(leader.rollNo || '—')})<br>
-            ${m2Name ? `<strong>Member 2:</strong> ${escapeHtml(m2Name)} (${escapeHtml((m2 && m2.rollNo) || '—')})<br>` : ''}
-            ${team.member3 && (team.member3.name || team.member3.rollNo) ? `<strong>Member 3:</strong> ${escapeHtml(team.member3.name)} (${escapeHtml(team.member3.rollNo || '—')})<br>` : ''}
-            <strong>Institution:</strong> ${escapeHtml(team.college || 'Vemu IT')} (${escapeHtml(team.department || 'CSE')})<br>
-            <strong>Allocated Lab:</strong> <span style="background: #D1FAE5; padding: 2px 8px; border-radius: 4px; font-weight: 700;">CSE Block B — Lab 3 Workstations</span>
-          </div>
+          <h3 style="font-weight: 700; color: #991B1B;">INVALID ENTRY / PASS NOT RECOGNIZED</h3>
+          <p style="font-size: 0.875rem;">No registered team or coordinator matches barcode "<strong>${escapeHtml(raw)}</strong>". Direct candidate to Spot Registration Desk.</p>
         </div>
       `;
+      return;
+    }
+
+    const leader = team.leader || { name: team.member1 || '', rollNo: team.rollNo || '' };
+    const m2 = team.member2;
+    const m2Name = m2 ? (typeof m2 === 'object' ? m2.name : m2) : null;
+    const regType = (team.registrationType || 'ONLINE').toUpperCase();
+
+    resultBox.className = 'status-alert-box alert-confirmed';
+    resultBox.innerHTML = `
+      <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div>
+        <h3 style="font-weight: 800; color: #065F46; font-size: 1.25rem;">GATE ADMISSION CONFIRMED (${regType})</h3>
+        <div style="font-size: 0.9375rem; margin-top: 6px; color: #047857; line-height: 1.6;">
+          <strong>Team Name:</strong> ${escapeHtml(team.teamName)} (${team.teamId})<br>
+          <strong>Leader:</strong> ${escapeHtml(leader.name)} (${escapeHtml(leader.rollNo || '—')})<br>
+          ${m2Name ? `<strong>Member 2:</strong> ${escapeHtml(m2Name)} (${escapeHtml((m2 && m2.rollNo) || '—')})<br>` : ''}
+          ${team.member3 && (team.member3.name || team.member3.rollNo) ? `<strong>Member 3:</strong> ${escapeHtml(team.member3.name)} (${escapeHtml(team.member3.rollNo || '—')})<br>` : ''}
+          <strong>Institution:</strong> ${escapeHtml(team.college || 'Vemu IT')} (${escapeHtml(team.department || 'CSE')})<br>
+          <strong>Allocated Lab:</strong> <span style="background: #D1FAE5; padding: 2px 8px; border-radius: 4px; font-weight: 700;">CSE Block B — Lab 3 Workstations</span>
+        </div>
+      </div>
+    `;
+  }
+
+  if (scanForm && scanInput) {
+    scanForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const raw = scanInput.value.trim();
+      if (!raw) return;
+      processVerification(raw);
     });
   }
 }
 
 /* ==========================================================================
-   Settings Modal (Cloud Firebase Config & Seed Reset)
+   Settings Modal (Cloud DB Info & Seed Reset)
    ========================================================================== */
 function initSettingsModal() {
   const openBtn = document.getElementById('btnOpenSettings');
-  const saveBtn = document.getElementById('btnSaveFirebaseConfig');
   const resetBtn = document.getElementById('btnResetSampleData');
 
   if (openBtn) {
     openBtn.addEventListener('click', () => {
-      const cfg = window.CodevisionFirebase.getConfig();
-      document.getElementById('cfgApiKey').value = cfg.apiKey || '';
-      document.getElementById('cfgAuthDomain').value = cfg.authDomain || '';
-      document.getElementById('cfgProjectId').value = cfg.projectId || '';
-      document.getElementById('cfgStorageBucket').value = cfg.storageBucket || '';
-      document.getElementById('cfgMessagingSenderId').value = cfg.messagingSenderId || '';
-      document.getElementById('cfgAppId').value = cfg.appId || '';
+      // Show Supabase connection info (read-only display)
+      const supabaseUrl = window.CodevisionSupabase ? window.CodevisionSupabase.url : '';
+      const supabaseKey = window.CodevisionSupabase ? window.CodevisionSupabase.anonKey : '';
 
-      const isConfigured = window.CodevisionFirebase.isConfigured();
-      document.getElementById('currentEngineStatus').textContent = isConfigured ? 'Connected to Cloud Firebase' : 'Active Local Realtime Multi-Tab Sync Engine';
+      const apiKeyEl = document.getElementById('cfgApiKey');
+      const projectIdEl = document.getElementById('cfgProjectId');
+      const statusEl = document.getElementById('currentEngineStatus');
+
+      if (apiKeyEl) apiKeyEl.value = supabaseKey ? supabaseKey.substring(0, 40) + '...' : '(not configured)';
+      if (projectIdEl) projectIdEl.value = supabaseUrl ? supabaseUrl.replace('https://', '').split('.')[0] : '';
+
+      const authDomainEl = document.getElementById('cfgAuthDomain');
+      const storageBucketEl = document.getElementById('cfgStorageBucket');
+      const msgSenderEl = document.getElementById('cfgMessagingSenderId');
+      const appIdEl = document.getElementById('cfgAppId');
+      if (authDomainEl) authDomainEl.value = supabaseUrl || '';
+      if (storageBucketEl) storageBucketEl.value = window.CodevisionSupabase ? window.CodevisionSupabase.bucket : 'team-profiles';
+      if (msgSenderEl) msgSenderEl.value = 'N/A (Supabase realtime)';
+      if (appIdEl) appIdEl.value = 'supabase-v2';
+
+      if (statusEl) statusEl.textContent = supabaseUrl ? 'Connected — Supabase Cloud Database Active' : 'Local Cache Mode (no Supabase)';
 
       window.CodevisionUtils.openModal('settingsModal');
-    });
-  }
-
-  if (saveBtn) {
-    saveBtn.addEventListener('click', () => {
-      const config = {
-        apiKey: document.getElementById('cfgApiKey').value.trim(),
-        authDomain: document.getElementById('cfgAuthDomain').value.trim(),
-        projectId: document.getElementById('cfgProjectId').value.trim(),
-        storageBucket: document.getElementById('cfgStorageBucket').value.trim(),
-        messagingSenderId: document.getElementById('cfgMessagingSenderId').value.trim(),
-        appId: document.getElementById('cfgAppId').value.trim()
-      };
-
-      window.CodevisionFirebase.saveConfig(config);
-      window.CodevisionUtils.showToast('Firebase settings saved! Reloading application...', 'success', 2000);
-      setTimeout(() => {
-        window.location.reload();
-      }, 800);
     });
   }
 
@@ -1070,13 +1027,22 @@ function initSettingsModal() {
       }
     });
   }
+
+  // Save button — just close and show info (Supabase config is set in supabase-config.js)
+  const saveBtn = document.getElementById('btnSaveFirebaseConfig');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      window.CodevisionUtils.showToast('Supabase settings are configured in supabase-config.js. No changes made.', 'info', 3000);
+      window.CodevisionUtils.closeModal('settingsModal');
+    });
+  }
 }
 
 /* ==========================================================================
    Event Schedule, Timings & Duration Manager (Admin-Configurable)
    ========================================================================== */
 function initScheduleManager() {
-  const form = document.getElementById('adminScheduleForm');
+  const form = document.getElementById('scheduleConfigForm') || document.getElementById('adminScheduleForm');
   const dateInput = document.getElementById('cfgEventDate');
   const datePreview = document.getElementById('cfgEventDatePreview');
   const startTimeInput = document.getElementById('cfgStartTime');
