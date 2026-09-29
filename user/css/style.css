@@ -1059,4 +1059,17 @@
   .countdown-num {
     font-size: 1.4rem;
   }
+  .brand-logo {
+    gap: 8px;
+  }
+  .brand-title {
+    font-size: 1.0625rem;
+  }
+  .brand-subtitle {
+    font-size: 0.625rem;
+  }
+  .header-actions .btn-sm {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
 }
