@@ -915,23 +915,18 @@ function initThemeManager() {
     themeForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const title = document.getElementById('themeTitle') ? document.getElementById('themeTitle').value.trim() : '';
-      const description = document.getElementById('themeDescription') ? document.getElementById('themeDescription').value.trim() : '';
-      const difficulty = document.getElementById('themeDifficulty') ? document.getElementById('themeDifficulty').value : 'Intermediate';
-      // themeCategory maps to icon; fallback to 'code'
-      const iconEl = document.getElementById('themeCategory') || document.getElementById('themeIcon');
-      const icon = iconEl ? (iconEl.value || 'code') : 'code';
 
-      if (!title || !description) {
-        window.CodevisionUtils.showToast('Please enter Theme Title and Description.', 'warning');
+      if (!title) {
+        window.CodevisionUtils.showToast('Please enter the Theme Title.', 'warning');
         return;
       }
 
       const themeData = {
         number: String(allThemes.length + 1).padStart(2, '0'),
         title,
-        description,
-        icon,
-        difficulty,
+        description: title, // use title as description (title-only form)
+        icon: 'code',
+        difficulty: 'Intermediate',
         active: true
       };
 
@@ -940,13 +935,14 @@ function initThemeManager() {
 
       try {
         await window.CodevisionDB.addTheme(themeData);
-        window.CodevisionUtils.showToast('Competition track saved in event vault!', 'success');
+        window.CodevisionUtils.showToast(`Theme "${title}" saved in event vault!`, 'success', 3000);
         window.CodevisionUtils.closeModal('themeModal');
+        if (themeForm) themeForm.reset();
       } catch (err) {
         console.error(err);
-        window.CodevisionUtils.showToast('Failed to save track', 'error');
+        window.CodevisionUtils.showToast('Failed to save theme. Try again.', 'error');
       } finally {
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Save Track'; }
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Save Theme'; }
       }
     });
   }

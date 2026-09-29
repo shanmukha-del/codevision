@@ -1035,3 +1035,126 @@ button, input, select, textarea {
   }
 }
 
+/* ==========================================================================
+   Email Dispatch Confirmation Modal (cv-email-modal)
+   ========================================================================== */
+.cv-email-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.cv-email-modal-overlay.active {
+  display: flex;
+}
+
+.cv-email-modal-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+  max-width: 480px;
+  width: 100%;
+  overflow: hidden;
+  animation: cvEmailSlideUp 0.28s ease;
+}
+
+@keyframes cvEmailSlideUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cv-email-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.cv-email-icon-badge {
+  width: 44px;
+  height: 44px;
+  background: #EFF6FF;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563EB;
+  flex-shrink: 0;
+}
+
+.cv-email-modal-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.cv-email-modal-close:hover {
+  background: #F1F5F9;
+  color: #0F172A;
+}
+
+.cv-email-modal-body {
+  padding: 20px 24px;
+}
+
+.cv-email-dispatch-alert {
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.cv-email-summary-box {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cv-email-row {
+  display: flex;
+  gap: 10px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  align-items: flex-start;
+}
+
+.cv-email-label {
+  color: #64748B;
+  font-weight: 600;
+  min-width: 72px;
+  flex-shrink: 0;
+}
+
+.cv-email-val {
+  color: #0F172A;
+  word-break: break-all;
+}
+
+.cv-email-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid #E2E8F0;
+}

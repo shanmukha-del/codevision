@@ -803,49 +803,24 @@
        MODAL 5: ADD / EDIT THEME
        ========================================================================== -->
   <div class="modal-backdrop" id="themeModal" role="dialog" aria-modal="true" aria-label="Add Theme">
-    <div class="modal-container" style="max-width: 580px;">
+    <div class="modal-container" style="max-width: 460px;">
       <div class="modal-header">
-        <h3 class="modal-title" id="themeModalTitle">Add Competition Track</h3>
+        <h3 class="modal-title" id="themeModalTitle">Add Competition Theme</h3>
         <button type="button" class="modal-close" onclick="window.CodevisionUtils.closeModal('themeModal')">&times;</button>
       </div>
       <form id="themeForm">
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label" for="themeTitle">Theme Title <span class="required">*</span></label>
-            <input type="text" id="themeTitle" class="form-input" placeholder="e.g. Next-Gen FinTech Dashboard" required>
-          </div>
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="themeCategory">Track Category</label>
-              <select id="themeCategory" class="form-select">
-                <option value="Web3 &amp; FinTech">Web3 &amp; FinTech</option>
-                <option value="Health &amp; MedTech">Health &amp; MedTech</option>
-                <option value="EdTech &amp; Learning">EdTech &amp; Learning</option>
-                <option value="AI &amp; Smart Tools">AI &amp; Smart Tools</option>
-                <option value="CleanTech &amp; Green Energy">CleanTech &amp; Green Energy</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="themeDifficulty">Difficulty Level</label>
-              <select id="themeDifficulty" class="form-select">
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Expert">Expert</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="themeDescription">Brief Challenge Description <span class="required">*</span></label>
-            <textarea id="themeDescription" class="form-textarea" rows="3" placeholder="Provide problem statement..." required></textarea>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="themeRules">Key Constraints &amp; Evaluation Focus</label>
-            <input type="text" id="themeRules" class="form-input" placeholder="e.g. Pure HTML5 &amp; CSS3 flexbox/grid layout, responsive mobile viewport">
+            <input type="text" id="themeTitle" class="form-input" placeholder="e.g. Next-Gen FinTech Dashboard" required autofocus>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 6px;">
+              Enter the confidential theme title. It will be revealed to candidates on event morning.
+            </p>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="window.CodevisionUtils.closeModal('themeModal')">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="btnSaveTheme">Save Track</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveTheme">Save Theme</button>
         </div>
       </form>
     </div>
