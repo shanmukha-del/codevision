@@ -116,7 +116,9 @@ College: ${team.college || 'Vemu Institute of Technology'}
 Leader: ${leader.name || ''} (${leader.rollNo || ''})
 Leader Section: ${leader.section || 'A'}
 Leader Phone: ${leader.phone || ''}
-${member2 ? `Member 2: ${member2.name || ''} (${member2.rollNo || ''}, Sec: ${member2.section || 'A'})` : 'Team Size: 1 Member (Solo)'}
+${member2 ? `Member 2: ${member2.name || ''} (${member2.rollNo || ''}, Sec: ${member2.section || 'A'})` : ''}
+${team.member3 ? `Member 3: ${team.member3.name || ''} (${team.member3.rollNo || ''}, Sec: ${team.member3.section || 'A'})` : ''}
+Team Composition: ${team.teamSize || (team.member3 ? 3 : 2)} Members (${team.teamSize === 3 ? 'Trio Team' : 'Duo Team'})
 
 ==================================================
 MANDATORY EVENT DAY CHECKLIST

@@ -135,25 +135,46 @@ function initHallTicketLookup() {
     document.getElementById('ticketEmail').textContent = leader.email || team.email || '—';
     document.getElementById('ticketPhone').textContent = leader.phone || team.phone || '—';
 
-    // 4. Member 2 Details (Smaller text as instructed, or hidden if solo team)
-    const m2Card = document.getElementById('ticketMember2Card');
-    const m2NameEl = document.getElementById('ticketMember2');
+    // 4. Member 2 Details (Always present in 2-3 member teams)
+    const m2Row = document.getElementById('ticketMember2Row') || document.getElementById('ticketMember2Card');
+    const m2NameEl = document.getElementById('ticketM2Name') || document.getElementById('ticketMember2');
+    const m2RollEl = document.getElementById('ticketM2Roll') || document.getElementById('ticketMember2Roll');
+    const m2ClassEl = document.getElementById('ticketM2Class') || document.getElementById('ticketMember2Class');
+    const m2SecEl = document.getElementById('ticketM2Sec') || document.getElementById('ticketMember2Sec');
 
     const member2 = team.member2;
     const hasMember2 = member2 && (typeof member2 === 'object' ? (member2.name && member2.name.trim()) : (typeof member2 === 'string' && member2.trim()));
 
     if (hasMember2) {
-      if (m2Card) m2Card.style.display = 'block';
+      if (m2Row) m2Row.style.display = 'flex';
       const m2Obj = typeof member2 === 'object' ? member2 : { name: String(member2) };
       if (m2NameEl) m2NameEl.textContent = m2Obj.name;
-      const m2Roll = document.getElementById('ticketMember2Roll');
-      if (m2Roll) m2Roll.textContent = m2Obj.rollNo || '—';
-      const m2Class = document.getElementById('ticketMember2Class');
-      if (m2Class) m2Class.textContent = m2Obj.classYear || leader.classYear || 'III B.Tech';
-      const m2Sec = document.getElementById('ticketMember2Sec');
-      if (m2Sec) m2Sec.textContent = `Sec ${m2Obj.section || leader.section || 'A'}`;
+      if (m2RollEl) m2RollEl.textContent = m2Obj.rollNo || '—';
+      if (m2ClassEl) m2ClassEl.textContent = m2Obj.classYear || leader.classYear || 'III B.Tech';
+      if (m2SecEl) m2SecEl.textContent = `Sec ${m2Obj.section || leader.section || 'A'}`;
     } else {
-      if (m2Card) m2Card.style.display = 'none';
+      if (m2Row) m2Row.style.display = 'none';
+    }
+
+    // 5. Member 3 Details (Rendered if Trio Team)
+    const m3Row = document.getElementById('ticketMember3Row') || document.getElementById('ticketMember3Card');
+    const m3NameEl = document.getElementById('ticketM3Name') || document.getElementById('ticketMember3');
+    const m3RollEl = document.getElementById('ticketM3Roll') || document.getElementById('ticketMember3Roll');
+    const m3ClassEl = document.getElementById('ticketM3Class') || document.getElementById('ticketMember3Class');
+    const m3SecEl = document.getElementById('ticketM3Sec') || document.getElementById('ticketMember3Sec');
+
+    const member3 = team.member3;
+    const hasMember3 = member3 && (typeof member3 === 'object' ? (member3.name && member3.name.trim()) : (typeof member3 === 'string' && member3.trim()));
+
+    if (hasMember3) {
+      if (m3Row) m3Row.style.display = 'flex';
+      const m3Obj = typeof member3 === 'object' ? member3 : { name: String(member3) };
+      if (m3NameEl) m3NameEl.textContent = m3Obj.name;
+      if (m3RollEl) m3RollEl.textContent = m3Obj.rollNo || '—';
+      if (m3ClassEl) m3ClassEl.textContent = m3Obj.classYear || leader.classYear || 'III B.Tech';
+      if (m3SecEl) m3SecEl.textContent = `Sec ${m3Obj.section || leader.section || 'A'}`;
+    } else {
+      if (m3Row) m3Row.style.display = 'none';
     }
 
     // 5. College & Department

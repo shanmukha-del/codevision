@@ -441,6 +441,17 @@
             <input type="text" id="spotTeamName" class="form-input font-bold" placeholder="Team name..." required>
           </div>
 
+          <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">TEAM COMPOSITION (2 TO 3 MEMBERS)</div>
+          <div style="display: flex; gap: 16px; margin-bottom: 14px; background: #F8FAFC; padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer;">
+              <input type="radio" name="spotTeamSize" id="spotSize2" value="2" checked>
+              <span>2 Members (Duo)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 600; cursor: pointer;">
+              <input type="radio" name="spotTeamSize" id="spotSize3" value="3">
+              <span>3 Members (Trio)</span>
+            </label>
+          </div>
           <div style="font-size: 0.75rem; font-weight: 800; color: var(--primary); margin-bottom: 8px;">TEAM LEADER DETAILS</div>
           <div class="form-row-2">
             <div class="form-group">
@@ -481,7 +492,7 @@
             </div>
           </div>
 
-          <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin: 12px 0 8px;">MEMBER 2 (OPTIONAL)</div>
+          <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin: 12px 0 8px;">TEAM MEMBER 2 <span class="required">*</span></div>
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="spotM2Name">Member 2 Name</label>
@@ -506,6 +517,38 @@
             <div class="form-group">
               <label class="form-label" for="spotM2Sec">Section</label>
               <input type="text" id="spotM2Sec" class="form-input font-mono" placeholder="e.g. A" value="A">
+            </div>
+          </div>
+
+          
+          <!-- Member 3 Block for Spot Reg -->
+          <div id="spotM3Block" style="display: none;">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #7C3AED; margin: 12px 0 8px;">TEAM MEMBER 3 (TRIO ENTRY) <span class="required">*</span></div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="spotM3Name">Member 3 Name <span class="required">*</span></label>
+                <input type="text" id="spotM3Name" class="form-input" placeholder="Full name">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="spotM3Roll">Member 3 Roll No <span class="required">*</span></label>
+                <input type="text" id="spotM3Roll" class="form-input font-mono" placeholder="Roll No">
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="spotM3Class">Academic Year</label>
+                <select id="spotM3Class" class="form-select">
+                  <option value="I B.Tech">I Year B.Tech</option>
+                  <option value="II B.Tech">II Year B.Tech</option>
+                  <option value="III B.Tech" selected>III Year B.Tech</option>
+                  <option value="IV B.Tech">IV Year B.Tech</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="spotM3Sec">Section</label>
+                <input type="text" id="spotM3Sec" class="form-input font-mono" placeholder="e.g. A" value="A">
+              </div>
             </div>
           </div>
 
@@ -655,6 +698,23 @@
 
             <div style="color: var(--text-muted); font-weight: 600;">Class &amp; Sec:</div>
             <div id="modalM2ClassSec">—</div>
+          </div>
+        </div>
+
+                <!-- Member 3 Dossier -->
+        <div id="modalMember3Box" style="background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; display: none;">
+          <div style="font-size: 0.75rem; font-weight: 800; color: #7C3AED; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">
+            Team Member 3 (Trio Track)
+          </div>
+          <div id="modalMember3Content" style="display: grid; grid-template-columns: 130px 1fr; row-gap: 8px; font-size: 0.875rem;">
+            <div style="color: var(--text-muted); font-weight: 600;">Full Name:</div>
+            <div id="modalM3Name" style="font-weight: 600;">—</div>
+
+            <div style="color: var(--text-muted); font-weight: 600;">Roll Number:</div>
+            <div id="modalM3Roll" class="font-mono" style="font-weight: 700; color: #7C3AED;">—</div>
+
+            <div style="color: var(--text-muted); font-weight: 600;">Class &amp; Sec:</div>
+            <div id="modalM3ClassSec">—</div>
           </div>
         </div>
 

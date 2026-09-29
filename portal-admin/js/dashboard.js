@@ -258,7 +258,16 @@ function initStatsAndTeams() {
                 <span class="font-mono">${escapeHtml(m2Roll || '—')}</span>
                 ${m2Class ? `• ${escapeHtml(m2Class)} - Sec ${escapeHtml(m2Sec || 'A')}` : ''}
               </div>
-            ` : `<span style="font-size: 0.8125rem; color: var(--text-light); font-style: italic;">Solo Developer</span>`}
+            ` : '—'}
+            ${team.member3 && (team.member3.name || team.member3.rollNo) ? `
+              <div style="margin-top: 6px; padding-top: 4px; border-top: 1px dashed var(--border-light);">
+                <div style="font-weight: 600; color: #7C3AED;">${escapeHtml(team.member3.name)} <span style="font-size: 0.625rem; background: #F3E8FF; padding: 1px 5px; border-radius: 3px; font-weight: 800;">M3</span></div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">
+                  <span class="font-mono">${escapeHtml(team.member3.rollNo || '—')}</span>
+                  • ${escapeHtml(team.member3.classYear || leader.classYear || 'III B.Tech')} - Sec ${escapeHtml(team.member3.section || leader.section || 'A')}
+                </div>
+              </div>
+            ` : ''}
           </td>
           <td>
             <div style="font-size: 0.8125rem;">${escapeHtml(team.college || 'Vemu IT')}</div>
@@ -359,16 +368,37 @@ window.viewTeamModal = function(teamId) {
 
   // Member 2 Details
   const m2Box = document.getElementById('modalMember2Box');
-  if (m2Name) {
-    m2Box.style.display = 'block';
-    document.getElementById('modalM2Name').textContent = m2Name;
-    document.getElementById('modalM2Roll').textContent = m2Roll || '—';
-    document.getElementById('modalM2ClassSec').textContent = `${m2Class || 'III B.Tech'} • Section ${m2Sec || 'A'}`;
-  } else {
-    m2Box.style.display = 'block';
-    document.getElementById('modalM2Name').textContent = 'None (Solo Participant Track)';
-    document.getElementById('modalM2Roll').textContent = 'N/A';
-    document.getElementById('modalM2ClassSec').textContent = 'Individual Developer';
+  if (m2Box) {
+    if (m2Name) {
+      m2Box.style.display = 'block';
+      document.getElementById('modalM2Name').textContent = m2Name;
+      document.getElementById('modalM2Roll').textContent = m2Roll || '—';
+      document.getElementById('modalM2ClassSec').textContent = `${m2Class || 'III B.Tech'} • Section ${m2Sec || 'A'}`;
+    } else {
+      m2Box.style.display = 'none';
+    }
+  }
+
+  // Member 3 Details
+  const m3Box = document.getElementById('modalMember3Box');
+  const m3 = team.member3;
+  const m3Name = m3 ? (typeof m3 === 'object' ? m3.name : m3) : null;
+  const m3Roll = m3 && typeof m3 === 'object' ? m3.rollNo : '—';
+  const m3Class = m3 && typeof m3 === 'object' ? m3.classYear : leader.classYear;
+  const m3Sec = m3 && typeof m3 === 'object' ? m3.section : leader.section;
+
+  if (m3Box) {
+    if (m3Name) {
+      m3Box.style.display = 'block';
+      const nameEl = document.getElementById('modalM3Name');
+      const rollEl = document.getElementById('modalM3Roll');
+      const csEl = document.getElementById('modalM3ClassSec');
+      if (nameEl) nameEl.textContent = m3Name;
+      if (rollEl) rollEl.textContent = m3Roll || '—';
+      if (csEl) csEl.textContent = `${m3Class || 'III B.Tech'} • Section ${m3Sec || 'A'}`;
+    } else {
+      m3Box.style.display = 'none';
+    }
   }
 
   // Logistics
@@ -476,12 +506,16 @@ function initSpotRegistration() {
     });
   }
 
-  if (size1 && size2 && m2Block) {
-    size1.addEventListener('change', () => {
-      m2Block.style.display = size1.checked ? 'none' : 'block';
+  const sizeRadio2 = document.getElementById('spotSize2');
+  const sizeRadio3 = document.getElementById('spotSize3');
+  const m3SpotBlock = document.getElementById('spotM3Block');
+
+  if (sizeRadio2 && sizeRadio3 && m3SpotBlock) {
+    sizeRadio2.addEventListener('change', () => {
+      if (sizeRadio2.checked) m3SpotBlock.style.display = 'none';
     });
-    size2.addEventListener('change', () => {
-      m2Block.style.display = size2.checked ? 'block' : 'none';
+    sizeRadio3.addEventListener('change', () => {
+      if (sizeRadio3.checked) m3SpotBlock.style.display = 'block';
     });
   }
 
@@ -492,7 +526,7 @@ function initSpotRegistration() {
       const teamName = document.getElementById('spotTeamName').value.trim();
       const logoEl = document.getElementById('spotLogoData');
       const teamLogo = (logoEl && logoEl.value) ? logoEl.value : 'CV';
-      const teamSize = size1 && size1.checked ? 1 : 2;
+      const teamSize = (document.getElementById('spotSize3') && document.getElementById('spotSize3').checked) ? 3 : 2;
 
       const leaderName = document.getElementById('spotLeaderName').value.trim();
       const leaderRoll = document.getElementById('spotLeaderRoll').value.trim().toUpperCase();
@@ -501,16 +535,25 @@ function initSpotRegistration() {
       const leaderClass = document.getElementById('spotLeaderClass').value;
       const leaderSec = document.getElementById('spotLeaderSec').value;
 
-      let member2 = null;
-      if (teamSize === 2) {
-        const m2Name = document.getElementById('spotM2Name').value.trim();
-        const m2Roll = document.getElementById('spotM2Roll').value.trim().toUpperCase();
-        if (m2Name && m2Roll) {
-          member2 = {
-            name: m2Name,
-            rollNo: m2Roll,
-            classYear: document.getElementById('spotM2Class').value || leaderClass,
-            section: document.getElementById('spotM2Sec').value || leaderSec
+      const m2Name = document.getElementById('spotM2Name').value.trim();
+      const m2Roll = document.getElementById('spotM2Roll').value.trim().toUpperCase();
+      const member2 = {
+        name: m2Name,
+        rollNo: m2Roll,
+        classYear: (document.getElementById('spotM2Class') && document.getElementById('spotM2Class').value) || leaderClass,
+        section: (document.getElementById('spotM2Sec') && document.getElementById('spotM2Sec').value) || leaderSec
+      };
+
+      let member3 = null;
+      if (teamSize === 3) {
+        const m3Name = (document.getElementById('spotM3Name') ? document.getElementById('spotM3Name').value.trim() : '');
+        const m3Roll = (document.getElementById('spotM3Roll') ? document.getElementById('spotM3Roll').value.trim().toUpperCase() : '');
+        if (m3Name || m3Roll) {
+          member3 = {
+            name: m3Name,
+            rollNo: m3Roll,
+            classYear: (document.getElementById('spotM3Class') && document.getElementById('spotM3Class').value) || leaderClass,
+            section: (document.getElementById('spotM3Sec') && document.getElementById('spotM3Sec').value) || leaderSec
           };
         }
       }
@@ -531,6 +574,7 @@ function initSpotRegistration() {
           section: leaderSec
         },
         member2,
+        member3,
         department: dept,
         college,
         registrationType: 'SPOT',
@@ -962,7 +1006,8 @@ function initGateScanner() {
           <div style="font-size: 0.9375rem; margin-top: 6px; color: #047857; line-height: 1.6;">
             <strong>Team Name:</strong> ${escapeHtml(team.teamName)} (${team.teamId})<br>
             <strong>Leader:</strong> ${escapeHtml(leader.name)} (${escapeHtml(leader.rollNo || '—')})<br>
-            ${m2Name ? `<strong>Member 2:</strong> ${escapeHtml(m2Name)}<br>` : ''}
+            ${m2Name ? `<strong>Member 2:</strong> ${escapeHtml(m2Name)} (${escapeHtml((m2 && m2.rollNo) || '—')})<br>` : ''}
+            ${team.member3 && (team.member3.name || team.member3.rollNo) ? `<strong>Member 3:</strong> ${escapeHtml(team.member3.name)} (${escapeHtml(team.member3.rollNo || '—')})<br>` : ''}
             <strong>Institution:</strong> ${escapeHtml(team.college || 'Vemu IT')} (${escapeHtml(team.department || 'CSE')})<br>
             <strong>Allocated Lab:</strong> <span style="background: #D1FAE5; padding: 2px 8px; border-radius: 4px; font-weight: 700;">CSE Block B — Lab 3 Workstations</span>
           </div>

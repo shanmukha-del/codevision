@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS public.teams (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     team_id VARCHAR(50) UNIQUE NOT NULL,            -- e.g. 'CV26-K9X42'
     team_name VARCHAR(150) NOT NULL,
-    team_logo TEXT DEFAULT '⚡',                    -- Emoji or image URL
-    team_size INT NOT NULL DEFAULT 1 CHECK (team_size IN (1, 2)),
+    team_logo TEXT DEFAULT 'CV',                    -- Image URL or Emblem
+    team_size INT NOT NULL DEFAULT 2 CHECK (team_size IN (2, 3)),
     
     -- Leader / Member 1 Details
     leader_name VARCHAR(150) NOT NULL,
@@ -27,15 +27,24 @@ CREATE TABLE IF NOT EXISTS public.teams (
     leader_section VARCHAR(20) DEFAULT 'A',
     leader_photo_url TEXT DEFAULT NULL,            -- Profile image URL in Supabase Storage
     
-    -- Member 2 Details (Optional for Solo participants)
-    member2_name VARCHAR(150) DEFAULT NULL,
+    -- Member 2 Details (Required for Duo & Trio teams)
+    member2_name VARCHAR(150) NOT NULL,
     member2_email VARCHAR(150) DEFAULT NULL,
     member2_phone VARCHAR(30) DEFAULT NULL,
-    member2_roll_no VARCHAR(50) DEFAULT NULL,
-    member2_class_year VARCHAR(50) DEFAULT NULL,
-    member2_section VARCHAR(20) DEFAULT NULL,
+    member2_roll_no VARCHAR(50) NOT NULL,
+    member2_class_year VARCHAR(50) DEFAULT 'III B.Tech',
+    member2_section VARCHAR(20) DEFAULT 'A',
     member2_photo_url TEXT DEFAULT NULL,           -- Member 2 Profile image URL
     
+    -- Member 3 Details (Required for Trio teams)
+    member3_name VARCHAR(150) DEFAULT NULL,
+    member3_email VARCHAR(150) DEFAULT NULL,
+    member3_phone VARCHAR(30) DEFAULT NULL,
+    member3_roll_no VARCHAR(50) DEFAULT NULL,
+    member3_class_year VARCHAR(50) DEFAULT NULL,
+    member3_section VARCHAR(20) DEFAULT NULL,
+    member3_photo_url TEXT DEFAULT NULL,           -- Member 3 Profile image URL
+
     -- Institution & Event Meta
     college VARCHAR(200) NOT NULL DEFAULT 'Vemu Institute of Technology',
     department VARCHAR(150) NOT NULL DEFAULT 'Computer Science & Engineering',

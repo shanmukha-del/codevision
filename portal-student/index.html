@@ -324,8 +324,8 @@
 
         <div class="rule-card card-3d">
           <div class="rule-num font-mono">02</div>
-          <h4 class="rule-title">Team Structure (1–2 Members)</h4>
-          <p class="rule-desc">Teams may consist of an individual developer or a duo. Cross-department and cross-institution collaborations are welcome.</p>
+          <h4 class="rule-title">Team Structure (2–3 Members)</h4>
+          <p class="rule-desc">Teams must consist of a duo (2 members) or a trio (3 members). Individual solo participation is not permitted. Cross-department collaborations are welcome.</p>
         </div>
 
         <div class="rule-card card-3d">
@@ -448,19 +448,6 @@
               </h3>
 
               <div class="team-size-selector">
-                <label class="size-card-option" id="sizeOpt1">
-                  <input type="radio" name="teamSize" value="1" id="radioSize1">
-                  <div class="size-card-content">
-                    <div class="size-icon" style="color: var(--primary);">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    </div>
-                    <div>
-                      <strong class="size-title">1 Member (Solo Developer)</strong>
-                      <span class="size-desc">Individual competitor building solo</span>
-                    </div>
-                  </div>
-                </label>
-
                 <label class="size-card-option active" id="sizeOpt2">
                   <input type="radio" name="teamSize" value="2" id="radioSize2" checked>
                   <div class="size-card-content">
@@ -469,7 +456,20 @@
                     </div>
                     <div>
                       <strong class="size-title">2 Members (Duo Team)</strong>
-                      <span class="size-desc">Team Leader + Co-participant</span>
+                      <span class="size-desc">Team Leader + 1 Team Member</span>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="size-card-option" id="sizeOpt3">
+                  <input type="radio" name="teamSize" value="3" id="radioSize3">
+                  <div class="size-card-content">
+                    <div class="size-icon" style="color: #7C3AED;">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><circle cx="19" cy="8" r="2"/></svg>
+                    </div>
+                    <div>
+                      <strong class="size-title">3 Members (Trio Team)</strong>
+                      <span class="size-desc">Team Leader + 2 Team Members</span>
                     </div>
                   </div>
                 </label>
@@ -620,10 +620,82 @@
               </div>
             </div>
 
-            <!-- SECTION 5: INSTITUTION DETAILS -->
-            <div class="form-block-section">
+            
+            <!-- SECTION 5: MEMBER 3 DETAILS (TRIO TEAMS) -->
+            <div class="form-block-section" id="member3SectionBlock" style="display: none;">
               <h3 class="form-block-title">
                 <span class="block-num">5</span>
+                <span>Member 3 Information <span class="required">*</span></span>
+              </h3>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="member3Name">
+                    <span>Member 3 Full Name <span class="required">*</span></span>
+                  </label>
+                  <input type="text" id="member3Name" class="form-input" placeholder="Full name as in College ID">
+                  <span class="form-error" id="member3Name-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="member3RollNo">
+                    <span>Member 3 Roll Number / Hall Ticket No <span class="required">*</span></span>
+                    <span class="optional">e.g. 234M1A0536</span>
+                  </label>
+                  <input type="text" id="member3RollNo" class="form-input font-mono" placeholder="e.g. 234M1A0536">
+                  <span class="form-error" id="member3RollNo-error"></span>
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="member3Email">
+                    <span>Member 3 Email Address <span class="optional">(Optional)</span></span>
+                  </label>
+                  <input type="email" id="member3Email" class="form-input" placeholder="member3@example.com">
+                  <span class="form-error" id="member3Email-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="member3Phone">
+                    <span>Member 3 Phone Number <span class="optional">(Optional)</span></span>
+                  </label>
+                  <input type="tel" id="member3Phone" class="form-input" placeholder="e.g. 9848099882" maxlength="10">
+                  <span class="form-error" id="member3Phone-error"></span>
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label" for="member3Class">
+                    <span>Member 3 Academic Year <span class="required">*</span></span>
+                  </label>
+                  <select id="member3Class" class="form-select">
+                    <option value="">Select Academic Year</option>
+                    <option value="I B.Tech">I Year B.Tech</option>
+                    <option value="II B.Tech">II Year B.Tech</option>
+                    <option value="III B.Tech" selected>III Year B.Tech</option>
+                    <option value="IV B.Tech">IV Year B.Tech</option>
+                    <option value="MCA / Postgrad">MCA / Postgraduate</option>
+                    <option value="Diploma / Polytechnic">Diploma / Polytechnic</option>
+                  </select>
+                  <span class="form-error" id="member3Class-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="member3Section">
+                    <span>Member 3 Section <span class="required">*</span></span>
+                  </label>
+                  <input type="text" id="member3Section" class="form-input font-mono" placeholder="e.g. A, B, C..." value="A">
+                  <span class="form-error" id="member3Section-error"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 6: INSTITUTION DETAILS -->
+            <div class="form-block-section">
+              <h3 class="form-block-title">
+                <span class="block-num">6</span>
                 <span>Institution Details</span>
               </h3>
 
@@ -750,6 +822,15 @@
                   <span class="member-val-meta font-mono" id="ticketM2Roll">ROLL NUMBER</span>
                   <span class="member-val-sub" id="ticketM2Class">III B.Tech</span>
                   <span class="member-val-sub" id="ticketM2Sec">Sec A</span>
+                </div>
+              </div>
+                          <div class="member-spec-row" id="ticketMember3Row" style="display: none;">
+                <div class="card-role-tag member2-tag" style="background: #F3E8FF; color: #7C3AED;">MEMBER 3</div>
+                <div class="member-data-col">
+                  <span class="member-val-name" id="ticketM3Name">Member 3 Name</span>
+                  <span class="member-val-meta font-mono" id="ticketM3Roll">ROLL NUMBER</span>
+                  <span class="member-val-sub" id="ticketM3Class">III B.Tech</span>
+                  <span class="member-val-sub" id="ticketM3Sec">Sec A</span>
                 </div>
               </div>
             </div>
