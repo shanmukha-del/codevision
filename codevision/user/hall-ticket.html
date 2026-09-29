@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Official Team ID Card — CODEVISION 2026 | Vemu Institute of Technology</title>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
+
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/hall-ticket.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-icon">&lt;/&gt;</div>
+        <div class="brand-text">
+          <span class="brand-title">CODEVISION</span>
+          <span class="brand-subtitle">TEAM ID PORTAL</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#format" class="nav-link">Format</a>
+        <a href="index.html#schedule" class="nav-link">Schedule</a>
+        <a href="index.html#rules" class="nav-link">Rules</a>
+        <a href="index.html#themes" class="nav-link">Theme Reveal</a>
+        <a href="register.html" class="nav-link">Register Team</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="register.html" class="btn btn-primary btn-sm">Register Team (Free)</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="hallticket-page-wrap">
+
+    <!-- Search / Access Card -->
+    <div class="ticket-search-card no-print">
+      <div class="heading-eyebrow">Digital Entry Pass &amp; Admit Card</div>
+      <h1 style="font-size: 1.875rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
+        Find Your Official Team ID Card
+      </h1>
+      <p style="color: var(--text-muted); font-size: 0.9375rem; max-width: 580px; margin: 0 auto;">
+        Enter your unique <strong>Team ID</strong> (e.g. <code>CV26-K9X42</code>), <strong>Leader Roll Number</strong> (e.g. <code>234M1A0501</code>), or registered email address.
+      </p>
+
+      <form class="ticket-search-form" id="hallTicketSearchForm">
+        <input type="text" id="searchQuery" class="form-input" placeholder="Enter Team ID, Roll No, or Email..." required>
+        <button type="submit" class="btn btn-primary" id="btnSearchTicket" style="flex-shrink: 0;">
+          <span>Generate ID Card</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </form>
+
+      <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 12px;">
+        💡 Registered teams get immediate ID cards. Both Team Leaders and Faculty Coordinators can print or download this card.
+      </div>
+    </div>
+
+    <!-- Registration Success Celebratory Alert (Shown if newly registered) -->
+    <div id="newRegSuccessAlert" class="status-alert-box alert-confirmed no-print" style="display: none; margin-bottom: 24px;">
+      <div class="alert-icon">🎉</div>
+      <div>
+        <h3 style="font-size: 1.125rem; font-weight: 800; color: #065F46; margin-bottom: 4px;">
+          Team Registered Successfully!
+        </h3>
+        <p style="font-size: 0.875rem; color: #047857; margin: 0; line-height: 1.5;">
+          Your team slot is confirmed with zero fees. Below is your official, architected <strong>CODEVISION 2026 Team Identity Card &amp; Gate Entry Pass</strong>. Please print or download it before attending the event!
+        </p>
+      </div>
+    </div>
+
+    <!-- Status Notice (Error or Not Found) -->
+    <div id="ticketStatusNotice" style="display: none; margin-bottom: 28px;"></div>
+
+    <!-- ========================================================================
+         VIRTUAL TEAM ID CARD (SUPER DESIGNED & WELL-ARCHITECTED)
+         ======================================================================== -->
+    <!-- ========================================================================
+         VIRTUAL TEAM ID CARD (COMPACT AUTHENTIC ID CARD FORMAT)
+         ======================================================================== -->
+    <div id="ticketResultSection" style="display: none;">
+
+      <!-- The Official Printable Team ID Card -->
+      <article class="admit-card compact-card-badge" id="printableAdmitCard">
+        
+        <!-- 1. Top Lanyard Clip Punch Slot -->
+        <div class="card-lanyard-slot-row">
+          <div class="card-lanyard-slot"></div>
+        </div>
+
+        <!-- 2. Dark Official College Header -->
+        <header class="card-college-header">
+          <div class="card-logo-mark">&lt;/&gt;</div>
+          <div class="card-header-titles">
+            <h2 class="card-college-name">VEMU INSTITUTE OF TECHNOLOGY</h2>
+            <p class="card-dept-name">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</p>
+            <div class="card-event-badge">CODEVISION 2026 • OFFICIAL TEAM PASS</div>
+          </div>
+        </header>
+
+        <!-- 3. Ribbon Bar: Status & Type -->
+        <div class="card-ribbon-bar">
+          <span id="ticketBadgeType" class="ribbon-type font-mono">ONLINE PASS</span>
+          <span class="ribbon-confirmed">✓ ENTRY CONFIRMED • FREE</span>
+        </div>
+
+        <!-- 4. Team Identity Section (Logo + Team Name + ID) -->
+        <div class="card-team-identity">
+          <div class="card-team-logo" id="ticketLogoHolder">
+            <span id="ticketLogoIcon">⚡</span>
+            <img id="ticketLogoImg" src="" alt="Team Logo" style="display: none;">
+          </div>
+          <div class="card-team-info">
+            <span class="card-team-sublabel">REGISTERED TEAM NAME</span>
+            <h1 class="card-team-name" id="ticketTeamName">—</h1>
+            <div class="card-team-id-badge">
+              <span>TEAM ID:</span>
+              <strong class="font-mono" id="ticketTeamId">—</strong>
+              <span class="card-reg-pill font-mono" id="ticketRegType">ONLINE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Team Members (Clear Hierarchy: Leader BIG, Member 2 SMALL) -->
+        <div class="card-members-section">
+          <!-- Leader Card (Prominent & Larger) -->
+          <div class="card-member-row leader-highlight">
+            <div class="card-role-tag leader-tag">👑 TEAM LEADER</div>
+            <div class="card-member-name leader-prominent" id="ticketLeader">—</div>
+            <div class="card-member-details font-mono">
+              <span>Roll: <strong id="ticketLeaderRoll">—</strong></span>
+              <span>•</span>
+              <span id="ticketLeaderClass">—</span>
+              <span>•</span>
+              <span id="ticketLeaderSec">—</span>
+            </div>
+            <div class="card-member-contact font-mono text-xs">
+              <span id="ticketEmail">—</span> • <span id="ticketPhone">—</span>
+            </div>
+          </div>
+
+          <!-- Member 2 Card (Subdued & Smaller) -->
+          <div class="card-member-row member2-row" id="ticketMember2Card">
+            <div class="card-role-tag member2-tag">🤝 MEMBER 2</div>
+            <div class="card-member-name member2-subdued" id="ticketMember2">—</div>
+            <div class="card-member-details font-mono" id="ticketMember2Details">
+              <span>Roll: <strong id="ticketMember2Roll">—</strong></span>
+              <span>•</span>
+              <span id="ticketMember2Class">—</span>
+              <span>•</span>
+              <span id="ticketMember2Sec">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Card Footer: Logistics & Gate QR Code -->
+        <div class="card-bottom-strip">
+          <div class="card-logistics-col">
+            <div class="card-log-item">
+              <span class="log-label">Event Date:</span>
+              <span class="log-value" id="ticketEventDate">Saturday, Oct 24, 2026</span>
+            </div>
+            <div class="card-log-item">
+              <span class="log-label">Timing:</span>
+              <span class="log-value" id="ticketEventTiming">09:30 AM (10:00 AM – 3:00 PM)</span>
+            </div>
+            <div class="card-log-item">
+              <span class="log-label">Venue:</span>
+              <span class="log-value" id="ticketEventVenue">CSE Labs, Vemu IT</span>
+            </div>
+            <!-- Hidden backward-compat fields -->
+            <span id="ticketDept" style="display: none;"></span>
+            <span id="ticketCollege" style="display: none;"></span>
+          </div>
+
+          <div class="card-qr-col">
+            <div class="card-qr-frame" id="ticketQrCodeHolder"></div>
+            <span class="card-qr-caption font-mono" id="ticketQrIdLabel">CV26-XXXXX</span>
+            <span class="card-scan-tip">GATE SCAN</span>
+          </div>
+        </div>
+
+        <!-- 7. Security Micro-Stripe -->
+        <footer class="card-security-footer">
+          <span>★ VEMU INSTITUTE OF TECHNOLOGY • DEPARTMENT OF CSE ★</span>
+        </footer>
+
+      </article>
+
+      <!-- Action Controls (Hidden when printed) -->
+      <div class="ticket-actions-bar no-print">
+        <button type="button" class="btn btn-primary btn-lg" id="btnPrintHallTicket" style="flex: 1;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span>Print / Save ID Card (PDF)</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="btnToggleSearch" onclick="toggleSearchBox()">
+          <span>Find Another Team</span>
+        </button>
+        <a href="register.html" class="btn btn-outline">
+          <span>+ Register Team</span>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="../shared/js/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../shared/js/supabase-config.js"></script>
+  <script src="../shared/js/utils.js"></script>
+  <script src="../shared/js/db.js"></script>
+  <script src="js/hall-ticket.js"></script>
+</body>
+</html>

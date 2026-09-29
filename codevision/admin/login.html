@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Sign In — CODEVISION 2026 | Vemu IT</title>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
+
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="css/admin.css">
+
+  <style>
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-xl);
+      width: 100%;
+      max-width: 460px;
+      padding: 40px;
+      position: relative;
+    }
+
+    .demo-creds-box {
+      margin-top: 24px;
+      padding: 14px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.8125rem;
+    }
+
+    .demo-creds-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .btn-demo-fill {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      text-align: left;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-main);
+      transition: all var(--transition-fast);
+    }
+
+    .btn-demo-fill:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div style="text-align: center; margin-bottom: 28px;">
+        <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 800; font-family: var(--font-mono); font-size: 1.25rem; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);">
+          &lt;/&gt;
+        </div>
+        <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">
+          CODEVISION Admin Portal
+        </h1>
+        <p style="font-size: 0.8125rem; color: var(--text-muted);">
+          Vemu Institute of Technology • Department of CSE
+        </p>
+      </div>
+
+      <!-- Error box -->
+      <div id="loginErrorBox" style="display: none; background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.8125rem; margin-bottom: 20px;"></div>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label class="form-label" for="adminUsername">Username</label>
+          <input type="text" id="adminUsername" class="form-input" placeholder="codevision" value="codevision" autocomplete="username" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" class="form-input" placeholder="••••••••" value="codevision2026" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="btnLoginSubmit" style="width: 100%; margin-top: 8px;">
+          Sign In to Dashboard →
+        </button>
+      </form>
+
+      <!-- Administrator credentials display -->
+      <div class="demo-creds-box">
+        <div style="font-weight: 700; color: var(--text-main); display: flex; align-items: center; justify-content: space-between;">
+          <span style="display: flex; align-items: center; gap: 6px;">🔑 Administrator Credentials</span>
+          <span class="badge badge-blue" style="font-size: 0.65rem;">Official</span>
+        </div>
+        <div class="demo-creds-pills">
+          <button type="button" class="btn-demo-fill" data-username="codevision" data-pass="codevision2026">
+            <span><strong>User:</strong> <code>codevision</code> &bull; <strong>Pass:</strong> <code>codevision2026</code></span>
+            <span>1-Click Fill</span>
+          </button>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px;">
+        <a href="../user/index.html" style="font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">
+          ← Return to Public Participant Portal
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../shared/js/supabase-config.js"></script>
+  <script src="../shared/js/utils.js"></script>
+  <script src="../shared/js/db.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CODEVISION 2026 — Frontend Coding Challenge | Vemu Institute of Technology</title>
+  <meta name="description" content="Official platform for CODEVISION — National Level Frontend Coding Challenge organized by Department of Computer Science & Engineering, Vemu Institute of Technology.">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
+
+  <!-- Core & Shared Styles -->
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/3d-motion.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       Sticky Glass Navigation
+       ========================================================================== -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="index.html" class="brand-logo" aria-label="Codevision Home">
+        <div class="brand-icon">&lt;/&gt;</div>
+        <div class="brand-text">
+          <span class="brand-title">CODEVISION</span>
+          <span class="brand-subtitle">VEMU IT • CSE</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" role="navigation" aria-label="Main Navigation">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#format" class="nav-link">Format</a>
+        <a href="#schedule" class="nav-link">Schedule</a>
+        <a href="#rules" class="nav-link">Rules</a>
+        <a href="#themes" class="nav-link">Theme Reveal</a>
+        <a href="coordinator-badge.html" class="nav-link">Coordinators</a>
+        <a href="hall-ticket.html" class="nav-link">Team ID Card</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="hall-ticket.html" class="btn btn-secondary btn-sm" style="display: none; @media(min-width: 640px){ display: inline-flex; }">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="13" y2="12"/></svg>
+          Team ID Card
+        </a>
+        <a href="register.html" class="btn btn-primary btn-sm">
+          <span>Register Now</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <button class="btn-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Drawer -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer" role="region" aria-label="Mobile Navigation">
+      <a href="#about" class="nav-link">About Event</a>
+      <a href="#format" class="nav-link">Event Format</a>
+      <a href="#schedule" class="nav-link">Schedule Timeline</a>
+      <a href="#rules" class="nav-link">Official Rules</a>
+      <a href="#themes" class="nav-link">Event Day Theme Reveal</a>
+      <a href="coordinator-badge.html" class="nav-link">Coordinator Badges</a>
+      <a href="hall-ticket.html" class="nav-link" style="color: var(--primary); font-weight: 700;">Virtual Team ID Card</a>
+      <a href="register.html" class="btn btn-primary" style="margin-top: 8px;">Register Your Team (Free)</a>
+      <a href="../admin/login.html" class="nav-link" style="font-size: 0.8125rem; color: var(--text-muted); text-align: center;">Admin Portal Login →</a>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       Hero Section with 3D Visual Environment
+       ========================================================================== -->
+  <main id="main-content">
+    <section class="hero-section" id="about">
+      <!-- Ambient 3D Glow Orbs -->
+      <div class="glow-orb glow-blue" style="top: 10%; left: 5%; width: 400px; height: 400px;"></div>
+      <div class="glow-orb glow-cyan" style="top: 30%; right: 10%; width: 450px; height: 450px;"></div>
+
+      <div class="hero-grid">
+        <!-- Left Content -->
+        <div class="hero-content">
+          <div class="college-pill">
+            <span>🏛️</span>
+            <span><strong>VEMU INSTITUTE OF TECHNOLOGY</strong> • CSE DEPARTMENT PRESENTS</span>
+          </div>
+
+          <h1 class="hero-title">
+            <span class="text-gradient">CODEVISION</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            Frontend Coding Challenge • Ideas | Interfaces | Innovation
+          </p>
+
+          <p class="hero-description">
+            Design. Code. Create. Put your frontend engineering skills to the ultimate test in an electrifying 5-hour national-level coding challenge. Build futuristic, responsive web interfaces using pure HTML5 and CSS3.
+          </p>
+
+          <!-- Dynamic Countdown Timer -->
+          <div class="countdown-container">
+            <div class="countdown-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Event Countdown Timer</span>
+            </div>
+            <div class="countdown-grid">
+              <div class="countdown-box">
+                <div class="countdown-num" id="cd-days">20</div>
+                <div class="countdown-unit">Days</div>
+              </div>
+              <div class="countdown-box">
+                <div class="countdown-num" id="cd-hours">06</div>
+                <div class="countdown-unit">Hours</div>
+              </div>
+              <div class="countdown-box">
+                <div class="countdown-num" id="cd-minutes">42</div>
+                <div class="countdown-unit">Minutes</div>
+              </div>
+              <div class="countdown-box">
+                <div class="countdown-num" id="cd-seconds">18</div>
+                <div class="countdown-unit">Seconds</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTAs -->
+          <div class="hero-actions">
+            <a href="register.html" class="btn btn-primary btn-lg">
+              <span>Register Team (Free)</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="hall-ticket.html" class="btn btn-secondary btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="13" y2="12"/></svg>
+              <span>Get Team ID Card</span>
+            </a>
+          </div>
+
+          <!-- Event Details Ribbon (Admin-Dynamic) -->
+          <div class="hero-meta-strip">
+            <div class="hero-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span id="heroEventDate">Saturday, Oct 24, 2026</span>
+            </div>
+            <div class="hero-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span id="heroEventTime">10:00 AM – 3:00 PM</span>
+            </div>
+            <div class="hero-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span id="heroEventVenue">CSE Labs, Vemu IT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 3D Visual Environment -->
+        <div class="hero-visual-col perspective-container">
+          <!-- Floating 3D Code Symbols -->
+          <div class="float-symbol float-badge animate-float-1" style="top: -24px; left: 10px;">
+            <span class="float-badge-icon icon-blue">&lt;/&gt;</span>
+            <span>HTML5 Semantic</span>
+          </div>
+
+          <div class="float-symbol float-badge animate-float-2" style="bottom: -20px; left: 20px;">
+            <span class="float-badge-icon icon-cyan">{ }</span>
+            <span>CSS3 Grid &amp; Flex</span>
+          </div>
+
+          <div class="float-symbol float-badge animate-float-3" style="top: 25%; right: -25px;">
+            <span class="float-badge-icon icon-violet">⚡</span>
+            <span id="heroDurationBadge">5 Hours Live</span>
+          </div>
+
+          <!-- 3D Browser Window Mockup -->
+          <div class="hero-browser-3d">
+            <div class="browser-header">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-tab">
+                <span class="tab-icon">#</span>
+                <span>codevision-future.html</span>
+              </div>
+              <div class="browser-address">localhost:3000/codevision</div>
+            </div>
+
+            <div class="browser-code-area">
+              <div><span class="code-comment">&lt;!-- Codevision 2026 Challenge --&gt;</span></div>
+              <div><span class="code-tag">&lt;div</span> <span class="code-attr">class=</span><span class="code-str">"future"</span><span class="code-tag">&gt;</span></div>
+              <div style="padding-left: 18px;">
+                <span class="code-tag">&lt;h1</span> <span class="code-attr">class=</span><span class="code-str">"hero-title"</span><span class="code-tag">&gt;</span>CODEVISION<span class="code-tag">&lt;/h1&gt;</span>
+              </div>
+              <div style="padding-left: 18px;">
+                <span class="code-tag">&lt;p</span> <span class="code-attr">data-theme=</span><span class="code-str">"dynamic"</span><span class="code-tag">&gt;</span>
+              </div>
+              <div style="padding-left: 36px; color: #0891B2; font-weight: 600;">
+                IDEAS | INTERFACES | INNOVATION
+              </div>
+              <div style="padding-left: 18px;">
+                <span class="code-tag">&lt;/p&gt;</span>
+              </div>
+              <div style="padding-left: 18px;">
+                <span class="code-tag">&lt;style&gt;</span>
+              </div>
+              <div style="padding-left: 36px; color: #64748B;">
+                .future { <span class="code-prop">display</span>: <span class="code-val">grid</span>; <span class="code-prop">perspective</span>: <span class="code-val">1200px</span>; }
+              </div>
+              <div style="padding-left: 18px;">
+                <span class="code-tag">&lt;/style&gt;</span>
+              </div>
+              <div><span class="code-tag">&lt;/div&gt;</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Event Overview & Format Cards
+         ========================================================================== -->
+    <section class="section section-alt" id="format">
+      <div class="section-header reveal">
+        <span class="heading-eyebrow">Event Structure</span>
+        <h2 class="section-title">Format &amp; Technical Specifications</h2>
+        <p class="section-desc">Designed to evaluate your core frontend engineering architecture, responsive adaptability, visual aesthetic, and modern design precision.</p>
+      </div>
+
+      <div class="format-grid">
+        <div class="format-card tilt-card reveal">
+          <div class="format-icon" style="background: var(--primary-light); color: var(--primary);">💻</div>
+          <span class="format-label">Event Format</span>
+          <div class="format-val">Frontend Challenge</div>
+          <p class="format-sub">Intensive on-campus web interface hackathon with live evaluation.</p>
+        </div>
+
+        <div class="format-card tilt-card reveal">
+          <div class="format-icon" style="background: var(--cyan-light); color: var(--cyan);">🎨</div>
+          <span class="format-label">Technology</span>
+          <div class="format-val">HTML5 + CSS3</div>
+          <p class="format-sub">Pure frontend craftsmanship. No heavy frameworks. Semantic &amp; responsive.</p>
+        </div>
+
+        <div class="format-card tilt-card reveal">
+          <div class="format-icon" style="background: var(--violet-light); color: var(--violet);">👥</div>
+          <span class="format-label">Team Size</span>
+          <div class="format-val">1 – 2 Members</div>
+          <p class="format-sub">Solo developers or dynamic duos. Collaborate and conquer.</p>
+        </div>
+
+        <div class="format-card tilt-card reveal">
+          <div class="format-icon" style="background: #ECFDF5; color: #059669;">⏱️</div>
+          <span class="format-label">Event Timing</span>
+          <div class="format-val" id="formatTimeDuration">10:00 AM – 3:00 PM</div>
+          <p class="format-sub" id="formatSubDuration">5 hours of non-stop innovation, live mentorship, and final jury viva.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Event Timeline / Schedule
+         ========================================================================== -->
+    <section class="section" id="schedule">
+      <div class="section-header reveal">
+        <span class="heading-eyebrow">Agenda</span>
+        <h2 class="section-title">Event Day Schedule</h2>
+        <p class="section-desc">Follow the chronological milestones from opening check-in to project submission and jury evaluation.</p>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="timeline-item reveal">
+          <div class="timeline-marker"></div>
+          <div class="timeline-card">
+            <span class="timeline-time-badge">10:00 AM</span>
+            <h3 class="timeline-title">Registration &amp; Briefing</h3>
+            <p class="timeline-desc">Teams report to CSE Seminar Hall, scan hall tickets at verification gate, and receive event kits and lab workstation allocations.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-marker"></div>
+          <div class="timeline-card">
+            <span class="timeline-time-badge">10:15 AM</span>
+            <h3 class="timeline-title">Theme Announcement</h3>
+            <p class="timeline-desc">Official problem statements and surprise thematic criteria revealed live by the convener and jury panel.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-marker"></div>
+          <div class="timeline-card">
+            <span class="timeline-time-badge">10:30 AM</span>
+            <h3 class="timeline-title">Coding Begins</h3>
+            <p class="timeline-desc">Hackathon commences. Teams start crafting semantic HTML and responsive CSS architecture in assigned lab workstations.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-marker"></div>
+          <div class="timeline-card">
+            <span class="timeline-time-badge">01:00 PM</span>
+            <h3 class="timeline-title">Mid-way Progress Check</h3>
+            <p class="timeline-desc">Faculty coordinators and industry mentors conduct quick walkthroughs to review UI fidelity, wireframe progress, and code cleanliness.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-marker"></div>
+          <div class="timeline-card">
+            <span class="timeline-time-badge">02:30 PM</span>
+            <h3 class="timeline-title">Final Submission Window</h3>
+            <p class="timeline-desc">Teams finalize responsiveness, polish animations, bundle source files, and upload to the official submission portal.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-marker"></div>
+          <div class="timeline-card">
+            <span class="timeline-time-badge">03:00 PM</span>
+            <h3 class="timeline-title">Coding Ends &amp; Jury Showcase</h3>
+            <p class="timeline-desc">Workstation freeze. Live presentation on projector, followed by jury scoring and award ceremony.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Official Rules Section
+         ========================================================================== -->
+    <section class="section section-alt" id="rules">
+      <div class="section-header reveal">
+        <span class="heading-eyebrow">Guidelines</span>
+        <h2 class="section-title">Official Codevision Rules</h2>
+        <p class="section-desc">Ensure complete compliance with our technical and procedural guidelines for a fair, high-standard competition.</p>
+      </div>
+
+      <div class="rules-grid">
+        <div class="rule-card tilt-card reveal">
+          <div class="rule-number">01</div>
+          <div class="rule-content">
+            <h3 class="rule-title">Core Web Standards</h3>
+            <p class="rule-desc">Websites must be developed using pure HTML5 and CSS3. Vanilla JavaScript may be used for interactions, but external frontend frameworks (React, Vue, etc.) are strictly prohibited.</p>
+          </div>
+        </div>
+
+        <div class="rule-card tilt-card reveal">
+          <div class="rule-number">02</div>
+          <div class="rule-content">
+            <h3 class="rule-title">Team Composition</h3>
+            <p class="rule-desc">Teams can contain 1 to 2 members. Both members must be registered college students from recognized universities or polytechnics.</p>
+          </div>
+        </div>
+
+        <div class="rule-card tilt-card reveal">
+          <div class="rule-number">03</div>
+          <div class="rule-content">
+            <h3 class="rule-title">Duration &amp; Timings</h3>
+            <p class="rule-desc">Event duration is 10:00 AM to 3:00 PM. Participants must report by 9:30 AM for QR ticket check-in and system allotment.</p>
+          </div>
+        </div>
+
+        <div class="rule-card tilt-card reveal">
+          <div class="rule-number">04</div>
+          <div class="rule-content">
+            <h3 class="rule-title">Deadline Discipline</h3>
+            <p class="rule-desc">Participants must submit their final project archive before the 2:30 PM deadline. Late submissions will face score penalties.</p>
+          </div>
+        </div>
+
+        <div class="rule-card tilt-card reveal">
+          <div class="rule-number">05</div>
+          <div class="rule-content">
+            <h3 class="rule-title">Originality of Work</h3>
+            <p class="rule-desc">External pre-built website templates and copied site packs cannot be used. All markup and stylesheet structures must be written during the event.</p>
+          </div>
+        </div>
+
+        <div class="rule-card tilt-card reveal">
+          <div class="rule-number">06</div>
+          <div class="rule-content">
+            <h3 class="rule-title">Thematic Alignment</h3>
+            <p class="rule-desc">Teams must strictly follow their assigned theme. Projects misaligned with the problem scope will not qualify for top prizes.</p>
+          </div>
+        </div>
+
+        <div class="rule-card tilt-card reveal">
+          <div class="rule-number">07</div>
+          <div class="rule-content">
+            <h3 class="rule-title">Viva &amp; Presentation</h3>
+            <p class="rule-desc">Participants must present their completed website on screen to the jury panel, explaining design choices, CSS architecture, and responsiveness.</p>
+          </div>
+        </div>
+
+        <div class="rule-card tilt-card reveal">
+          <div class="rule-number">08</div>
+          <div class="rule-content">
+            <h3 class="rule-title">Jury Final Authority</h3>
+            <p class="rule-desc">The decision of the faculty coordinators and jury members will be final and binding. Any malpractice or plagiarism leads to instant disqualification.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Theme Reveal on Event Day Section (Revealed live on Oct 24, 2026)
+         ========================================================================== -->
+    <section class="section" id="themes">
+      <div class="section-header reveal">
+        <span class="heading-eyebrow">Grand Reveal</span>
+        <h2 class="section-title">Themes Revealed on the Day of Event</h2>
+        <p class="section-desc">To maintain 100% genuine innovation and fair competition, official challenge problem tracks are kept confidential and will be unsealed live during the opening ceremony.</p>
+      </div>
+
+      <!-- Locked Theme Reveal Showcase Box -->
+      <div class="theme-reveal-card reveal">
+        <div class="theme-reveal-glow"></div>
+        <div class="theme-reveal-badge">
+          <span>🔒 OFFICIAL EVENT DAY REVEAL</span>
+        </div>
+        <h3 class="theme-reveal-heading">Problem Statements Will Be Unsealed Live</h3>
+        <p class="theme-reveal-desc">
+          As instructed by the Department of Computer Science &amp; Engineering, all competition themes will be officially unveiled on the auditorium projector screen at <strong id="themeRevealDateBanner">10:00 AM on Saturday, Oct 24, 2026</strong>. Teams will build responsive web solutions from scratch using pure HTML5 &amp; CSS3.
+        </p>
+
+        <div class="reveal-highlights-grid">
+          <div class="reveal-highlight-item">
+            <div class="highlight-icon">⏱️</div>
+            <div class="highlight-text">
+              <strong>Reveal Time</strong>
+              <span id="themeRevealBadgeDate">Oct 24, 2026 • 10:00 AM Sharp</span>
+            </div>
+          </div>
+          <div class="reveal-highlight-item">
+            <div class="highlight-icon">🎯</div>
+            <div class="highlight-text">
+              <strong>Multiple Tracks</strong>
+              <span>Web Apps, UI Dashboards &amp; EdTech</span>
+            </div>
+          </div>
+          <div class="reveal-highlight-item">
+            <div class="highlight-icon">🛡️</div>
+            <div class="highlight-text">
+              <strong>Zero Pre-building</strong>
+              <span>Pure live on-the-spot creation</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal-action-box">
+          <a href="register.html" class="btn btn-primary btn-lg">
+            <span>Register Your Team (Free)</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Call To Action Banner (Hall Ticket & Registration)
+         ========================================================================== -->
+    <section class="section">
+      <div class="cta-banner reveal">
+        <div class="cta-content">
+          <span style="font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #93C5FD; display: block; margin-bottom: 8px;">Registration Open • Free Entry</span>
+          <h2 class="cta-title">Ready to Showcase Your Frontend Mastery?</h2>
+          <p class="cta-desc">Lock your team slot today. Instant confirmation with zero registration fee, and generate your official printable Team ID Card right away.</p>
+        </div>
+        <div class="cta-actions">
+          <a href="register.html" class="btn btn-secondary btn-lg" style="background: #FFFFFF; color: var(--primary); font-weight: 700;">
+            Register Your Team (Free) →
+          </a>
+          <a href="hall-ticket.html" class="btn btn-outline btn-lg" style="color: #FFFFFF; border-color: rgba(255,255,255,0.4);">
+            Download Team ID Card
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       Footer
+       ========================================================================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <a href="index.html" class="brand-logo" style="margin-bottom: 16px;">
+            <div class="brand-icon">&lt;/&gt;</div>
+            <div class="brand-text">
+              <span class="brand-title">CODEVISION</span>
+              <span class="brand-subtitle">VEMU IT • CSE</span>
+            </div>
+          </a>
+          <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; max-width: 340px;">
+            Vemu Institute of Technology — P. Kotha Kota, Near Pakala, Chittoor District, Andhra Pradesh - 517112.
+          </p>
+          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 10px;">
+            Affiliated to JNTUA, Ananthapuramu. Approved by AICTE, New Delhi.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="#about">About Event</a></li>
+            <li><a href="#format">Event Format</a></li>
+            <li><a href="#schedule">Schedule Timeline</a></li>
+            <li><a href="#rules">Rules &amp; Regulations</a></li>
+            <li><a href="#themes">Theme Reveal</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Portals</h4>
+          <ul class="footer-links">
+            <li><a href="register.html">Team Registration (Free)</a></li>
+            <li><a href="hall-ticket.html">Team ID Card Portal</a></li>
+            <li><a href="coordinator-badge.html">Coordinator Badges</a></li>
+            <li><a href="../admin/login.html" style="font-weight: 600; color: var(--primary);">Admin Portal Login</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Support &amp; Inquiries</h4>
+          <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
+            Email: <a href="mailto:cse.codevision@vemu.org">cse.codevision@vemu.org</a><br>
+            Helpline: +91 98480 22334<br>
+            Student Helpline: +91 91234 56789
+          </p>
+          <div style="margin-top: 16px;">
+            <span class="badge badge-blue">Official CSE Portal</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © 2026 CODEVISION — Department of Computer Science &amp; Engineering, Vemu Institute of Technology. All rights reserved.
+        </div>
+        <div>
+          Crafted with pure HTML5, CSS3 &amp; Vanilla JavaScript.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../shared/js/supabase-config.js"></script>
+  <script src="../shared/js/utils.js"></script>
+  <script src="../shared/js/db.js"></script>
+  <script src="js/landing.js"></script>
+</body>
+</html>

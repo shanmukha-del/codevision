@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Registration — CODEVISION 2026 | Vemu Institute of Technology</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
+
+  <!-- Core & Shared Styles -->
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       Navigation Bar
+       ========================================================================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-icon">&lt;/&gt;</div>
+        <div class="brand-text">
+          <span class="brand-title">CODEVISION</span>
+          <span class="brand-subtitle">REGISTRATION PORTAL</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#format" class="nav-link">Format</a>
+        <a href="index.html#rules" class="nav-link">Rules</a>
+        <a href="index.html#themes" class="nav-link">Theme Reveal</a>
+        <a href="hall-ticket.html" class="nav-link">Team ID Card</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="hall-ticket.html" class="btn btn-secondary btn-sm">
+          <span>Find Team ID Card</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       Main Registration Flow
+       ========================================================================== -->
+  <main class="register-page-wrap">
+
+    <!-- Landscape Poster Header -->
+    <div class="landscape-poster-card" id="landscapePosterCard">
+      <div class="poster-backdrop"></div>
+      <div class="poster-overlay"></div>
+
+      <div class="poster-header-content">
+        <div class="poster-header-pill">
+          <span>🏛️</span>
+          <span>VEMU IT • CSE PRESENTS</span>
+        </div>
+        <h1 class="poster-header-title">
+          <span class="text-gradient">CODEVISION</span>
+        </h1>
+        <p class="poster-header-sub">
+          Ideas | Interfaces | Innovation • National Level Frontend Coding Challenge
+        </p>
+        <div class="poster-quick-badges">
+          <span class="badge badge-blue">1–2 Members</span>
+          <span class="badge badge-violet">HTML5 + CSS3</span>
+          <span class="badge badge-confirmed">100% Free Entry • No Fees</span>
+          <span class="badge" style="background:#FFFFFF; color:var(--text-main); border:1px solid var(--border);">Sat, Oct 24, 2026</span>
+        </div>
+      </div>
+
+      <div class="poster-stage">
+        <div class="poster-img-frame" id="openPosterLightbox" title="Click to view full HD poster">
+          <img src="../shared/assets/codevision-poster.jpg" alt="Codevision Official Event Poster - Vemu Institute of Technology">
+          <div class="poster-zoom-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            <span>HD View</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registration Card & Form -->
+    <div class="registration-card">
+      <div class="reg-form-header">
+        <span class="heading-eyebrow">Free Candidate Registration</span>
+        <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
+          Register Your Team
+        </h2>
+        <p style="font-size: 0.9375rem; color: var(--text-muted);">
+          Fill in your team credentials below. Once submitted, your official <strong>Team ID Card &amp; Gate Entry Pass</strong> will be generated immediately.
+        </p>
+      </div>
+
+      <form id="teamRegistrationForm" novalidate>
+
+        <!-- SECTION 1: TEAM BRAND & LOGO -->
+        <div class="form-block-section">
+          <h3 class="form-block-title">
+            <span class="block-num">1</span>
+            <span>Team Brand &amp; Identity</span>
+          </h3>
+
+          <div class="form-group">
+            <label class="form-label" for="teamName">
+              <span>Team Name <span class="required">*</span></span>
+              <span class="optional">e.g., SyntaxSorcerers, CSS_Wizards, WebPioneers</span>
+            </label>
+            <input type="text" id="teamName" class="form-input font-bold" placeholder="Enter innovative team name..." required maxlength="40">
+            <span class="form-error" id="teamName-error"></span>
+          </div>
+
+          <!-- Team Logo Direct File Upload -->
+          <div class="logo-selection-wrap">
+            <label class="form-label" for="logoFileInput">
+              <span>Team Logo / Identity Badge <span class="required">*</span></span>
+              <span class="optional">Upload your official team logo image</span>
+            </label>
+
+            <div class="logo-upload-card" id="logoDropZone">
+              <input type="file" id="logoFileInput" accept="image/png, image/jpeg, image/jpg, image/svg+xml, image/webp" style="display: none;">
+              
+              <!-- Left Preview Frame -->
+              <div class="logo-preview-box" id="logoPreviewHolder" title="Click to upload logo">
+                <div id="logoPlaceholder" class="logo-placeholder">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                  <span>Upload</span>
+                </div>
+                <img id="logoPreviewImg" src="" alt="Team Logo Preview" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+              </div>
+
+              <!-- Right Instructions & Upload Button -->
+              <div class="logo-upload-info">
+                <div class="logo-upload-prompt">
+                  <strong>Click to Browse or Drag &amp; Drop Logo</strong>
+                  <p>Upload your team emblem or mascot (PNG, JPG, SVG, WEBP - Max 2MB).</p>
+                </div>
+                <div class="logo-upload-actions">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnUploadLogo">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span id="btnUploadLogoText">Choose Logo File</span>
+                  </button>
+                  <button type="button" class="btn btn-outline btn-sm" id="btnRemoveLogo" style="display: none; color: var(--danger); border-color: rgba(220, 38, 38, 0.3);">
+                    Remove
+                  </button>
+                  <span id="logoFileName" class="logo-file-status">No logo uploaded yet</span>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="selectedLogoData" value="">
+            <span class="form-error" id="selectedLogoData-error"></span>
+          </div>
+        </div>
+
+        <!-- SECTION 2: TEAM SIZE SELECTION -->
+        <div class="form-block-section">
+          <h3 class="form-block-title">
+            <span class="block-num">2</span>
+            <span>Team Composition</span>
+          </h3>
+
+          <div class="team-size-selector">
+            <label class="size-card-option" id="sizeOpt1">
+              <input type="radio" name="teamSize" value="1" id="radioSize1">
+              <div class="size-card-content">
+                <span class="size-icon">👤</span>
+                <div>
+                  <strong class="size-title">1 Member (Solo Developer)</strong>
+                  <span class="size-desc">Individual competitor building solo</span>
+                </div>
+              </div>
+            </label>
+
+            <label class="size-card-option active" id="sizeOpt2">
+              <input type="radio" name="teamSize" value="2" id="radioSize2" checked>
+              <div class="size-card-content">
+                <span class="size-icon">👥</span>
+                <div>
+                  <strong class="size-title">2 Members (Duo Team)</strong>
+                  <span class="size-desc">Team Leader + Co-participant</span>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- SECTION 3: TEAM LEADER DETAILS -->
+        <div class="form-block-section">
+          <h3 class="form-block-title">
+            <span class="block-num">3</span>
+            <span>👑 Team Leader Information</span>
+          </h3>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="leaderName">
+                <span>Team Leader Full Name <span class="required">*</span></span>
+              </label>
+              <input type="text" id="leaderName" class="form-input" placeholder="Full name as in College ID" required>
+              <span class="form-error" id="leaderName-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="leaderRollNo">
+                <span>College Roll Number / Hall Ticket No <span class="required">*</span></span>
+                <span class="optional">e.g. 234M1A0501</span>
+              </label>
+              <input type="text" id="leaderRollNo" class="form-input font-mono" placeholder="e.g. 234M1A0501" required>
+              <span class="form-error" id="leaderRollNo-error"></span>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="leaderEmail">
+                <span>Leader Email Address <span class="required">*</span></span>
+                <span class="optional">ID card will be verified with this</span>
+              </label>
+              <input type="email" id="leaderEmail" class="form-input" placeholder="leader@example.com" required>
+              <span class="form-error" id="leaderEmail-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="leaderPhone">
+                <span>Leader Phone Number <span class="required">*</span></span>
+                <span class="optional">10-digit WhatsApp number</span>
+              </label>
+              <input type="tel" id="leaderPhone" class="form-input" placeholder="e.g. 9848022334" maxlength="10" required>
+              <span class="form-error" id="leaderPhone-error"></span>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="leaderClass">
+                <span>Class / Academic Year <span class="required">*</span></span>
+              </label>
+              <select id="leaderClass" class="form-select" required>
+                <option value="">Select Academic Year</option>
+                <option value="I B.Tech">I Year B.Tech</option>
+                <option value="II B.Tech">II Year B.Tech</option>
+                <option value="III B.Tech" selected>III Year B.Tech</option>
+                <option value="IV B.Tech">IV Year B.Tech</option>
+                <option value="MCA / Postgrad">MCA / Postgraduate</option>
+                <option value="Diploma / Polytechnic">Diploma / Polytechnic</option>
+              </select>
+              <span class="form-error" id="leaderClass-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="leaderSection">
+                <span>Section <span class="required">*</span></span>
+              </label>
+              <select id="leaderSection" class="form-select" required>
+                <option value="">Select Section</option>
+                <option value="A" selected>Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+                <option value="D">Section D</option>
+                <option value="General">General / Single Section</option>
+              </select>
+              <span class="form-error" id="leaderSection-error"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: MEMBER 2 DETAILS (CONDITIONAL) -->
+        <div class="form-block-section" id="member2Section">
+          <h3 class="form-block-title">
+            <span class="block-num">4</span>
+            <span>🤝 Member 2 Information</span>
+          </h3>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="member2Name">
+                <span>Member 2 Full Name <span class="required">*</span></span>
+              </label>
+              <input type="text" id="member2Name" class="form-input" placeholder="Full name as in College ID">
+              <span class="form-error" id="member2Name-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member2RollNo">
+                <span>Member 2 Roll Number / Hall Ticket No <span class="required">*</span></span>
+                <span class="optional">e.g. 234M1A0518</span>
+              </label>
+              <input type="text" id="member2RollNo" class="form-input font-mono" placeholder="e.g. 234M1A0518">
+              <span class="form-error" id="member2RollNo-error"></span>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="member2Email">
+                <span>Member 2 Email Address <span class="required">*</span></span>
+              </label>
+              <input type="email" id="member2Email" class="form-input" placeholder="member2@example.com">
+              <span class="form-error" id="member2Email-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member2Phone">
+                <span>Member 2 Phone Number <span class="required">*</span></span>
+              </label>
+              <input type="tel" id="member2Phone" class="form-input" placeholder="e.g. 9848099881" maxlength="10">
+              <span class="form-error" id="member2Phone-error"></span>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="member2Class">
+                <span>Member 2 Class / Academic Year <span class="required">*</span></span>
+              </label>
+              <select id="member2Class" class="form-select">
+                <option value="">Select Academic Year</option>
+                <option value="I B.Tech">I Year B.Tech</option>
+                <option value="II B.Tech">II Year B.Tech</option>
+                <option value="III B.Tech" selected>III Year B.Tech</option>
+                <option value="IV B.Tech">IV Year B.Tech</option>
+                <option value="MCA / Postgrad">MCA / Postgraduate</option>
+                <option value="Diploma / Polytechnic">Diploma / Polytechnic</option>
+              </select>
+              <span class="form-error" id="member2Class-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member2Section">
+                <span>Member 2 Section <span class="required">*</span></span>
+              </label>
+              <select id="member2Section" class="form-select">
+                <option value="">Select Section</option>
+                <option value="A" selected>Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+                <option value="D">Section D</option>
+                <option value="General">General / Single Section</option>
+              </select>
+              <span class="form-error" id="member2Section-error"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: INSTITUTION & DEPARTMENT -->
+        <div class="form-block-section">
+          <h3 class="form-block-title">
+            <span class="block-num">5</span>
+            <span>🏛️ Institution Details</span>
+          </h3>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="department">
+                <span>Department / Branch <span class="required">*</span></span>
+              </label>
+              <select id="department" class="form-select" required>
+                <option value="Computer Science & Engineering" selected>Computer Science &amp; Engineering (CSE)</option>
+                <option value="Artificial Intelligence & Data Science">AI &amp; Data Science (AI &amp; DS)</option>
+                <option value="Information Technology">Information Technology (IT)</option>
+                <option value="Electronics & Communication">Electronics &amp; Communication (ECE)</option>
+                <option value="Electrical & Electronics">Electrical &amp; Electronics (EEE)</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="MCA / BCA">MCA / BCA</option>
+                <option value="Other Department">Other Technical Department</option>
+              </select>
+              <span class="form-error" id="department-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="college">
+                <span>College / Institution Name <span class="required">*</span></span>
+              </label>
+              <input type="text" id="college" class="form-input" placeholder="e.g. Vemu Institute of Technology" value="Vemu Institute of Technology" required>
+              <span class="form-error" id="college-error"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ZERO PAYMENTS / FREE REGISTRATION CALLOUT -->
+        <div class="free-reg-callout">
+          <div class="callout-icon">🎉</div>
+          <div>
+            <strong style="color: #065F46; font-size: 1rem; display: block; margin-bottom: 2px;">
+              Zero Registration Fee • Direct Entry Pass Generation
+            </strong>
+            <p style="font-size: 0.875rem; color: #047857; margin: 0; line-height: 1.5;">
+              As confirmed by HOD Mam, registration is 100% free with no payment required. Clicking submit will immediately register your team and generate your official printable <strong>Team ID Card &amp; Gate Entry Pass</strong>!
+            </p>
+          </div>
+        </div>
+
+        <!-- FORM SUBMIT ACTIONS -->
+        <div class="form-submit-actions">
+          <a href="index.html" class="btn btn-secondary">
+            ← Cancel &amp; Return Home
+          </a>
+          <button type="submit" class="btn btn-primary btn-lg" id="btnSubmitTeam">
+            <span>Register Team &amp; Generate Team ID Card</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+
+  <!-- HD Poster Lightbox Modal -->
+  <div id="posterLightbox" role="dialog" aria-modal="true" aria-label="HD Poster View">
+    <div style="position: relative; max-width: 90vw; max-height: 90vh;">
+      <button type="button" id="closePosterLightbox" style="position: absolute; top: -40px; right: 0; background: none; border: none; color: #FFFFFF; font-size: 2rem; cursor: pointer;">✕</button>
+      <img src="../shared/assets/codevision-poster.jpg" alt="Codevision HD Poster" style="max-width: 100%; max-height: 85vh; border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);">
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../shared/js/supabase-config.js"></script>
+  <script src="../shared/js/utils.js"></script>
+  <script src="../shared/js/db.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>

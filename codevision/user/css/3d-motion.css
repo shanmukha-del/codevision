@@ -1,0 +1,265 @@
+/* ==========================================================================
+   CODEVISION — LIGHTWEIGHT 3D & MOTION DESIGN SYSTEM
+   CSS 3D Transforms, Hardware Accelerated Parallax & Micro-Interactions
+   ========================================================================== */
+
+/* 3D Perspective Canvas */
+.perspective-container {
+  perspective: 1200px;
+  perspective-origin: center center;
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* 3D Interactive Browser Mockup */
+.hero-browser-3d {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 24px 60px -12px rgba(15, 23, 42, 0.12),
+    0 10px 24px -6px rgba(37, 99, 235, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: rotateX(7deg) rotateY(-8deg) rotateZ(1deg);
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.3, 1), box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.hero-browser-3d:hover {
+  box-shadow: 
+    0 32px 70px -10px rgba(15, 23, 42, 0.16),
+    0 14px 32px -4px rgba(37, 99, 235, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.browser-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: rgba(248, 250, 252, 0.85);
+  border-bottom: 1px solid var(--border-light);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.browser-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.dot-red { background: #FF5F56; }
+.dot-yellow { background: #FFBD2E; }
+.dot-green { background: #27C93F; }
+
+.browser-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin-left: 8px;
+}
+
+.browser-tab .tab-icon {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.browser-address {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-light);
+  background: rgba(241, 245, 249, 0.8);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.browser-code-area {
+  padding: 20px 24px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #1E293B;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  overflow-x: auto;
+}
+
+/* Syntax Highlighting inside Mockup */
+.code-tag { color: #2563EB; font-weight: 600; }
+.code-attr { color: #0891B2; }
+.code-str { color: #059669; }
+.code-prop { color: #7C3AED; }
+.code-val { color: #D97706; }
+.code-comment { color: #94A3B8; font-style: italic; }
+
+/* 3D Floating Elements */
+.float-symbol {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  pointer-events: none;
+  user-select: none;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  z-index: 2;
+}
+
+.float-badge {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(37, 99, 235, 0.06);
+  padding: 8px 16px;
+  font-size: 0.8125rem;
+  color: var(--text-main);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.float-badge-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+.icon-blue { background: var(--primary-light); color: var(--primary); }
+.icon-cyan { background: var(--cyan-light); color: var(--cyan); }
+.icon-violet { background: var(--violet-light); color: var(--violet); }
+
+/* Animation keyframes for floating elements */
+@keyframes floatY {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(1.5deg);
+  }
+}
+
+@keyframes floatRev {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(12px) rotate(-1.5deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.animate-float-1 {
+  animation: floatY 5s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: floatRev 6s ease-in-out infinite;
+}
+
+.animate-float-3 {
+  animation: floatY 7s ease-in-out infinite 1s;
+}
+
+.animate-float-4 {
+  animation: floatRev 5.5s ease-in-out infinite 0.5s;
+}
+
+/* Subtle 3D Card Hover Tilt */
+.tilt-card {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.3, 1), box-shadow 0.25s ease;
+  transform-style: preserve-3d;
+}
+
+.tilt-card:hover {
+  transform: translateY(-6px) translateZ(10px);
+}
+
+/* Ambient 3D Glowing Spheres in Background */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+}
+
+.glow-blue {
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.25) 0%, transparent 70%);
+}
+
+.glow-cyan {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
+}
+
+.glow-violet {
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 70%);
+}
+
+/* Scroll Reveal classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reduced motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  .hero-browser-3d {
+    transform: none !important;
+  }
+  .animate-float-1, .animate-float-2, .animate-float-3, .animate-float-4 {
+    animation: none !important;
+  }
+  .tilt-card:hover {
+    transform: none !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

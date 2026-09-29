@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Confirmed — CODEVISION 2026 | Vemu IT</title>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
+
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .pending-page-wrap {
+      max-width: 760px;
+      margin: 48px auto 80px;
+      padding: 0 20px;
+    }
+
+    .status-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-lg);
+      padding: 40px;
+      position: relative;
+    }
+
+    .status-header-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #ECFDF5;
+      color: #059669;
+      border: 2px solid #A7F3D0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 20px;
+    }
+
+    .status-alert-box {
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .alert-confirmed {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+    }
+
+    .team-id-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FAFCFF;
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 24px;
+    }
+
+    .info-list-grid {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      row-gap: 12px;
+      font-size: 0.9375rem;
+      padding: 16px 0;
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 24px;
+    }
+
+    .info-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .info-value {
+      color: var(--text-main);
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    @media (max-width: 600px) {
+      .status-card {
+        padding: 24px 18px;
+      }
+      .info-list-grid {
+        grid-template-columns: 1fr;
+        row-gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-icon">&lt;/&gt;</div>
+        <div class="brand-text">
+          <span class="brand-title">CODEVISION</span>
+          <span class="brand-subtitle">STATUS TRACKER</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="hall-ticket.html" class="nav-link">Team ID Card Portal</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="register.html" class="btn btn-secondary btn-sm">New Registration</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Status Page -->
+  <main class="pending-page-wrap">
+    <div class="status-card" id="pendingContent">
+
+      <div class="status-header-icon" id="statusTopIcon">✓</div>
+
+      <div style="text-align: center; margin-bottom: 24px;">
+        <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
+          Registration Confirmed!
+        </h1>
+        <p style="color: var(--text-muted); font-size: 0.9375rem;">
+          Your team entry has been recorded in the Codevision database with zero registration fee.
+        </p>
+      </div>
+
+      <!-- Live Notice Banner -->
+      <div class="status-alert-box alert-confirmed" id="statusNoticeBanner">
+        <div class="alert-icon">🎉</div>
+        <div>
+          <h3 style="font-size: 1.0625rem; font-weight: 700; color: #065F46; margin-bottom: 4px;">
+            Your Slot is Confirmed
+          </h3>
+          <p style="font-size: 0.875rem; color: #047857; line-height: 1.5; margin: 0;">
+            Your official printable Team ID Card and Gate Entry Pass is ready. Please view and download your pass below.
+          </p>
+        </div>
+      </div>
+
+      <!-- Team ID & Status Badge -->
+      <div class="team-id-badge-row">
+        <div>
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 2px;">
+            Unique Team ID
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="font-mono" id="displayTeamId" style="font-size: 1.375rem; font-weight: 800; color: var(--primary);">
+              Loading...
+            </span>
+            <button type="button" class="btn btn-outline btn-sm" id="btnCopyTeamId" style="padding: 2px 8px; font-size: 0.75rem;">
+              Copy ID
+            </button>
+          </div>
+        </div>
+
+        <div id="displayStatusBadge" class="badge badge-confirmed">
+          <span class="badge-dot"></span> Confirmed Entry
+        </div>
+      </div>
+
+      <!-- Registered Details -->
+      <div class="info-list-grid">
+        <div class="info-label">Team Name:</div>
+        <div class="info-value" id="displayTeamName">—</div>
+
+        <div class="info-label">Members:</div>
+        <div class="info-value" id="displayMembers">—</div>
+
+        <div class="info-label">College &amp; Dept:</div>
+        <div class="info-value" id="displayCollege">—</div>
+
+        <div class="info-label">Registration Type:</div>
+        <div class="info-value font-mono" id="displayRegType">—</div>
+
+        <div class="info-label">Submitted On:</div>
+        <div class="info-value" id="displayDate">—</div>
+      </div>
+
+      <!-- Action Area -->
+      <div id="statusActionArea" style="margin-top: 24px;">
+        <a href="hall-ticket.html" id="btnViewIdCard" class="btn btn-primary btn-lg" style="width: 100%;">
+          View &amp; Print Team ID Card →
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../shared/js/supabase-config.js"></script>
+  <script src="../shared/js/utils.js"></script>
+  <script src="../shared/js/db.js"></script>
+  <script src="js/pending.js"></script>
+</body>
+</html>

@@ -1,0 +1,477 @@
+/* ==========================================================================
+   CODEVISION — REGISTRATION PORTAL STYLESHEET
+   HD Landscape Poster Header, Logo Selector, Team Size Toggle & Fast Submission
+   ========================================================================== */
+
+.register-page-wrap {
+  max-width: 980px;
+  margin: 32px auto 80px;
+  padding: 0 20px;
+}
+
+/* ==========================================================================
+   HD Landscape Poster Header
+   ========================================================================== */
+.landscape-poster-card {
+  position: relative;
+  width: 100%;
+  height: 290px;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(37, 99, 235, 0.08);
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFFFF;
+}
+
+/* Blurred Ambient Backdrop */
+.poster-backdrop {
+  position: absolute;
+  inset: -20px;
+  background-image: url('../../shared/assets/codevision-poster.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) brightness(1.05) saturate(1.2);
+  opacity: 0.35;
+  z-index: 1;
+  transform: scale(1.1);
+}
+
+.poster-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.82) 45%, rgba(255, 255, 255, 0.25) 100%);
+  z-index: 2;
+}
+
+/* Left Content in Landscape Header */
+.poster-header-content {
+  position: relative;
+  z-index: 3;
+  padding: 36px 44px;
+  max-width: 580px;
+}
+
+.poster-header-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.poster-header-title {
+  font-size: 2.125rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.poster-header-sub {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.poster-quick-badges {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Right Poster Preview Stage */
+.poster-stage {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  width: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+}
+
+.poster-img-frame {
+  height: 90%;
+  aspect-ratio: 2/3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 14px 28px -4px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  position: relative;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.poster-img-frame:hover {
+  transform: scale(1.04) rotate(1deg);
+  box-shadow: 0 20px 36px -4px rgba(37, 99, 235, 0.3);
+}
+
+.poster-img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.poster-zoom-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  color: #FFFFFF;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Lightbox Modal for Poster */
+#posterLightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+#posterLightbox.active {
+  display: flex;
+}
+
+/* ==========================================================================
+   Main Registration Form Card
+   ========================================================================== */
+.registration-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  padding: 44px 48px;
+  position: relative;
+}
+
+.reg-form-header {
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+
+/* Form Block Sections */
+.form-block-section {
+  background: #FAFCFF;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  transition: all var(--transition-normal);
+}
+
+.form-block-section:hover {
+  border-color: rgba(37, 99, 235, 0.25);
+  box-shadow: var(--shadow-xs);
+}
+
+.form-block-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1875rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.block-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #FFFFFF;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* ==========================================================================
+   Team Logo Direct File Upload Dropzone
+   ========================================================================== */
+.logo-selection-wrap {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-medium);
+}
+
+.logo-upload-card {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  background: #FFFFFF;
+  border: 2px dashed var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 18px 24px;
+  margin-top: 10px;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.logo-upload-card:hover,
+.logo-upload-card.dragover {
+  border-color: var(--primary);
+  background: #F8FAFF;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+}
+
+.logo-preview-box {
+  width: 82px;
+  height: 82px;
+  border-radius: var(--radius-xl);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.logo-upload-card:hover .logo-preview-box {
+  border-color: var(--primary);
+  transform: scale(1.03);
+}
+
+.logo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.logo-upload-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.logo-upload-prompt strong {
+  display: block;
+  font-size: 0.9375rem;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.logo-upload-prompt p {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.logo-upload-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.logo-file-status {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   Team Size Radio Card Selector
+   ========================================================================== */
+.team-size-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.size-card-option {
+  position: relative;
+  background: #FFFFFF;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+}
+
+.size-card-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.size-card-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.size-icon {
+  font-size: 1.75rem;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-normal);
+}
+
+.size-title {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.size-desc {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.size-card-option:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  transform: translateY(-2px);
+}
+
+.size-card-option.active {
+  border-color: var(--primary);
+  background: #F8FAFF;
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.size-card-option.active .size-icon {
+  background: var(--primary);
+  color: #FFFFFF;
+}
+
+/* Member 2 Section Transition */
+#member2Section {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   Free Registration Callout Banner
+   ========================================================================== */
+.free-reg-callout {
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.callout-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Form Actions */
+.form-submit-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-light);
+  gap: 16px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 860px) {
+  .landscape-poster-card {
+    height: auto;
+    flex-direction: column;
+  }
+  .poster-overlay {
+    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
+  }
+  .poster-header-content {
+    max-width: 100%;
+    padding: 28px 24px 12px;
+  }
+  .poster-stage {
+    width: 100%;
+    height: 220px;
+    padding: 12px 24px 28px;
+  }
+  .registration-card {
+    padding: 28px 20px;
+  }
+  .form-block-section {
+    padding: 20px 16px;
+  }
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+  .team-size-selector {
+    grid-template-columns: 1fr;
+  }
+  .logo-pick-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .form-submit-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+  .form-submit-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
