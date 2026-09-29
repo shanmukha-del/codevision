@@ -966,7 +966,77 @@ function initGateScanner() {
   const scanForm = document.getElementById('manualScanForm');
   const scanInput = document.getElementById('manualQrInput');
   const resultBox = document.getElementById('scanResultNotice');
+  const btnToggleCamera = document.getElementById('btnToggleCamera');
+  const qrVideoElement = document.getElementById('qrVideoElement');
+  const cameraPlaceholder = document.getElementById('cameraPlaceholderText');
+  const scannerContainer = document.getElementById('scannerVideoContainer');
+  const checkInsTableBody = document.getElementById('checkInsTableBody');
+  const checkInCountBadge = document.getElementById('checkInCountBadge');
+  const btnExportCheckInsCsv = document.getElementById('btnExportCheckInsCsv');
+  const btnClearCheckIns = document.getElementById('btnClearCheckIns');
 
+  let html5QrScanner = null;
+  let isCameraScanning = false;
+
+  // Render Check-in Roster Table
+  function renderCheckInsTable(checkins) {
+    if (!checkInsTableBody) return;
+    const list = checkins || (window.CodevisionDB && window.CodevisionDB.getCheckIns ? window.CodevisionDB.getCheckIns() : []);
+
+    if (checkInCountBadge) {
+      checkInCountBadge.textContent = list.length;
+    }
+
+    if (list.length === 0) {
+      checkInsTableBody.innerHTML = `
+        <tr>
+          <td colspan="8" style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.8125rem;">
+            No check-ins recorded yet. Scan or verify candidate passes above.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    checkInsTableBody.innerHTML = list.map((item, idx) => {
+      const isTeam = item.type === 'TEAM';
+      const typeBadge = isTeam
+        ? `<span class="badge badge-blue">TEAM</span>`
+        : `<span class="badge badge-green" style="background:#D1FAE5;color:#065F46;border-color:#A7F3D0;">COORD</span>`;
+      
+      const leaderDetails = isTeam
+        ? `<strong>${escapeHtml(item.leaderName || '—')}</strong><div style="font-size:0.75rem;color:var(--text-muted);">${escapeHtml(item.leaderRollNo || '')}</div>`
+        : `<strong>${escapeHtml(item.name || '—')}</strong><div style="font-size:0.75rem;color:var(--text-muted);">${escapeHtml(item.deskOrLab || '')}</div>`;
+
+      const membersList = isTeam
+        ? [item.member2Name, item.member3Name].filter(Boolean).map(m => escapeHtml(m)).join(', ') || '—'
+        : '—';
+
+      return `
+        <tr>
+          <td class="font-mono" style="font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;">${escapeHtml(item.scannedAtFormatted || item.scannedAt || '')}</td>
+          <td>${typeBadge}</td>
+          <td><span class="font-mono" style="font-weight: 700; color: var(--primary);">${escapeHtml(item.id)}</span></td>
+          <td style="font-weight: 700; color: #0F172A;">${escapeHtml(item.name)}</td>
+          <td>${leaderDetails}</td>
+          <td style="font-size: 0.8125rem;">${membersList}</td>
+          <td style="font-size: 0.8125rem; color: var(--text-muted);">${escapeHtml(item.college || 'Vemu IT')}</td>
+          <td><span style="display: inline-block; padding: 2px 8px; border-radius: 999px; background: #D1FAE5; color: #065F46; font-size: 0.75rem; font-weight: 700;">ADMITTED</span></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Subscribe to realtime check-ins
+  if (window.CodevisionDB && window.CodevisionDB.onCheckInsChange) {
+    window.CodevisionDB.onCheckInsChange((checkins) => {
+      renderCheckInsTable(checkins);
+    });
+  } else {
+    renderCheckInsTable([]);
+  }
+
+  // Process Verification of scanned code
   function processVerification(raw) {
     if (!raw || !resultBox) return;
 
@@ -979,6 +1049,26 @@ function initGateScanner() {
       const coord = allCoordinators.find(c => c.coordId.toUpperCase() === coordId.toUpperCase());
 
       if (coord) {
+        // Record Check-in
+        let checkInRes = { isDuplicate: false };
+        if (window.CodevisionDB && window.CodevisionDB.recordCheckIn) {
+          checkInRes = window.CodevisionDB.recordCheckIn({
+            type: 'COORDINATOR',
+            id: coord.coordId,
+            name: coord.name,
+            leaderName: coord.name,
+            leaderRollNo: coord.rollOrEmpId || '',
+            college: 'Vemu IT',
+            department: coord.department || 'CSE',
+            regType: 'FACULTY/STUDENT',
+            deskOrLab: coord.desk || 'General Event Operations Desk'
+          });
+        }
+
+        const duplicateNotice = checkInRes.isDuplicate
+          ? `<div style="margin-top: 8px; font-size: 0.8125rem; color: #D97706; font-weight: 700;">⚠️ Already Checked In Earlier at ${checkInRes.checkIn.scannedAtFormatted}</div>`
+          : `<div style="margin-top: 8px; font-size: 0.8125rem; color: #059669; font-weight: 700;">✅ Check-In Recorded in Gate Roster</div>`;
+
         resultBox.className = 'status-alert-box alert-confirmed';
         resultBox.innerHTML = `
           <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -989,8 +1079,10 @@ function initGateScanner() {
               <strong>Role:</strong> ${escapeHtml(coord.role)} • ${escapeHtml(coord.designation || '')}<br>
               <strong>Assigned Venue:</strong> <span style="background: #D1FAE5; padding: 2px 8px; border-radius: 4px; font-weight: 700;">${escapeHtml(coord.desk)}</span>
             </div>
+            ${duplicateNotice}
           </div>
         `;
+        window.CodevisionUtils.showToast(`Coordinator ${coord.name} admitted!`, 'success');
         return;
       }
     }
@@ -1013,13 +1105,38 @@ function initGateScanner() {
           <p style="font-size: 0.875rem;">No registered team or coordinator matches barcode "<strong>${escapeHtml(raw)}</strong>". Direct candidate to Spot Registration Desk.</p>
         </div>
       `;
+      window.CodevisionUtils.showToast('Unrecognized Pass', 'error');
       return;
     }
 
     const leader = team.leader || { name: team.member1 || '', rollNo: team.rollNo || '' };
     const m2 = team.member2;
     const m2Name = m2 ? (typeof m2 === 'object' ? m2.name : m2) : null;
+    const m3 = team.member3;
+    const m3Name = m3 && (m3.name || m3.rollNo) ? m3.name : null;
     const regType = (team.registrationType || 'ONLINE').toUpperCase();
+
+    // Record check-in to roster
+    let checkInRes = { isDuplicate: false };
+    if (window.CodevisionDB && window.CodevisionDB.recordCheckIn) {
+      checkInRes = window.CodevisionDB.recordCheckIn({
+        type: 'TEAM',
+        id: team.teamId,
+        name: team.teamName,
+        leaderName: leader.name || '',
+        leaderRollNo: leader.rollNo || '',
+        member2Name: m2Name || '',
+        member3Name: m3Name || '',
+        college: team.college || 'Vemu IT',
+        department: team.department || 'CSE',
+        regType: regType,
+        deskOrLab: 'CSE Block B — Lab 3 Workstations'
+      });
+    }
+
+    const duplicateNotice = checkInRes.isDuplicate
+      ? `<div style="margin-top: 8px; font-size: 0.8125rem; color: #D97706; font-weight: 700;">⚠️ Already Admitted at ${checkInRes.checkIn.scannedAtFormatted}</div>`
+      : `<div style="margin-top: 8px; font-size: 0.8125rem; color: #059669; font-weight: 700;">✅ Entry Confirmed &amp; Logged in Roster</div>`;
 
     resultBox.className = 'status-alert-box alert-confirmed';
     resultBox.innerHTML = `
@@ -1030,20 +1147,210 @@ function initGateScanner() {
           <strong>Team Name:</strong> ${escapeHtml(team.teamName)} (${team.teamId})<br>
           <strong>Leader:</strong> ${escapeHtml(leader.name)} (${escapeHtml(leader.rollNo || '—')})<br>
           ${m2Name ? `<strong>Member 2:</strong> ${escapeHtml(m2Name)} (${escapeHtml((m2 && m2.rollNo) || '—')})<br>` : ''}
-          ${team.member3 && (team.member3.name || team.member3.rollNo) ? `<strong>Member 3:</strong> ${escapeHtml(team.member3.name)} (${escapeHtml(team.member3.rollNo || '—')})<br>` : ''}
+          ${m3Name ? `<strong>Member 3:</strong> ${escapeHtml(m3Name)} (${escapeHtml((m3 && m3.rollNo) || '—')})<br>` : ''}
           <strong>Institution:</strong> ${escapeHtml(team.college || 'Vemu IT')} (${escapeHtml(team.department || 'CSE')})<br>
           <strong>Allocated Lab:</strong> <span style="background: #D1FAE5; padding: 2px 8px; border-radius: 4px; font-weight: 700;">CSE Block B — Lab 3 Workstations</span>
         </div>
+        ${duplicateNotice}
       </div>
     `;
+
+    window.CodevisionUtils.showToast(`Team ${team.teamName} admitted!`, 'success');
   }
 
+  // Manual Form Input
   if (scanForm && scanInput) {
     scanForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const raw = scanInput.value.trim();
       if (!raw) return;
       processVerification(raw);
+      scanInput.value = '';
+    });
+  }
+
+  // Camera QR Scanner Toggle
+  if (btnToggleCamera) {
+    btnToggleCamera.addEventListener('click', async () => {
+      if (isCameraScanning) {
+        stopCameraScanner();
+      } else {
+        startCameraScanner();
+      }
+    });
+  }
+
+  function startCameraScanner() {
+    if (!scannerContainer) return;
+
+    // Check if html5QrCode library is available
+    if (typeof Html5Qrcode !== 'undefined') {
+      try {
+        scannerContainer.innerHTML = `<div id="html5QrReaderElement" style="width: 100%; height: 100%;"></div>`;
+        html5QrScanner = new Html5Qrcode("html5QrReaderElement");
+
+        const config = { fps: 10, qrbox: { width: 220, height: 220 } };
+
+        html5QrScanner.start(
+          { facingMode: "environment" },
+          config,
+          (decodedText) => {
+            // Success QR read
+            processVerification(decodedText);
+          },
+          (errorMessage) => {
+            // Scanning in progress... ignore frame-level errors
+          }
+        ).then(() => {
+          isCameraScanning = true;
+          if (btnToggleCamera) {
+            btnToggleCamera.className = 'btn btn-outline';
+            btnToggleCamera.style.borderColor = 'rgba(220,38,38,0.5)';
+            btnToggleCamera.style.color = 'var(--danger)';
+            btnToggleCamera.innerHTML = `<span>■ Stop Camera Scanner</span>`;
+          }
+          window.CodevisionUtils.showToast('Camera scanner active! Point at Team ID Card.', 'info', 2500);
+        }).catch((err) => {
+          console.warn("Html5Qrcode error:", err);
+          fallbackNativeCamera();
+        });
+      } catch (err) {
+        console.warn("Scanner init failed, using native fallback", err);
+        fallbackNativeCamera();
+      }
+    } else {
+      fallbackNativeCamera();
+    }
+  }
+
+  function fallbackNativeCamera() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      window.CodevisionUtils.showToast('Camera access is not supported on this browser/origin. Please use manual input.', 'warning', 4000);
+      return;
+    }
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+      .then((stream) => {
+        if (qrVideoElement) {
+          qrVideoElement.srcObject = stream;
+          qrVideoElement.style.display = 'block';
+          qrVideoElement.play();
+          if (cameraPlaceholder) cameraPlaceholder.style.display = 'none';
+          isCameraScanning = true;
+          if (btnToggleCamera) {
+            btnToggleCamera.className = 'btn btn-outline';
+            btnToggleCamera.style.borderColor = 'rgba(220,38,38,0.5)';
+            btnToggleCamera.style.color = 'var(--danger)';
+            btnToggleCamera.innerHTML = `<span>■ Stop Camera Scanner</span>`;
+          }
+          window.CodevisionUtils.showToast('Camera active. (Native stream)', 'info');
+        }
+      })
+      .catch((err) => {
+        console.error("Camera access error:", err);
+        window.CodevisionUtils.showToast('Camera permission denied or not available. Please allow camera or use manual input.', 'error', 3500);
+      });
+  }
+
+  function stopCameraScanner() {
+    if (html5QrScanner) {
+      html5QrScanner.stop().then(() => {
+        html5QrScanner.clear();
+        html5QrScanner = null;
+        resetScannerUI();
+      }).catch(() => {
+        resetScannerUI();
+      });
+    } else if (qrVideoElement && qrVideoElement.srcObject) {
+      const tracks = qrVideoElement.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+      qrVideoElement.srcObject = null;
+      resetScannerUI();
+    } else {
+      resetScannerUI();
+    }
+  }
+
+  function resetScannerUI() {
+    isCameraScanning = false;
+    if (scannerContainer) {
+      scannerContainer.innerHTML = `
+        <video id="qrVideoElement" style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+        <div id="cameraPlaceholderText" style="text-align: center; padding: 20px;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-bottom: 8px; opacity: 0.7;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p style="font-size: 0.875rem; margin: 0; opacity: 0.8;">Camera inactive. Click button below to activate scanner.</p>
+        </div>
+      `;
+    }
+    if (btnToggleCamera) {
+      btnToggleCamera.className = 'btn btn-primary';
+      btnToggleCamera.style.borderColor = '';
+      btnToggleCamera.style.color = '';
+      btnToggleCamera.innerHTML = `<span>Activate Camera Scanner</span>`;
+    }
+  }
+
+  // Export Check-in Roster as CSV
+  if (btnExportCheckInsCsv) {
+    btnExportCheckInsCsv.addEventListener('click', () => {
+      const list = window.CodevisionDB && window.CodevisionDB.getCheckIns ? window.CodevisionDB.getCheckIns() : [];
+      if (list.length === 0) {
+        window.CodevisionUtils.showToast('No check-in entries to export yet.', 'warning');
+        return;
+      }
+
+      const headers = [
+        'Check-In Time', 'Type', 'ID', 'Team / Name', 'Leader / Contact',
+        'Leader Roll No', 'Member 2', 'Member 3', 'College', 'Department',
+        'Reg Type', 'Allocated Lab / Desk', 'Verified Status'
+      ];
+
+      function csvEscape(val) {
+        if (val === null || val === undefined) return '';
+        const str = String(val).replace(/"/g, '""');
+        return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
+      }
+
+      const rows = list.map(item => [
+        csvEscape(item.scannedAtFormatted || item.scannedAt || ''),
+        csvEscape(item.type || 'TEAM'),
+        csvEscape(item.id || ''),
+        csvEscape(item.name || ''),
+        csvEscape(item.leaderName || ''),
+        csvEscape(item.leaderRollNo || ''),
+        csvEscape(item.member2Name || ''),
+        csvEscape(item.member3Name || ''),
+        csvEscape(item.college || ''),
+        csvEscape(item.department || ''),
+        csvEscape(item.regType || ''),
+        csvEscape(item.deskOrLab || ''),
+        'ADMITTED'
+      ].join(','));
+
+      const csvContent = [headers.join(','), ...rows].join('\r\n');
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `CODEVISION_2026_Gate_Admitted_List_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      window.CodevisionUtils.showToast(`Exported ${list.length} admitted passes to CSV!`, 'success');
+    });
+  }
+
+  // Clear Roster
+  if (btnClearCheckIns) {
+    btnClearCheckIns.addEventListener('click', () => {
+      if (confirm('Clear the gate admission roster? Registered teams in the database will NOT be affected.')) {
+        if (window.CodevisionDB && window.CodevisionDB.clearCheckIns) {
+          window.CodevisionDB.clearCheckIns();
+        }
+        window.CodevisionUtils.showToast('Admission roster cleared.', 'info');
+      }
     });
   }
 }

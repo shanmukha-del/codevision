@@ -34,6 +34,48 @@
       margin: 20px auto 0;
     }
 
+    .coord-portal-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .coord-tab-btn {
+      padding: 10px 22px;
+      border-radius: var(--radius-full);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .coord-tab-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .coord-tab-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+    }
+
+    .coord-view-panel {
+      display: none;
+    }
+
+    .coord-view-panel.active {
+      display: block;
+    }
+
     /* Virtual Coordinator Badge (Lanyard Hanging ID Pass) */
     .virtual-badge-container {
       max-width: 440px;
@@ -320,8 +362,22 @@
 
   <main class="badge-page-wrap">
 
-    <!-- Search Box -->
-    <div class="badge-search-card no-print">
+    <!-- Coordinator Portal Tabs -->
+    <div class="coord-portal-tabs no-print">
+      <button type="button" class="coord-tab-btn active" id="tabBtnBadge" data-target="panel-badge-lookup">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>My Virtual Badge</span>
+      </button>
+      <button type="button" class="coord-tab-btn" id="tabBtnScanner" data-target="panel-coord-scanner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Gate Check-In &amp; Scanner</span>
+      </button>
+    </div>
+
+    <!-- PANEL 1: Virtual Badge Lookup -->
+    <div class="coord-view-panel active" id="panel-badge-lookup">
+      <!-- Search Box -->
+      <div class="badge-search-card no-print">
       <div class="heading-eyebrow">Official Event Committee</div>
       <h1 style="font-size: 1.875rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
         Virtual Coordinator Badges
@@ -413,8 +469,92 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           <span>Print / Save Badge (PDF)</span>
         </button>
-      </div>
+        </div>
 
+      </div>
+    </div>
+
+    <!-- PANEL 2: Coordinator Gate Check-In & Camera Scanner -->
+    <div class="coord-view-panel" id="panel-coord-scanner">
+      <div style="max-width: 680px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 1.625rem; font-weight: 800; margin-bottom: 6px; color: var(--text-main);">
+          Security Gate Check-In &amp; Pass Verifier
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">
+          Scan candidate Team ID Cards or barcodes to verify registrations, admission status, and lab seating.
+        </p>
+
+        <div class="scanner-card" style="background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-2xl); padding: 32px; box-shadow: var(--shadow-md);">
+          <div id="coordScannerVideoContainer" style="width: 100%; height: 260px; background: #0F172A; border-radius: var(--radius-lg); overflow: hidden; position: relative; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; color: #FFFFFF;">
+            <video id="coordQrVideoElement" style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+            <div id="coordCameraPlaceholderText" style="text-align: center; padding: 20px;">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-bottom: 8px; opacity: 0.7;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <p style="font-size: 0.875rem; margin: 0; opacity: 0.8;">Camera inactive. Click button below to activate scanner.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;">
+            <button type="button" class="btn btn-primary" id="btnToggleCoordCamera">
+              <span>Activate Camera Scanner</span>
+            </button>
+          </div>
+
+          <div style="border-top: 1px solid var(--border-light); padding-top: 20px;">
+            <span style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 8px; font-weight: 600;">OR MANUAL SEARCH / SCANNER GUN INPUT</span>
+            <form id="coordManualScanForm" style="display: flex; gap: 8px;">
+              <input type="text" id="coordManualQrInput" class="form-input font-mono" placeholder="Scan or type CODEVISION|CV26-XXXXX or Roll No..." required>
+              <button type="submit" class="btn btn-secondary" style="flex-shrink: 0;">Verify Pass</button>
+            </form>
+          </div>
+
+          <div id="coordScanResultNotice" style="display: none; margin-top: 20px;"></div>
+        </div>
+
+        <!-- Checked-in Teams Live Audit & Export -->
+        <div style="margin-top: 32px; text-align: left; background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-2xl); padding: 24px; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h3 style="font-size: 1.125rem; font-weight: 800; color: #0F172A; margin: 0;">
+                Admitted Candidates &amp; Gate Check-In Roster
+              </h3>
+              <p style="font-size: 0.8125rem; color: var(--text-muted); margin: 2px 0 0;">
+                Real-time synchronized roster. Admitted: <strong id="coordCheckInCountBadge" style="color: var(--primary);">0</strong>
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-outline btn-sm" id="btnExportCoordCheckInsCsv">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Admitted CSV
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive" style="max-height: 380px; overflow-y: auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Type</th>
+                  <th>ID</th>
+                  <th>Team / Name</th>
+                  <th>Leader / Contact</th>
+                  <th>Members</th>
+                  <th>College</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="coordCheckInsTableBody">
+                <tr>
+                  <td colspan="8" style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.8125rem;">
+                    No check-ins recorded yet. Scan or verify candidate passes above.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
     </div>
 
   </main>
@@ -422,6 +562,7 @@
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="js/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/utils.js"></script>
@@ -429,6 +570,26 @@
   <script src="js/splash.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // 1. Tab Switching
+      const tabBtns = document.querySelectorAll('.coord-tab-btn');
+      const viewPanels = document.querySelectorAll('.coord-view-panel');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const target = btn.getAttribute('data-target');
+          viewPanels.forEach(p => {
+            if (p.id === target) {
+              p.classList.add('active');
+            } else {
+              p.classList.remove('active');
+            }
+          });
+        });
+      });
+
+      // 2. Virtual Badge Lookup Logic
       const form = document.getElementById('coordSearchForm');
       const input = document.getElementById('coordQuery');
       const resultSec = document.getElementById('coordBadgeSection');
@@ -442,10 +603,12 @@
         searchCoordinator(coordId);
       }
 
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        searchCoordinator(input.value.trim());
-      });
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          searchCoordinator(input.value.trim());
+        });
+      }
 
       async function searchCoordinator(q) {
         if (!q) return;
@@ -467,14 +630,12 @@
             return;
           }
 
-          // Populate badge
           document.getElementById('badgeRoleTitle').textContent = (coord.role || 'Event Coordinator').toUpperCase();
           document.getElementById('badgeCoordName').textContent = coord.name;
           document.getElementById('badgeCoordDesig').textContent = `${coord.designation || 'Coordinator'} • ${coord.department || 'CSE'}`;
           document.getElementById('badgeCoordId').textContent = coord.coordId;
           document.getElementById('badgeCoordDesk').textContent = coord.desk || 'Central Operations Desk';
 
-          // Avatar
           const iconEl = document.getElementById('badgeAvatarIcon');
           const imgEl = document.getElementById('badgeAvatarImg');
           if (coord.avatar && (coord.avatar.startsWith('data:image') || coord.avatar.startsWith('http'))) {
@@ -489,7 +650,6 @@
             iconEl.innerHTML = `<span style="font-weight: 800; font-size: 2.2rem; color: var(--primary);">${(coord.name || 'C').charAt(0).toUpperCase()}</span>`;
           }
 
-          // QR Code
           const qrHolder = document.getElementById('badgeQrHolder');
           if (qrHolder && window.QRCode) {
             qrHolder.innerHTML = '';
@@ -516,7 +676,388 @@
           window.print();
         });
       }
+
+      // 3. Coordinator Gate Scanner & Admission Tracking
+      initCoordinatorGateScanner();
     });
+
+    function initCoordinatorGateScanner() {
+      const scanForm = document.getElementById('coordManualScanForm');
+      const scanInput = document.getElementById('coordManualQrInput');
+      const resultBox = document.getElementById('coordScanResultNotice');
+      const btnToggleCamera = document.getElementById('btnToggleCoordCamera');
+      const qrVideoElement = document.getElementById('coordQrVideoElement');
+      const cameraPlaceholder = document.getElementById('coordCameraPlaceholderText');
+      const scannerContainer = document.getElementById('coordScannerVideoContainer');
+      const checkInsTableBody = document.getElementById('coordCheckInsTableBody');
+      const checkInCountBadge = document.getElementById('coordCheckInCountBadge');
+      const btnExportCoordCheckInsCsv = document.getElementById('btnExportCoordCheckInsCsv');
+
+      let html5QrScanner = null;
+      let isCameraScanning = false;
+      let cachedTeams = [];
+      let cachedCoordinators = [];
+
+      // Fetch reference lists
+      if (window.CodevisionDB) {
+        if (window.CodevisionDB.getAllTeams) {
+          window.CodevisionDB.getAllTeams().then(teams => { cachedTeams = teams || []; });
+        }
+        if (window.CodevisionDB.onAllTeamsChange) {
+          window.CodevisionDB.onAllTeamsChange(teams => { cachedTeams = teams || []; });
+        }
+        if (window.CodevisionDB.getCoordinators) {
+          window.CodevisionDB.getCoordinators().then(coords => { cachedCoordinators = coords || []; });
+        }
+        if (window.CodevisionDB.onCoordinatorsChange) {
+          window.CodevisionDB.onCoordinatorsChange(coords => { cachedCoordinators = coords || []; });
+        }
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
+      }
+
+      function renderCheckInsTable(checkins) {
+        if (!checkInsTableBody) return;
+        const list = checkins || (window.CodevisionDB && window.CodevisionDB.getCheckIns ? window.CodevisionDB.getCheckIns() : []);
+
+        if (checkInCountBadge) {
+          checkInCountBadge.textContent = list.length;
+        }
+
+        if (list.length === 0) {
+          checkInsTableBody.innerHTML = `
+            <tr>
+              <td colspan="8" style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.8125rem;">
+                No check-ins recorded yet. Scan or verify candidate passes above.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        checkInsTableBody.innerHTML = list.map(item => {
+          const isTeam = item.type === 'TEAM';
+          const typeBadge = isTeam
+            ? `<span class="badge badge-blue">TEAM</span>`
+            : `<span class="badge badge-green" style="background:#D1FAE5;color:#065F46;border-color:#A7F3D0;">COORD</span>`;
+          
+          const leaderDetails = isTeam
+            ? `<strong>${escapeHtml(item.leaderName || '—')}</strong><div style="font-size:0.75rem;color:var(--text-muted);">${escapeHtml(item.leaderRollNo || '')}</div>`
+            : `<strong>${escapeHtml(item.name || '—')}</strong><div style="font-size:0.75rem;color:var(--text-muted);">${escapeHtml(item.deskOrLab || '')}</div>`;
+
+          const membersList = isTeam
+            ? [item.member2Name, item.member3Name].filter(Boolean).map(m => escapeHtml(m)).join(', ') || '—'
+            : '—';
+
+          return `
+            <tr>
+              <td class="font-mono" style="font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;">${escapeHtml(item.scannedAtFormatted || item.scannedAt || '')}</td>
+              <td>${typeBadge}</td>
+              <td><span class="font-mono" style="font-weight: 700; color: var(--primary);">${escapeHtml(item.id)}</span></td>
+              <td style="font-weight: 700; color: #0F172A;">${escapeHtml(item.name)}</td>
+              <td>${leaderDetails}</td>
+              <td style="font-size: 0.8125rem;">${membersList}</td>
+              <td style="font-size: 0.8125rem; color: var(--text-muted);">${escapeHtml(item.college || 'Vemu IT')}</td>
+              <td><span style="display: inline-block; padding: 2px 8px; border-radius: 999px; background: #D1FAE5; color: #065F46; font-size: 0.75rem; font-weight: 700;">ADMITTED</span></td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      if (window.CodevisionDB && window.CodevisionDB.onCheckInsChange) {
+        window.CodevisionDB.onCheckInsChange(list => renderCheckInsTable(list));
+      } else {
+        renderCheckInsTable([]);
+      }
+
+      function processVerification(raw) {
+        if (!raw || !resultBox) return;
+        resultBox.style.display = 'block';
+
+        // Check if Coordinator QR
+        if (raw.includes('COORD')) {
+          const parts = raw.split('|');
+          const coordId = (parts[parts.length - 1] || '').trim();
+          const coord = cachedCoordinators.find(c => c.coordId && c.coordId.toUpperCase() === coordId.toUpperCase());
+
+          if (coord) {
+            let checkInRes = { isDuplicate: false };
+            if (window.CodevisionDB && window.CodevisionDB.recordCheckIn) {
+              checkInRes = window.CodevisionDB.recordCheckIn({
+                type: 'COORDINATOR',
+                id: coord.coordId,
+                name: coord.name,
+                leaderName: coord.name,
+                leaderRollNo: coord.rollOrEmpId || '',
+                college: 'Vemu IT',
+                department: coord.department || 'CSE',
+                regType: 'FACULTY/STUDENT',
+                deskOrLab: coord.desk || 'General Event Operations Desk'
+              });
+            }
+
+            const duplicateNotice = checkInRes.isDuplicate
+              ? `<div style="margin-top: 8px; font-size: 0.8125rem; color: #D97706; font-weight: 700;">⚠️ Already Checked In Earlier at ${checkInRes.checkIn.scannedAtFormatted}</div>`
+              : `<div style="margin-top: 8px; font-size: 0.8125rem; color: #059669; font-weight: 700;">✅ Check-In Recorded in Gate Roster</div>`;
+
+            resultBox.className = 'status-alert-box alert-confirmed';
+            resultBox.innerHTML = `
+              <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div>
+                <h3 style="font-weight: 800; color: #065F46; font-size: 1.25rem;">COORDINATOR VIP GATE ACCESS APPROVED</h3>
+                <div style="font-size: 0.9375rem; margin-top: 6px; color: #047857; line-height: 1.6;">
+                  <strong>Coordinator:</strong> ${escapeHtml(coord.name)} (${coord.coordId})<br>
+                  <strong>Role:</strong> ${escapeHtml(coord.role)} • ${escapeHtml(coord.designation || '')}<br>
+                  <strong>Assigned Venue:</strong> <span style="background: #D1FAE5; padding: 2px 8px; border-radius: 4px; font-weight: 700;">${escapeHtml(coord.desk)}</span>
+                </div>
+                ${duplicateNotice}
+              </div>
+            `;
+            window.CodevisionUtils.showToast(`Coordinator ${coord.name} admitted!`, 'success');
+            return;
+          }
+        }
+
+        // Check Team QR
+        let teamId = raw;
+        if (raw.includes('|')) {
+          const parts = raw.split('|');
+          teamId = parts[parts.length - 1].trim();
+        }
+
+        const team = cachedTeams.find(t => t.teamId && t.teamId.toUpperCase() === teamId.toUpperCase());
+
+        if (!team) {
+          resultBox.className = 'status-alert-box alert-rejected';
+          resultBox.innerHTML = `
+            <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+            <div>
+              <h3 style="font-weight: 700; color: #991B1B;">INVALID ENTRY / PASS NOT RECOGNIZED</h3>
+              <p style="font-size: 0.875rem;">No registered team matches barcode "<strong>${escapeHtml(raw)}</strong>". Direct candidate to Spot Registration Desk.</p>
+            </div>
+          `;
+          window.CodevisionUtils.showToast('Unrecognized Pass', 'error');
+          return;
+        }
+
+        const leader = team.leader || { name: team.member1 || '', rollNo: team.rollNo || '' };
+        const m2 = team.member2;
+        const m2Name = m2 ? (typeof m2 === 'object' ? m2.name : m2) : null;
+        const m3 = team.member3;
+        const m3Name = m3 && (m3.name || m3.rollNo) ? m3.name : null;
+        const regType = (team.registrationType || 'ONLINE').toUpperCase();
+
+        let checkInRes = { isDuplicate: false };
+        if (window.CodevisionDB && window.CodevisionDB.recordCheckIn) {
+          checkInRes = window.CodevisionDB.recordCheckIn({
+            type: 'TEAM',
+            id: team.teamId,
+            name: team.teamName,
+            leaderName: leader.name || '',
+            leaderRollNo: leader.rollNo || '',
+            member2Name: m2Name || '',
+            member3Name: m3Name || '',
+            college: team.college || 'Vemu IT',
+            department: team.department || 'CSE',
+            regType: regType,
+            deskOrLab: 'CSE Block B — Lab 3 Workstations'
+          });
+        }
+
+        const duplicateNotice = checkInRes.isDuplicate
+          ? `<div style="margin-top: 8px; font-size: 0.8125rem; color: #D97706; font-weight: 700;">⚠️ Already Admitted at ${checkInRes.checkIn.scannedAtFormatted}</div>`
+          : `<div style="margin-top: 8px; font-size: 0.8125rem; color: #059669; font-weight: 700;">✅ Entry Confirmed &amp; Logged in Roster</div>`;
+
+        resultBox.className = 'status-alert-box alert-confirmed';
+        resultBox.innerHTML = `
+          <div class="alert-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <h3 style="font-weight: 800; color: #065F46; font-size: 1.25rem;">GATE ADMISSION CONFIRMED (${regType})</h3>
+            <div style="font-size: 0.9375rem; margin-top: 6px; color: #047857; line-height: 1.6;">
+              <strong>Team Name:</strong> ${escapeHtml(team.teamName)} (${team.teamId})<br>
+              <strong>Leader:</strong> ${escapeHtml(leader.name)} (${escapeHtml(leader.rollNo || '—')})<br>
+              ${m2Name ? `<strong>Member 2:</strong> ${escapeHtml(m2Name)} (${escapeHtml((m2 && m2.rollNo) || '—')})<br>` : ''}
+              ${m3Name ? `<strong>Member 3:</strong> ${escapeHtml(m3Name)} (${escapeHtml((m3 && m3.rollNo) || '—')})<br>` : ''}
+              <strong>Institution:</strong> ${escapeHtml(team.college || 'Vemu IT')} (${escapeHtml(team.department || 'CSE')})<br>
+              <strong>Allocated Lab:</strong> <span style="background: #D1FAE5; padding: 2px 8px; border-radius: 4px; font-weight: 700;">CSE Block B — Lab 3 Workstations</span>
+            </div>
+            ${duplicateNotice}
+          </div>
+        `;
+        window.CodevisionUtils.showToast(`Team ${team.teamName} admitted!`, 'success');
+      }
+
+      if (scanForm && scanInput) {
+        scanForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const raw = scanInput.value.trim();
+          if (!raw) return;
+          processVerification(raw);
+          scanInput.value = '';
+        });
+      }
+
+      if (btnToggleCamera) {
+        btnToggleCamera.addEventListener('click', () => {
+          if (isCameraScanning) {
+            stopCameraScanner();
+          } else {
+            startCameraScanner();
+          }
+        });
+      }
+
+      function startCameraScanner() {
+        if (!scannerContainer) return;
+
+        if (typeof Html5Qrcode !== 'undefined') {
+          try {
+            scannerContainer.innerHTML = `<div id="html5QrReaderElementCoord" style="width: 100%; height: 100%;"></div>`;
+            html5QrScanner = new Html5Qrcode("html5QrReaderElementCoord");
+
+            const config = { fps: 10, qrbox: { width: 220, height: 220 } };
+
+            html5QrScanner.start(
+              { facingMode: "environment" },
+              config,
+              (decodedText) => { processVerification(decodedText); },
+              () => {}
+            ).then(() => {
+              isCameraScanning = true;
+              if (btnToggleCamera) {
+                btnToggleCamera.className = 'btn btn-outline';
+                btnToggleCamera.style.borderColor = 'rgba(220,38,38,0.5)';
+                btnToggleCamera.style.color = 'var(--danger)';
+                btnToggleCamera.innerHTML = `<span>■ Stop Camera Scanner</span>`;
+              }
+              window.CodevisionUtils.showToast('Camera scanner active! Point at Team ID Card.', 'info', 2500);
+            }).catch(() => { fallbackNativeCamera(); });
+          } catch (err) {
+            fallbackNativeCamera();
+          }
+        } else {
+          fallbackNativeCamera();
+        }
+      }
+
+      function fallbackNativeCamera() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          window.CodevisionUtils.showToast('Camera access is not supported on this browser/origin. Please use manual input.', 'warning', 4000);
+          return;
+        }
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+          .then(stream => {
+            if (qrVideoElement) {
+              qrVideoElement.srcObject = stream;
+              qrVideoElement.style.display = 'block';
+              qrVideoElement.play();
+              if (cameraPlaceholder) cameraPlaceholder.style.display = 'none';
+              isCameraScanning = true;
+              if (btnToggleCamera) {
+                btnToggleCamera.className = 'btn btn-outline';
+                btnToggleCamera.style.borderColor = 'rgba(220,38,38,0.5)';
+                btnToggleCamera.style.color = 'var(--danger)';
+                btnToggleCamera.innerHTML = `<span>■ Stop Camera Scanner</span>`;
+              }
+              window.CodevisionUtils.showToast('Camera active. (Native stream)', 'info');
+            }
+          })
+          .catch(() => {
+            window.CodevisionUtils.showToast('Camera permission denied. Use manual input.', 'error', 3500);
+          });
+      }
+
+      function stopCameraScanner() {
+        if (html5QrScanner) {
+          html5QrScanner.stop().then(() => {
+            html5QrScanner.clear();
+            html5QrScanner = null;
+            resetScannerUI();
+          }).catch(() => resetScannerUI());
+        } else if (qrVideoElement && qrVideoElement.srcObject) {
+          const tracks = qrVideoElement.srcObject.getTracks();
+          tracks.forEach(track => track.stop());
+          qrVideoElement.srcObject = null;
+          resetScannerUI();
+        } else {
+          resetScannerUI();
+        }
+      }
+
+      function resetScannerUI() {
+        isCameraScanning = false;
+        if (scannerContainer) {
+          scannerContainer.innerHTML = `
+            <video id="coordQrVideoElement" style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+            <div id="coordCameraPlaceholderText" style="text-align: center; padding: 20px;">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-bottom: 8px; opacity: 0.7;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <p style="font-size: 0.875rem; margin: 0; opacity: 0.8;">Camera inactive. Click button below to activate scanner.</p>
+            </div>
+          `;
+        }
+        if (btnToggleCamera) {
+          btnToggleCamera.className = 'btn btn-primary';
+          btnToggleCamera.style.borderColor = '';
+          btnToggleCamera.style.color = '';
+          btnToggleCamera.innerHTML = `<span>Activate Camera Scanner</span>`;
+        }
+      }
+
+      if (btnExportCoordCheckInsCsv) {
+        btnExportCoordCheckInsCsv.addEventListener('click', () => {
+          const list = window.CodevisionDB && window.CodevisionDB.getCheckIns ? window.CodevisionDB.getCheckIns() : [];
+          if (list.length === 0) {
+            window.CodevisionUtils.showToast('No check-in entries to export yet.', 'warning');
+            return;
+          }
+
+          const headers = [
+            'Check-In Time', 'Type', 'ID', 'Team / Name', 'Leader / Contact',
+            'Leader Roll No', 'Member 2', 'Member 3', 'College', 'Department',
+            'Reg Type', 'Allocated Lab / Desk', 'Verified Status'
+          ];
+
+          function csvEscape(val) {
+            if (val === null || val === undefined) return '';
+            const str = String(val).replace(/"/g, '""');
+            return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
+          }
+
+          const rows = list.map(item => [
+            csvEscape(item.scannedAtFormatted || item.scannedAt || ''),
+            csvEscape(item.type || 'TEAM'),
+            csvEscape(item.id || ''),
+            csvEscape(item.name || ''),
+            csvEscape(item.leaderName || ''),
+            csvEscape(item.leaderRollNo || ''),
+            csvEscape(item.member2Name || ''),
+            csvEscape(item.member3Name || ''),
+            csvEscape(item.college || ''),
+            csvEscape(item.department || ''),
+            csvEscape(item.regType || ''),
+            csvEscape(item.deskOrLab || ''),
+            'ADMITTED'
+          ].join(','));
+
+          const csvContent = [headers.join(','), ...rows].join('\r\n');
+          const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `CODEVISION_2026_Gate_Admitted_List_${new Date().toISOString().slice(0, 10)}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          window.CodevisionUtils.showToast(`Exported ${list.length} admitted passes to CSV!`, 'success');
+        });
+      }
+    }
   </script>
 </body>
 </html>

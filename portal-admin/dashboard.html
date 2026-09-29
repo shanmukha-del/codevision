@@ -356,6 +356,54 @@
 
               <div id="scanResultNotice" style="display: none; margin-top: 20px;"></div>
             </div>
+
+            <!-- Checked-in Teams Live Audit & Export -->
+            <div style="margin-top: 32px; text-align: left; background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-2xl); padding: 24px; box-shadow: var(--shadow-sm);">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                <div>
+                  <h3 style="font-size: 1.125rem; font-weight: 800; color: #0F172A; margin: 0;">
+                    Admitted Candidates &amp; Gate Check-In Roster
+                  </h3>
+                  <p style="font-size: 0.8125rem; color: var(--text-muted); margin: 2px 0 0;">
+                    Verified teams and coordinators admitted at security gate. Total: <strong id="checkInCountBadge" style="color: var(--primary);">0</strong>
+                  </p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" class="btn btn-outline btn-sm" id="btnExportCheckInsCsv">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Export Admitted CSV
+                  </button>
+                  <button type="button" class="btn btn-outline btn-sm" id="btnClearCheckIns" style="color: var(--danger); border-color: rgba(220,38,38,0.3);">
+                    Clear Roster
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive" style="max-height: 380px; overflow-y: auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Type</th>
+                      <th>ID</th>
+                      <th>Team / Name</th>
+                      <th>Leader / Details</th>
+                      <th>Members</th>
+                      <th>College</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="checkInsTableBody">
+                    <tr>
+                      <td colspan="8" style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.8125rem;">
+                        No check-ins recorded yet. Scan or verify candidate passes above.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -880,6 +928,7 @@
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="js/qrcode.min.js"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/utils.js"></script>
