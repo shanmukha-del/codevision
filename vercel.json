@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/", "destination": "/user/index.html" },
+    { "source": "/register", "destination": "/user/register.html" },
+    { "source": "/login", "destination": "/admin/login.html" },
+    { "source": "/admin", "destination": "/admin/dashboard.html" },
+    { "source": "/dashboard", "destination": "/admin/dashboard.html" },
+    { "source": "/hall-ticket", "destination": "/user/hall-ticket.html" },
+    { "source": "/badge", "destination": "/user/coordinator-badge.html" }
+  ]
+}

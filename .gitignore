@@ -1,0 +1,8 @@
+# Environment & Sensitive Keys
+supabase password.txt
+*.txt
+
+# Logs
+*.log
+.DS_Store
+Thumbs.db
