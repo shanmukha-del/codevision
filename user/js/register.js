@@ -158,7 +158,7 @@ function initTeamSizeSelector() {
   const opt2 = document.getElementById('sizeOpt2');
   const radio1 = document.getElementById('radioSize1');
   const radio2 = document.getElementById('radioSize2');
-  const member2Section = document.getElementById('member2Section');
+  const member2Block = document.getElementById('member2SectionBlock') || document.getElementById('member2Section');
 
   function setSize(size) {
     currentTeamSize = size;
@@ -166,15 +166,15 @@ function initTeamSizeSelector() {
       if (opt1) opt1.classList.add('active');
       if (opt2) opt2.classList.remove('active');
       if (radio1) radio1.checked = true;
-      if (member2Section) {
-        member2Section.style.display = 'none';
+      if (member2Block) {
+        member2Block.style.display = 'none';
       }
     } else {
       if (opt2) opt2.classList.add('active');
       if (opt1) opt1.classList.remove('active');
       if (radio2) radio2.checked = true;
-      if (member2Section) {
-        member2Section.style.display = 'block';
+      if (member2Block) {
+        member2Block.style.display = 'block';
       }
     }
   }
@@ -227,7 +227,7 @@ function initRegistrationForm() {
     const leaderEmail = document.getElementById('leaderEmail').value.trim().toLowerCase();
     const leaderPhone = document.getElementById('leaderPhone').value.trim();
     const leaderClass = document.getElementById('leaderClass').value;
-    const leaderSection = document.getElementById('leaderSection').value;
+    const leaderSection = document.getElementById('leaderSection').value.trim();
 
     let member2Data = null;
     if (currentTeamSize === 2) {
@@ -237,11 +237,11 @@ function initRegistrationForm() {
         email: document.getElementById('member2Email').value.trim().toLowerCase(),
         phone: document.getElementById('member2Phone').value.trim(),
         classYear: document.getElementById('member2Class').value || leaderClass,
-        section: document.getElementById('member2Section').value || leaderSection
+        section: (document.getElementById('member2Section') ? document.getElementById('member2Section').value.trim() : '') || leaderSection
       };
     }
 
-    const department = document.getElementById('department').value;
+    const department = document.getElementById('department').value.trim();
     const college = document.getElementById('college').value.trim();
 
     const teamPayload = {
@@ -348,8 +348,8 @@ function initRegistrationForm() {
       showError(leaderClassEl, 'Please select Academic Year.');
       isValid = false;
     }
-    if (!leaderSecEl.value) {
-      showError(leaderSecEl, 'Please select Section.');
+    if (!leaderSecEl.value.trim()) {
+      showError(leaderSecEl, 'Please enter Section.');
       isValid = false;
     }
 
@@ -359,6 +359,7 @@ function initRegistrationForm() {
       const m2RollEl = document.getElementById('member2RollNo');
       const m2EmailEl = document.getElementById('member2Email');
       const m2PhoneEl = document.getElementById('member2Phone');
+      const m2SecEl = document.getElementById('member2Section');
 
       if (!m2NameEl.value.trim() || m2NameEl.value.trim().length < 3) {
         showError(m2NameEl, 'Please enter Member 2 full name.');
@@ -376,11 +377,15 @@ function initRegistrationForm() {
         showError(m2PhoneEl, 'Please enter a valid 10-digit phone for Member 2.');
         isValid = false;
       }
+      if (m2SecEl && !m2SecEl.value.trim()) {
+        showError(m2SecEl, 'Please enter Member 2 Section.');
+        isValid = false;
+      }
     }
 
     // Dept & College
-    if (!deptEl.value) {
-      showError(deptEl, 'Please select Department.');
+    if (!deptEl.value.trim()) {
+      showError(deptEl, 'Please enter Department.');
       isValid = false;
     }
     if (!collegeEl.value.trim()) {

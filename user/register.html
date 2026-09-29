@@ -259,21 +259,14 @@
               <label class="form-label" for="leaderSection">
                 <span>Section <span class="required">*</span></span>
               </label>
-              <select id="leaderSection" class="form-select" required>
-                <option value="">Select Section</option>
-                <option value="A" selected>Section A</option>
-                <option value="B">Section B</option>
-                <option value="C">Section C</option>
-                <option value="D">Section D</option>
-                <option value="General">General / Single Section</option>
-              </select>
+              <input type="text" id="leaderSection" class="form-input font-mono" placeholder="e.g. A, B, C..." value="A" required>
               <span class="form-error" id="leaderSection-error"></span>
             </div>
           </div>
         </div>
 
         <!-- SECTION 4: MEMBER 2 DETAILS (CONDITIONAL) -->
-        <div class="form-block-section" id="member2Section">
+        <div class="form-block-section" id="member2SectionBlock">
           <h3 class="form-block-title">
             <span class="block-num">4</span>
             <span>🤝 Member 2 Information</span>
@@ -337,14 +330,7 @@
               <label class="form-label" for="member2Section">
                 <span>Member 2 Section <span class="required">*</span></span>
               </label>
-              <select id="member2Section" class="form-select">
-                <option value="">Select Section</option>
-                <option value="A" selected>Section A</option>
-                <option value="B">Section B</option>
-                <option value="C">Section C</option>
-                <option value="D">Section D</option>
-                <option value="General">General / Single Section</option>
-              </select>
+              <input type="text" id="member2Section" class="form-input font-mono" placeholder="e.g. A, B, C..." value="A">
               <span class="form-error" id="member2Section-error"></span>
             </div>
           </div>
@@ -362,17 +348,7 @@
               <label class="form-label" for="department">
                 <span>Department / Branch <span class="required">*</span></span>
               </label>
-              <select id="department" class="form-select" required>
-                <option value="Computer Science & Engineering" selected>Computer Science &amp; Engineering (CSE)</option>
-                <option value="Artificial Intelligence & Data Science">AI &amp; Data Science (AI &amp; DS)</option>
-                <option value="Information Technology">Information Technology (IT)</option>
-                <option value="Electronics & Communication">Electronics &amp; Communication (ECE)</option>
-                <option value="Electrical & Electronics">Electrical &amp; Electronics (EEE)</option>
-                <option value="Mechanical Engineering">Mechanical Engineering</option>
-                <option value="Civil Engineering">Civil Engineering</option>
-                <option value="MCA / BCA">MCA / BCA</option>
-                <option value="Other Department">Other Technical Department</option>
-              </select>
+              <input type="text" id="department" class="form-input" placeholder="e.g. Computer Science & Engineering, AI & DS, ECE..." value="Computer Science & Engineering" required>
               <span class="form-error" id="department-error"></span>
             </div>
 
