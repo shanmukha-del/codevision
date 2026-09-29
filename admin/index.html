@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Sign In — CODEVISION 2026 | Vemu Institute of Technology</title>
+  
+  <link rel="icon" href="assets/college-logo.png">
+
+  <!-- Core & Admin Styles -->
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/admin.css">
+
+  <style>
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: #F8FAFC;
+    }
+
+    .login-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-2xl);
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(226, 232, 240, 0.8);
+      width: 100%;
+      max-width: 460px;
+      padding: 40px;
+      position: relative;
+    }
+
+    .demo-creds-box {
+      margin-top: 24px;
+      padding: 14px 16px;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.8125rem;
+    }
+
+    .demo-creds-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .btn-demo-fill {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      text-align: left;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-main);
+      transition: all var(--transition-fast);
+    }
+
+    .btn-demo-fill:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       LIGHT-THEME ANIMATED SPLASH SCREEN (MOBILE & LAPTOP)
+       ========================================================================== -->
+  <div id="codevisionSplash" class="cv-splash-screen" role="status" aria-live="polite" aria-label="Loading CODEVISION 2026 Admin Portal">
+    <div class="cv-splash-backdrop">
+      <div class="cv-splash-glow cv-glow-1"></div>
+      <div class="cv-splash-glow cv-glow-2"></div>
+    </div>
+    
+    <div class="cv-splash-content">
+      <div class="cv-splash-emblem-wrap">
+        <div class="cv-splash-pulse-ring"></div>
+        <div class="cv-splash-pulse-ring-outer"></div>
+        <img src="assets/college-logo.png" alt="VEMU Institute of Technology" class="cv-splash-emblem">
+      </div>
+
+      <div class="cv-splash-header">
+        <span class="cv-splash-estd">ESTD : 2008 • P.KOTHAKOTA, CHITTOOR</span>
+        <h2 class="cv-splash-college">VEMU INSTITUTE OF TECHNOLOGY</h2>
+        <span class="cv-splash-dept">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</span>
+      </div>
+
+      <div class="cv-splash-brand">
+        <h1 class="cv-splash-title">CODEVISION <span class="cv-splash-year">2026</span></h1>
+        <p class="cv-splash-tagline">Administrative Control Portal</p>
+      </div>
+
+      <div class="cv-splash-loader-wrap">
+        <div class="cv-splash-track">
+          <div class="cv-splash-bar" id="cvSplashBar"></div>
+        </div>
+        <div class="cv-splash-status">
+          <span id="cvSplashStatusText">Verifying Admin Session...</span>
+          <span id="cvSplashPercent">0%</span>
+        </div>
+      </div>
+
+      <button type="button" class="cv-splash-skip-btn" id="cvSplashSkipBtn" aria-label="Skip splash screen">
+        Enter Portal →
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       DEDICATED ADMIN SIGN-IN CARD
+       ========================================================================== -->
+  <div class="login-container">
+    <div class="login-card">
+      <div style="text-align: center; margin-bottom: 28px;">
+        <img src="assets/college-logo.png" alt="VEMU IT Logo" style="width: 68px; height: 68px; object-fit: contain; border-radius: 50%; background: #FFFFFF; padding: 3px; box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15), 0 0 0 2px var(--border); margin-bottom: 14px; display: inline-block;">
+        <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">
+          CODEVISION Admin Portal
+        </h1>
+        <p style="font-size: 0.8125rem; color: var(--text-muted); margin: 0;">
+          Vemu Institute of Technology &bull; Department of CSE
+        </p>
+      </div>
+
+      <!-- Error box -->
+      <div id="loginErrorBox" style="display: none; background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.8125rem; margin-bottom: 20px;"></div>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label class="form-label" for="adminUsername">Administrator Username</label>
+          <input type="text" id="adminUsername" class="form-input" placeholder="codevision" value="codevision" autocomplete="username" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="adminPassword">Security Password</label>
+          <input type="password" id="adminPassword" class="form-input" placeholder="••••••••" value="codevision2026" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="btnLoginSubmit" style="width: 100%; margin-top: 10px;">
+          <span>Sign In to Dashboard</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </form>
+
+      <!-- Administrator credentials display helper -->
+      <div class="demo-creds-box">
+        <div style="font-weight: 700; color: var(--text-main); display: flex; align-items: center; justify-content: space-between;">
+          <span style="display: flex; align-items: center; gap: 6px;">Administrator Credentials</span>
+          <span class="badge badge-blue" style="font-size: 0.65rem;">Official</span>
+        </div>
+        <div class="demo-creds-pills">
+          <button type="button" class="btn-demo-fill" data-username="codevision" data-pass="codevision2026">
+            <span><strong>User:</strong> <code>codevision</code> &bull; <strong>Pass:</strong> <code>codevision2026</code></span>
+            <span style="color: var(--primary); font-weight: 700;">1-Click Fill</span>
+          </button>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-light); font-size: 0.75rem; color: var(--text-muted);">
+        Official CSE Faculty &amp; Organizing Steering Committee Access
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/splash.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
