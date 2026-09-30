@@ -70,6 +70,7 @@
           <span class="badge badge-violet">HTML5 + CSS3</span>
           <span class="badge badge-confirmed">100% Free Entry • No Fees</span>
           <span class="badge" id="regPosterDateBadge" style="background:#FFFFFF; color:var(--text-main); border:1px solid var(--border);">Sat, Oct 24, 2026</span>
+          <span class="badge" id="regPageDeadlineBadge" style="background:#FEF3C7; color:#92400E; border:1px solid #FCD34D; font-weight:700;">⏳ Closes: 03 Oct 2026, 08:00 PM</span>
         </div>
       </div>
 
@@ -86,7 +87,11 @@
 
     <!-- Registration Card & Form -->
     <div class="registration-card">
-      <div class="reg-form-header">
+      <div class="reg-form-header" id="regFormHeader">
+        <div class="reg-deadline-banner" id="regDeadlineBanner" style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; background:#FEF3C7; border:1px solid #FCD34D; border-radius:999px; margin-bottom:12px; font-size:0.875rem; color:#92400E; font-weight:700;">
+          <span>⏳</span>
+          <span>Last Date to Register: <strong>Saturday, 03 Oct 2026 at 08:00 PM</strong></span>
+        </div>
         <span class="heading-eyebrow">Free Candidate Registration</span>
         <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
           Register Your Team
@@ -94,6 +99,36 @@
         <p style="font-size: 0.9375rem; color: var(--text-muted);">
           Fill in your team credentials below. Once submitted, your official <strong>Team ID Card &amp; Gate Entry Pass</strong> will be generated immediately.
         </p>
+      </div>
+
+      <!-- Registrations Closed Screen -->
+      <div id="registrationsClosedCard" class="reg-closed-card" style="display: none; text-align: center; padding: 48px 24px;">
+        <div style="width: 76px; height: 76px; border-radius: 50%; background: #FEF2F2; color: #DC2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 34px; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.15);">
+          ⛔
+        </div>
+        <span class="heading-eyebrow" style="color: #DC2626; background: #FEF2F2; border: 1px solid #FCA5A5; display: inline-block; padding: 4px 14px; border-radius: 999px; font-size: 0.8125rem; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.05em; text-transform: uppercase;">
+          Registration Window Concluded
+        </span>
+        <h2 style="font-size: 2rem; font-weight: 800; color: #111827; margin-bottom: 12px; letter-spacing: -0.02em;">
+          Registrations Are Officially Closed
+        </h2>
+        <p style="font-size: 1.0625rem; color: #4B5563; max-width: 620px; margin: 0 auto 24px; line-height: 1.6;">
+          The candidate registration portal for <strong>CODEVISION 2026</strong> officially closed on <strong>Saturday, 03 October 2026 at 08:00 PM</strong>. New team registrations are no longer accepted.
+        </p>
+        <div style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; margin-bottom: 32px; color: #334155; font-size: 0.9375rem; flex-wrap: wrap; justify-content: center;">
+          <span>📅 Event Date: <strong>Saturday, 24 October 2026</strong></span>
+          <span style="opacity: 0.3;">•</span>
+          <span>📍 Venue: <strong>CSE Labs, Vemu IT</strong></span>
+        </div>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a href="hall-ticket.html" class="btn btn-primary btn-lg" style="box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="13" y2="12"/></svg>
+            <span>Find / Download Registered Team ID Card</span>
+          </a>
+          <a href="index.html" class="btn btn-secondary btn-lg">
+            <span>← Return to Home</span>
+          </a>
+        </div>
       </div>
 
       <!-- Mandatory Event Rules & Guidelines Notice -->

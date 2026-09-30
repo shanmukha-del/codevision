@@ -7,7 +7,7 @@
   
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%232563EB'/><text x='50%' y='62%' font-family='monospace' font-weight='800' font-size='48' fill='white' text-anchor='middle'>%3C/%3E</text></svg>">
 
-  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/style.css">
   
   <style>
@@ -250,14 +250,56 @@
       }
     }
   </style>
-</head>
 <body>
+
+  <!-- ==========================================================================
+       LIGHT-THEME ANIMATED SPLASH SCREEN (MOBILE & LAPTOP)
+       ========================================================================== -->
+  <div id="codevisionSplash" class="cv-splash-screen" role="status" aria-live="polite" aria-label="Loading CODEVISION 2026">
+    <div class="cv-splash-backdrop">
+      <div class="cv-splash-glow cv-glow-1"></div>
+      <div class="cv-splash-glow cv-glow-2"></div>
+    </div>
+    
+    <div class="cv-splash-content">
+      <div class="cv-splash-emblem-wrap">
+        <div class="cv-splash-pulse-ring"></div>
+        <div class="cv-splash-pulse-ring-outer"></div>
+        <img src="assets/college-logo.png" alt="VEMU Institute of Technology" class="cv-splash-emblem">
+      </div>
+
+      <div class="cv-splash-header">
+        <span class="cv-splash-estd">ESTD : 2008 • P.KOTHAKOTA, CHITTOOR</span>
+        <h2 class="cv-splash-college">VEMU INSTITUTE OF TECHNOLOGY</h2>
+        <span class="cv-splash-dept">DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</span>
+      </div>
+
+      <div class="cv-splash-brand">
+        <h1 class="cv-splash-title">CODEVISION <span class="cv-splash-year">2026</span></h1>
+        <p class="cv-splash-tagline">Coordinator &amp; Committee Portal</p>
+      </div>
+
+      <div class="cv-splash-loader-wrap">
+        <div class="cv-splash-track">
+          <div class="cv-splash-bar" id="cvSplashBar"></div>
+        </div>
+        <div class="cv-splash-status">
+          <span id="cvSplashStatusText">Loading Coordinator Network...</span>
+          <span id="cvSplashPercent">0%</span>
+        </div>
+      </div>
+
+      <button type="button" class="cv-splash-skip-btn" id="cvSplashSkipBtn" aria-label="Skip splash screen">
+        Enter Portal →
+      </button>
+    </div>
+  </div>
 
   <!-- Navigation -->
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="brand-logo">
-        <img src="../shared/assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
+        <img src="assets/college-logo.png" alt="VEMU IT Logo" class="brand-logo-img">
         <div class="brand-text">
           <span class="brand-title">CODEVISION</span>
           <span class="brand-subtitle">COORDINATOR PORTAL</span>
@@ -268,7 +310,6 @@
         <a href="index.html" class="nav-link">Home</a>
         <a href="hall-ticket.html" class="nav-link">Team ID Card</a>
         <a href="register.html" class="nav-link">Register Team</a>
-        <a href="../admin/login.html" class="nav-link">Admin Portal</a>
       </nav>
 
       <div class="header-actions">
@@ -328,7 +369,7 @@
           <div class="coord-badge-body">
             
             <div class="coord-avatar-frame" id="badgeAvatarFrame">
-              <span id="badgeAvatarIcon">👨‍💻</span>
+              <span id="badgeAvatarIcon">CV</span>
               <img id="badgeAvatarImg" src="" alt="Coordinator Photo" style="display: none;">
             </div>
 
@@ -352,7 +393,7 @@
               </div>
 
               <div class="coord-badge-seal">
-                <span>★ VEMU IT ★</span><br>
+                <span>VEMU IT </span><br>
                 <span>ORGANIZING COMMITTEE</span><br>
                 <span>VALID: OCT 24, 2026</span>
               </div>
@@ -379,13 +420,19 @@
   </main>
 
   <!-- Scripts -->
-  <script src="../shared/js/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="js/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../shared/js/supabase-config.js"></script>
-  <script src="../shared/js/utils.js"></script>
-  <script src="../shared/js/db.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/splash.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      if (window.CodevisionDB && window.CodevisionDB.isRegistrationClosed && window.CodevisionDB.isRegistrationClosed()) {
+        document.querySelectorAll('a[href*="register.html"]').forEach(el => el.style.display = 'none');
+      }
+
       const form = document.getElementById('coordSearchForm');
       const input = document.getElementById('coordQuery');
       const resultSec = document.getElementById('coordBadgeSection');
@@ -414,7 +461,7 @@
           if (!coord) {
             notice.className = 'status-alert-box alert-rejected';
             notice.innerHTML = `
-              <div class="alert-icon">✕</div>
+              <div class="alert-icon">&times;</div>
               <div>
                 <h3 style="font-size: 1rem; font-weight: 700; color: #991B1B;">Coordinator Record Not Found</h3>
                 <p style="font-size: 0.875rem; margin: 0;">No registered coordinator matched "<strong>${window.CodevisionUtils.Validators.sanitize(q)}</strong>". Note: Coordinators are registered directly by the Admin.</p>

@@ -5,10 +5,12 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
+  initRegistrationDeadlineChecker();
   initCountdown();
   initDynamicThemes();
   init3DParallax();
   initScrollReveal();
+  setInterval(initRegistrationDeadlineChecker, 10000);
 });
 
 /* ==========================================================================
@@ -48,6 +50,71 @@ function initNavbar() {
         toggleBtn.setAttribute('aria-expanded', 'false');
       });
     });
+  }
+}
+
+/* ==========================================================================
+   Registration Deadline & Automatic Closure Handler
+   ========================================================================== */
+function initRegistrationDeadlineChecker() {
+  const isClosed = window.CodevisionDB && window.CodevisionDB.isRegistrationClosed ? window.CodevisionDB.isRegistrationClosed() : false;
+
+  const heroNotice = document.getElementById('heroRegDeadlineNotice');
+  const navRegBtn = document.getElementById('navRegisterBtn');
+  const mobileNavRegBtn = document.getElementById('mobileNavRegisterBtn');
+  const heroRegBtn = document.getElementById('heroRegisterBtn');
+  const heroTicketBtn = document.getElementById('heroHallTicketBtn');
+  const domainRevealBox = document.getElementById('domainRevealActionBox');
+  const bottomCtaRegisterBtn = document.getElementById('bottomCtaRegisterBtn');
+  const bottomCtaStatusTag = document.getElementById('bottomCtaStatusTag');
+  const bottomCtaDeadlineNotice = document.getElementById('bottomCtaDeadlineNotice');
+
+  if (isClosed) {
+    // 1. Hero Notice
+    if (heroNotice) {
+      heroNotice.innerHTML = `<span>⛔</span> <span>Registrations Officially Closed (Concluded 03 Oct 2026, 08:00 PM)</span>`;
+      heroNotice.style.background = '#FEE2E2';
+      heroNotice.style.color = '#991B1B';
+      heroNotice.style.borderColor = '#FCA5A5';
+    }
+
+    // 2. Hide register buttons across navigation and hero
+    if (navRegBtn) navRegBtn.style.display = 'none';
+    if (mobileNavRegBtn) mobileNavRegBtn.style.display = 'none';
+    if (heroRegBtn) heroRegBtn.style.display = 'none';
+    if (heroTicketBtn) {
+      heroTicketBtn.className = 'btn btn-primary btn-lg';
+    }
+    if (domainRevealBox) domainRevealBox.style.display = 'none';
+
+    // 3. Bottom CTA banner
+    if (bottomCtaStatusTag) {
+      bottomCtaStatusTag.textContent = 'REGISTRATION CONCLUDED';
+      bottomCtaStatusTag.style.color = '#FCA5A5';
+    }
+    if (bottomCtaRegisterBtn) bottomCtaRegisterBtn.style.display = 'none';
+    if (bottomCtaDeadlineNotice) {
+      bottomCtaDeadlineNotice.innerHTML = `Candidate registrations concluded on <strong>Saturday, 03 Oct 2026 at 08:00 PM</strong>.`;
+      bottomCtaDeadlineNotice.style.color = '#E2E8F0';
+    }
+
+    // 4. In theme cards (hide or change action)
+    document.querySelectorAll('.theme-footer a[href*="register.html"]').forEach(link => {
+      link.style.display = 'none';
+    });
+  } else {
+    // Open state
+    if (heroNotice) {
+      heroNotice.innerHTML = `<span>⏳</span> <span>Last Date to Register: <strong>Saturday, 03 Oct 2026 at 08:00 PM</strong></span>`;
+      heroNotice.style.background = '#FEF3C7';
+      heroNotice.style.color = '#92400E';
+      heroNotice.style.borderColor = '#FCD34D';
+    }
+    if (navRegBtn) navRegBtn.style.display = '';
+    if (mobileNavRegBtn) mobileNavRegBtn.style.display = '';
+    if (heroRegBtn) heroRegBtn.style.display = '';
+    if (domainRevealBox) domainRevealBox.style.display = '';
+    if (bottomCtaRegisterBtn) bottomCtaRegisterBtn.style.display = '';
   }
 }
 
@@ -189,6 +256,11 @@ function initDynamicThemes() {
       const iconKey = theme.icon || 'code';
       const iconHtml = iconSvgMap[iconKey] || iconSvgMap.code;
 
+      const isClosed = window.CodevisionDB && window.CodevisionDB.isRegistrationClosed ? window.CodevisionDB.isRegistrationClosed() : false;
+      const actionBadge = isClosed
+        ? `<span class="badge" style="background: #F1F5F9; color: #475569; font-size: 0.75rem; padding: 4px 10px; border-radius: 4px;">Problem Track</span>`
+        : `<a href="register.html" class="badge badge-blue" style="text-decoration: none; font-size: 0.75rem; padding: 4px 10px; border-radius: 4px;">Select in Registration &rarr;</a>`;
+
       return `
         <article class="theme-card tilt-card reveal revealed">
           <div class="theme-header">
@@ -201,7 +273,7 @@ function initDynamicThemes() {
           <p class="theme-desc">${escapeHtml(theme.description || theme.title)}</p>
           <div class="theme-footer">
             <span class="theme-difficulty ${difficultyClass}">${escapeHtml(theme.difficulty || 'Intermediate')}</span>
-            <a href="register.html" class="badge badge-blue" style="text-decoration: none; font-size: 0.75rem; padding: 4px 10px; border-radius: 4px;">Select in Registration &rarr;</a>
+            ${actionBadge}
           </div>
         </article>
       `;

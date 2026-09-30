@@ -5,11 +5,13 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  checkRegistrationDeadline();
   initLogoSelector();
   initTeamSizeSelector();
   initThemesSubscription();
   initRegistrationForm();
   initPosterLightbox();
+  setInterval(checkRegistrationDeadline, 10000);
 });
 
 let currentTeamSize = 2;
@@ -310,6 +312,45 @@ function initThemesSubscription() {
 }
 
 /* ==========================================================================
+   Registration Deadline Enforcement
+   ========================================================================== */
+function checkRegistrationDeadline() {
+  const isClosed = window.CodevisionDB && window.CodevisionDB.isRegistrationClosed ? window.CodevisionDB.isRegistrationClosed() : false;
+
+  const formEl = document.getElementById('teamRegistrationForm');
+  const closedCard = document.getElementById('registrationsClosedCard');
+  const rulesBanner = document.getElementById('mandatoryRulesBanner');
+  const domainsBanner = document.getElementById('domainsRevealBanner');
+  const regHeader = document.getElementById('regFormHeader');
+  const deadlineBadge = document.getElementById('regPageDeadlineBadge');
+  const regDeadlineBanner = document.getElementById('regDeadlineBanner');
+
+  if (isClosed) {
+    if (formEl) formEl.style.display = 'none';
+    if (rulesBanner) rulesBanner.style.display = 'none';
+    if (domainsBanner) domainsBanner.style.display = 'none';
+    if (regHeader) regHeader.style.display = 'none';
+    if (closedCard) closedCard.style.display = 'block';
+
+    if (deadlineBadge) {
+      deadlineBadge.textContent = '⛔ Registrations Closed';
+      deadlineBadge.style.background = '#FEE2E2';
+      deadlineBadge.style.color = '#991B1B';
+      deadlineBadge.style.borderColor = '#FCA5A5';
+    }
+    if (regDeadlineBanner) {
+      regDeadlineBanner.style.display = 'none';
+    }
+  } else {
+    if (closedCard) closedCard.style.display = 'none';
+    if (formEl) formEl.style.display = 'block';
+    if (rulesBanner) rulesBanner.style.display = 'block';
+    if (domainsBanner) domainsBanner.style.display = 'block';
+    if (regHeader) regHeader.style.display = 'block';
+  }
+}
+
+/* ==========================================================================
    Form Submission & Realtime Registration
    ========================================================================== */
 function initRegistrationForm() {
@@ -318,6 +359,12 @@ function initRegistrationForm() {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    if (window.CodevisionDB && window.CodevisionDB.isRegistrationClosed && window.CodevisionDB.isRegistrationClosed()) {
+      window.CodevisionUtils.showToast('Registration is officially closed. The deadline was Saturday, 03 Oct 2026 at 08:00 PM.', 'error');
+      checkRegistrationDeadline();
+      return;
+    }
 
     if (!validateForm()) {
       return;

@@ -6,7 +6,16 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initHallTicketLookup();
+  checkHallTicketPageClosure();
 });
+
+function checkHallTicketPageClosure() {
+  if (window.CodevisionDB && window.CodevisionDB.isRegistrationClosed && window.CodevisionDB.isRegistrationClosed()) {
+    document.querySelectorAll('a[href*="register.html"]').forEach(el => {
+      el.style.display = 'none';
+    });
+  }
+}
 
 function initHallTicketLookup() {
   const form = document.getElementById('hallTicketSearchForm');

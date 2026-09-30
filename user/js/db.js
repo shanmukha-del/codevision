@@ -22,6 +22,10 @@
   const SUPABASE_URL = "https://ezlmspomkhbluxwxpdge.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6bG1zcG9ta2hibHV4d3hwZGdlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MzA3MTMsImV4cCI6MjEwNjIwNjcxM30.0QL0FlvewJj-mKoUQlhKdcVRxEVmr-Hyt4TIs4iXyTo";
 
+  // Registration Deadline: Saturday, 03 October 2026 at 8:00 PM (20:00:00 IST)
+  const REGISTRATION_DEADLINE_ISO = '2026-10-03T20:00:00+05:30';
+  const REGISTRATION_DEADLINE_FORMATTED = 'Saturday, Oct 03, 2026 at 08:00 PM';
+
   // BroadcastChannel for instant inter-tab real-time sync
   let broadcastChannel = null;
   try {
@@ -876,9 +880,30 @@
     },
 
     // ----------------------------------------
+    // REGISTRATION DEADLINE & STATUS
+    // ----------------------------------------
+    getRegistrationDeadline() {
+      return {
+        iso: REGISTRATION_DEADLINE_ISO,
+        formatted: REGISTRATION_DEADLINE_FORMATTED,
+        shortFormatted: '03 Oct 2026, 08:00 PM',
+        timestamp: new Date(REGISTRATION_DEADLINE_ISO).getTime()
+      };
+    },
+
+    isRegistrationClosed() {
+      return Date.now() >= new Date(REGISTRATION_DEADLINE_ISO).getTime();
+    },
+
+    // ----------------------------------------
     // 2. TEAMS CRUD (Online & Spot Registrations)
     // ----------------------------------------
     async registerTeam(teamData) {
+      const isSpot = (teamData.registrationType || '').toUpperCase() === 'SPOT';
+      if (!isSpot && DB.isRegistrationClosed()) {
+        throw new Error('Registration is officially closed. The deadline was Saturday, 03 Oct 2026 at 08:00 PM.');
+      }
+
       const teamId = window.CodevisionUtils ? window.CodevisionUtils.generateTeamId() : 'CV26-' + Math.random().toString(36).substr(2, 5).toUpperCase();
       
       const teamSize = Number(teamData.teamSize || (teamData.member3 ? 3 : 2));

@@ -429,6 +429,10 @@
   <script src="js/splash.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      if (window.CodevisionDB && window.CodevisionDB.isRegistrationClosed && window.CodevisionDB.isRegistrationClosed()) {
+        document.querySelectorAll('a[href*="register.html"]').forEach(el => el.style.display = 'none');
+      }
+
       const form = document.getElementById('coordSearchForm');
       const input = document.getElementById('coordQuery');
       const resultSec = document.getElementById('coordBadgeSection');
