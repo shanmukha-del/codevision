@@ -134,15 +134,19 @@ function initCountdown() {
         fmtSub.textContent = `${schedule.durationHours} hours of non-stop innovation, live mentorship, and final jury viva.`;
       }
 
-      // Update Theme Reveal Banner
-      const themeDateBanner = document.getElementById('themeRevealDateBanner');
-      if (themeDateBanner && schedule.startTimeFormatted && schedule.eventDateFormatted) {
-        themeDateBanner.textContent = `${schedule.startTimeFormatted} on ${schedule.eventDateFormatted}`;
-      }
+      // Update Schedule Timeline Badges
+      const bReporting = document.getElementById('schedBadgeReporting');
+      if (bReporting && schedule.reportingTimeFormatted) bReporting.textContent = schedule.reportingTimeFormatted;
 
-      const themeBadgeDate = document.getElementById('themeRevealBadgeDate');
-      if (themeBadgeDate && schedule.eventDateFormatted && schedule.startTimeFormatted) {
-        themeBadgeDate.textContent = `${schedule.eventDateFormatted} • ${schedule.startTimeFormatted} Sharp`;
+      const bAnnounce = document.getElementById('schedBadgeAnnounce');
+      if (bAnnounce && schedule.startTimeFormatted) bAnnounce.textContent = schedule.startTimeFormatted;
+
+      const bEnd = document.getElementById('schedBadgeEnd');
+      if (bEnd && schedule.endTimeFormatted) bEnd.textContent = schedule.endTimeFormatted;
+
+      const ruleScheduleDesc = document.getElementById('ruleScheduleDesc');
+      if (ruleScheduleDesc && schedule.startTimeFormatted && schedule.endTimeFormatted && schedule.reportingTimeFormatted) {
+        ruleScheduleDesc.textContent = `Event duration is ${schedule.startTimeFormatted} to ${schedule.endTimeFormatted}. Participants must report by ${schedule.reportingTimeFormatted} for QR ticket check-in and system allotment.`;
       }
 
       update();
@@ -194,10 +198,10 @@ function initDynamicThemes() {
             </div>
           </div>
           <h3 class="theme-title">${escapeHtml(theme.title)}</h3>
-          <p class="theme-desc">${escapeHtml(theme.description)}</p>
+          <p class="theme-desc">${escapeHtml(theme.description || theme.title)}</p>
           <div class="theme-footer">
             <span class="theme-difficulty ${difficultyClass}">${escapeHtml(theme.difficulty || 'Intermediate')}</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Assigned on Event Day</span>
+            <a href="register.html" class="badge badge-blue" style="text-decoration: none; font-size: 0.75rem; padding: 4px 10px; border-radius: 4px;">Select in Registration &rarr;</a>
           </div>
         </article>
       `;

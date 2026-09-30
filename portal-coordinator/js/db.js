@@ -507,18 +507,25 @@
     const size = Number(t.teamSize || (m3 ? 3 : 2));
 
     let notesText = t.notes || (t.registrationType === 'SPOT' ? 'Spot Registration at Help Desk' : 'Online Registration Confirmed');
+    const meta = {};
     if (m3 && (m3.name || m3.rollNo)) {
-      const meta = {
-        actualTeamSize: 3,
-        member3: {
-          name: (m3.name || '').trim(),
-          rollNo: (m3.rollNo || '').trim().toUpperCase(),
-          email: (m3.email || '').trim().toLowerCase(),
-          phone: (m3.phone || '').trim(),
-          classYear: (m3.classYear || leaderClassYear).trim(),
-          section: (m3.section || leaderSection).trim().toUpperCase()
-        }
+      meta.actualTeamSize = 3;
+      meta.member3 = {
+        name: (m3.name || '').trim(),
+        rollNo: (m3.rollNo || '').trim().toUpperCase(),
+        email: (m3.email || '').trim().toLowerCase(),
+        phone: (m3.phone || '').trim(),
+        classYear: (m3.classYear || leaderClassYear).trim(),
+        section: (m3.section || leaderSection).trim().toUpperCase()
       };
+    }
+    if (t.selectedTheme) {
+      meta.selectedTheme = t.selectedTheme;
+    }
+    if (t.themeId) {
+      meta.themeId = t.themeId;
+    }
+    if (Object.keys(meta).length > 0) {
       notesText = `[CV_META:${JSON.stringify(meta)}] ${notesText}`.trim();
     }
 
@@ -553,6 +560,8 @@
 
   function supabaseRowToTeam(r) {
     let parsedM3 = null;
+    let parsedSelectedTheme = '';
+    let parsedThemeId = '';
     let effectiveTeamSize = Number(r.team_size || 2);
     let cleanNotes = r.notes || '';
 
@@ -563,6 +572,8 @@
           const meta = JSON.parse(match[1]);
           if (meta.member3) parsedM3 = meta.member3;
           if (meta.actualTeamSize) effectiveTeamSize = meta.actualTeamSize;
+          if (meta.selectedTheme) parsedSelectedTheme = meta.selectedTheme;
+          if (meta.themeId) parsedThemeId = meta.themeId;
           cleanNotes = cleanNotes.replace(/\[CV_META:.*?\]\s*/, '');
         }
       } catch (err) {
@@ -587,6 +598,8 @@
       teamName: r.team_name,
       teamLogo: r.team_logo || 'CV',
       teamSize: effectiveTeamSize,
+      selectedTheme: parsedSelectedTheme || r.selected_theme || '',
+      themeId: parsedThemeId || r.theme_id || '',
       leader: {
         name: r.leader_name || '',
         email: r.leader_email || '',
@@ -899,6 +912,8 @@
         teamName: (teamData.teamName || '').trim(),
         teamLogo: teamData.teamLogo || 'CV',
         teamSize,
+        selectedTheme: (teamData.selectedTheme || teamData.themeTitle || '').trim(),
+        themeId: teamData.themeId || '',
         leader: {
           name: leaderName.trim(),
           email: leaderEmail.trim().toLowerCase(),

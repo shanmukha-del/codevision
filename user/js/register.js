@@ -7,6 +7,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initLogoSelector();
   initTeamSizeSelector();
+  initThemesSubscription();
   initRegistrationForm();
   initPosterLightbox();
 });
@@ -197,6 +198,118 @@ function initTeamSizeSelector() {
 }
 
 /* ==========================================================================
+   Themes & Domain Tracks Realtime Listener
+   ========================================================================== */
+let availableThemes = [];
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function initThemesSubscription() {
+  const themeSelect = document.getElementById('selectedTheme');
+  const previewDiv = document.getElementById('selectedThemePreview');
+  const badgeEl = document.getElementById('selectedThemeBadge');
+  const descEl = document.getElementById('selectedThemeDesc');
+  const regDomainsList = document.getElementById('regPageDomainsList');
+
+  // Real-time Event Schedule sync for registration poster badge
+  if (window.CodevisionDB && window.CodevisionDB.onEventScheduleChange) {
+    window.CodevisionDB.onEventScheduleChange((schedule) => {
+      if (!schedule) return;
+      const posterDate = document.getElementById('regPosterDateBadge');
+      if (posterDate && schedule.eventDateFormatted) {
+        posterDate.textContent = schedule.eventDateFormatted;
+      }
+    });
+  }
+
+  // Real-time Themes sync from Database
+  if (window.CodevisionDB && window.CodevisionDB.onThemesChange) {
+    window.CodevisionDB.onThemesChange((themes) => {
+      availableThemes = themes || [];
+
+      // 1. Populate Dropdown
+      if (themeSelect) {
+        const currentVal = themeSelect.value;
+        themeSelect.innerHTML = `<option value="" disabled ${!currentVal ? 'selected' : ''}>-- Select a Problem Domain Track --</option>` +
+          availableThemes.map((t, idx) => {
+            const trackNum = t.number || String(idx + 1).padStart(2, '0');
+            const safeTitle = escapeHtml(t.title);
+            const safeDesc = escapeHtml(t.description || t.title);
+            return `<option value="${safeTitle}" data-id="${t.themeId}" data-num="${trackNum}" data-desc="${safeDesc}" ${currentVal === t.title ? 'selected' : ''}>Track ${trackNum}: ${safeTitle}</option>`;
+          }).join('');
+
+        if (currentVal && availableThemes.some(t => t.title === currentVal)) {
+          themeSelect.value = currentVal;
+          updateThemePreview();
+        } else if (currentVal) {
+          if (previewDiv) previewDiv.style.display = 'none';
+        }
+      }
+
+      // 2. Populate Domains Preview Grid on Registration Page
+      if (regDomainsList) {
+        if (availableThemes.length === 0) {
+          regDomainsList.innerHTML = `<p style="grid-column: 1 / -1; font-size: 0.8125rem; color: var(--text-muted); text-align: center; padding: 12px;">Loading problem domains...</p>`;
+        } else {
+          regDomainsList.innerHTML = availableThemes.map((t, idx) => {
+            const trackNum = t.number || String(idx + 1).padStart(2, '0');
+            const safeTitle = escapeHtml(t.title);
+            const safeDesc = escapeHtml(t.description || t.title);
+            const diff = escapeHtml(t.difficulty || 'Intermediate');
+            return `
+              <div class="reg-domain-card" onclick="selectThemeFromCard('${safeTitle}')">
+                <div class="reg-domain-header">
+                  <span class="badge badge-blue">Track ${trackNum}</span>
+                  <span class="reg-domain-diff">${diff}</span>
+                </div>
+                <h4 class="reg-domain-title">${safeTitle}</h4>
+                <p class="reg-domain-desc">${safeDesc}</p>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+    });
+  }
+
+  if (themeSelect) {
+    themeSelect.addEventListener('change', updateThemePreview);
+  }
+
+  function updateThemePreview() {
+    if (!themeSelect || !previewDiv) return;
+    const selectedOpt = (themeSelect.selectedIndex >= 0) ? themeSelect.options[themeSelect.selectedIndex] : null;
+    if (selectedOpt && selectedOpt.value) {
+      previewDiv.style.display = 'block';
+      if (badgeEl) badgeEl.textContent = selectedOpt.getAttribute('data-num') ? `Track ${selectedOpt.getAttribute('data-num')}` : 'Track Statement';
+      if (descEl) descEl.textContent = selectedOpt.getAttribute('data-desc') || selectedOpt.value;
+    } else {
+      previewDiv.style.display = 'none';
+    }
+  }
+
+  window.selectThemeFromCard = function(themeTitle) {
+    if (themeSelect) {
+      themeSelect.value = themeTitle;
+      updateThemePreview();
+      themeSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      themeSelect.focus();
+      if (window.CodevisionUtils && window.CodevisionUtils.showToast) {
+        window.CodevisionUtils.showToast(`Selected "${themeTitle}" track!`, 'info', 2000);
+      }
+    }
+  };
+}
+
+/* ==========================================================================
    Form Submission & Realtime Registration
    ========================================================================== */
 function initRegistrationForm() {
@@ -266,10 +379,17 @@ function initRegistrationForm() {
     const department = document.getElementById('department').value.trim();
     const college = document.getElementById('college').value.trim();
 
+    const themeSelect = document.getElementById('selectedTheme');
+    const selectedTheme = themeSelect ? themeSelect.value.trim() : '';
+    const selectedThemeOpt = (themeSelect && themeSelect.selectedIndex >= 0) ? themeSelect.options[themeSelect.selectedIndex] : null;
+    const themeId = selectedThemeOpt ? (selectedThemeOpt.getAttribute('data-id') || '') : '';
+
     const teamPayload = {
       teamName,
       teamLogo: selectedLogo,
       teamSize: currentTeamSize,
+      selectedTheme,
+      themeId,
       leader: {
         name: leaderName,
         rollNo: leaderRollNo,
@@ -352,6 +472,15 @@ function initRegistrationForm() {
     if (!selectedLogo || !logoDataEl || !logoDataEl.value) {
       if (dropZone) {
         showError(dropZone, 'Please upload your official team logo image.');
+      }
+      isValid = false;
+    }
+
+    // Challenge Problem Domain Track (Mandatory)
+    const themeSelect = document.getElementById('selectedTheme');
+    if (!themeSelect || !themeSelect.value) {
+      if (themeSelect) {
+        showError(themeSelect, 'Please select a Challenge Problem Domain Track.');
       }
       isValid = false;
     }

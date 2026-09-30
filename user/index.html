@@ -83,7 +83,7 @@
         <a href="#schedule" class="nav-link">Schedule</a>
         <a href="#rules" class="nav-link">Rules</a>
         <a href="#themes" class="nav-link">Theme Reveal</a>
-        <a href="../portal-coordinator/index.html" class="nav-link">Coordinators</a>
+        <a href="coordinator-badge.html" class="nav-link">Coordinators</a>
         <a href="hall-ticket.html" class="nav-link">Team ID Card</a>
       </nav>
 
@@ -109,10 +109,9 @@
       <a href="#schedule" class="nav-link">Schedule Timeline</a>
       <a href="#rules" class="nav-link">Official Rules</a>
       <a href="#themes" class="nav-link">Event Day Theme Reveal</a>
-      <a href="../portal-coordinator/index.html" class="nav-link">Coordinator Badges</a>
+      <a href="coordinator-badge.html" class="nav-link">Coordinator Badges</a>
       <a href="hall-ticket.html" class="nav-link" style="color: var(--primary); font-weight: 700;">Virtual Team ID Card</a>
       <a href="register.html" class="btn btn-primary" style="margin-top: 8px;">Register Your Team (Free)</a>
-      <a href="../portal-admin/index.html" class="nav-link" style="font-size: 0.8125rem; color: var(--text-muted); text-align: center;">Admin Portal Login →</a>
     </div>
   </header>
 
@@ -319,8 +318,8 @@
         <div class="timeline-item reveal">
           <div class="timeline-marker"></div>
           <div class="timeline-card">
-            <span class="timeline-time-badge">10:00 AM</span>
-            <h3 class="timeline-title">Registration &amp; Briefing</h3>
+            <span class="timeline-time-badge" id="schedBadgeReporting">09:30 AM</span>
+            <h3 class="timeline-title">Reporting &amp; Gate Verification</h3>
             <p class="timeline-desc">Teams report to CSE Seminar Hall, scan hall tickets at verification gate, and receive event kits and lab workstation allocations.</p>
           </div>
         </div>
@@ -328,16 +327,16 @@
         <div class="timeline-item reveal">
           <div class="timeline-marker"></div>
           <div class="timeline-card">
-            <span class="timeline-time-badge">10:15 AM</span>
-            <h3 class="timeline-title">Theme Announcement</h3>
-            <p class="timeline-desc">Official problem statements and surprise thematic criteria revealed live by the convener and jury panel.</p>
+            <span class="timeline-time-badge" id="schedBadgeAnnounce">10:00 AM</span>
+            <h3 class="timeline-title">Event Kickoff &amp; Domain Briefing</h3>
+            <p class="timeline-desc">Official challenge rules and domain expectations presented by the convener and jury panel.</p>
           </div>
         </div>
 
         <div class="timeline-item reveal">
           <div class="timeline-marker"></div>
           <div class="timeline-card">
-            <span class="timeline-time-badge">10:30 AM</span>
+            <span class="timeline-time-badge" id="schedBadgeStart">10:15 AM</span>
             <h3 class="timeline-title">Coding Begins</h3>
             <p class="timeline-desc">Hackathon commences. Teams start crafting semantic HTML and responsive CSS architecture in assigned lab workstations.</p>
           </div>
@@ -346,7 +345,7 @@
         <div class="timeline-item reveal">
           <div class="timeline-marker"></div>
           <div class="timeline-card">
-            <span class="timeline-time-badge">01:00 PM</span>
+            <span class="timeline-time-badge" id="schedBadgeMid">01:00 PM</span>
             <h3 class="timeline-title">Mid-way Progress Check</h3>
             <p class="timeline-desc">Faculty coordinators and industry mentors conduct quick walkthroughs to review UI fidelity, wireframe progress, and code cleanliness.</p>
           </div>
@@ -355,7 +354,7 @@
         <div class="timeline-item reveal">
           <div class="timeline-marker"></div>
           <div class="timeline-card">
-            <span class="timeline-time-badge">02:30 PM</span>
+            <span class="timeline-time-badge" id="schedBadgeSubmit">02:30 PM</span>
             <h3 class="timeline-title">Final Submission Window</h3>
             <p class="timeline-desc">Teams finalize responsiveness, polish animations, bundle source files, and upload to the official submission portal.</p>
           </div>
@@ -364,7 +363,7 @@
         <div class="timeline-item reveal">
           <div class="timeline-marker"></div>
           <div class="timeline-card">
-            <span class="timeline-time-badge">03:00 PM</span>
+            <span class="timeline-time-badge" id="schedBadgeEnd">03:00 PM</span>
             <h3 class="timeline-title">Coding Ends &amp; Jury Showcase</h3>
             <p class="timeline-desc">Workstation freeze. Live presentation on projector, followed by jury scoring and award ceremony.</p>
           </div>
@@ -403,7 +402,7 @@
           <div class="rule-number">03</div>
           <div class="rule-content">
             <h3 class="rule-title">Duration &amp; Timings</h3>
-            <p class="rule-desc">Event duration is 10:00 AM to 3:00 PM. Participants must report by 9:30 AM for QR ticket check-in and system allotment.</p>
+            <p class="rule-desc" id="ruleScheduleDesc">Event duration is 10:00 AM to 3:00 PM. Participants must report by 9:30 AM for QR ticket check-in and system allotment.</p>
           </div>
         </div>
 
@@ -450,56 +449,25 @@
     </section>
 
     <!-- ==========================================================================
-         Theme Reveal on Event Day Section (Revealed live on Oct 24, 2026)
+         Official Problem Domains & Challenge Tracks (Revealed Live)
          ========================================================================== -->
     <section class="section" id="themes">
       <div class="section-header reveal">
-        <span class="heading-eyebrow">Grand Reveal</span>
-        <h2 class="section-title">Themes Revealed on the Day of Event</h2>
-        <p class="section-desc">To maintain 100% genuine innovation and fair competition, official challenge problem tracks are kept confidential and will be unsealed live during the opening ceremony.</p>
+        <span class="heading-eyebrow">Challenge Tracks</span>
+        <h2 class="section-title">Official Problem Domains &amp; Themes</h2>
+        <p class="section-desc">Explore the 4 official competition tracks below. Teams can choose their desired problem domain during registration and build responsive web solutions using HTML5 &amp; CSS3.</p>
       </div>
 
-      <!-- Locked Theme Reveal Showcase Box -->
-      <div class="theme-reveal-card reveal">
-        <div class="theme-reveal-glow"></div>
-        <div class="theme-reveal-badge">
-          <span> OFFICIAL EVENT DAY REVEAL</span>
-        </div>
-        <h3 class="theme-reveal-heading">Problem Statements Will Be Unsealed Live</h3>
-        <p class="theme-reveal-desc">
-          As instructed by the Department of Computer Science &amp; Engineering, all competition themes will be officially unveiled on the auditorium projector screen at <strong id="themeRevealDateBanner">10:00 AM on Saturday, Oct 24, 2026</strong>. Teams will build responsive web solutions from scratch using pure HTML5 &amp; CSS3.
-        </p>
+      <!-- Realtime Dynamic Themes Grid (Live synced with DB/Admin) -->
+      <div id="dynamic-themes-list" class="themes-grid reveal">
+        <!-- Populated dynamically via CodevisionDB.onThemesChange -->
+      </div>
 
-        <div class="reveal-highlights-grid">
-          <div class="reveal-highlight-item">
-            <div class="highlight-icon">⏱️</div>
-            <div class="highlight-text">
-              <strong>Reveal Time</strong>
-              <span id="themeRevealBadgeDate">Oct 24, 2026 • 10:00 AM Sharp</span>
-            </div>
-          </div>
-          <div class="reveal-highlight-item">
-            <div class="highlight-icon"></div>
-            <div class="highlight-text">
-              <strong>Multiple Tracks</strong>
-              <span>Web Apps, UI Dashboards &amp; EdTech</span>
-            </div>
-          </div>
-          <div class="reveal-highlight-item">
-            <div class="highlight-icon"></div>
-            <div class="highlight-text">
-              <strong>Zero Pre-building</strong>
-              <span>Pure live on-the-spot creation</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="reveal-action-box">
-          <a href="register.html" class="btn btn-primary btn-lg">
-            <span>Register Your Team (Free)</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </a>
-        </div>
+      <div class="reveal-action-box" style="margin-top: 36px; text-align: center;">
+        <a href="register.html" class="btn btn-primary btn-lg">
+          <span>Choose Domain &amp; Register Your Team (Free)</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </div>
     </section>
 

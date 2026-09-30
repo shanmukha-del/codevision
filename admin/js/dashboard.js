@@ -308,9 +308,18 @@ function initStatsAndTeams() {
             <div style="display: flex; align-items: center;">
               ${logoHtml}
               <!-- Clicking Team Name directly opens details modal -->
-              <span class="team-name-link" onclick="viewTeamModal('${team.teamId}')" title="Click to view full team details">
-                ${escapeHtml(team.teamName)}
-              </span>
+              <div>
+                <span class="team-name-link" onclick="viewTeamModal('${team.teamId}')" title="Click to view full team details">
+                  ${escapeHtml(team.teamName)}
+                </span>
+                ${team.selectedTheme ? `
+                  <div style="margin-top: 3px;">
+                    <span style="font-size: 0.6875rem; background: rgba(37, 99, 235, 0.08); color: var(--primary); padding: 2px 6px; border-radius: 4px; font-weight: 700; border: 1px solid rgba(37, 99, 235, 0.2);">
+                      ${escapeHtml(team.selectedTheme)}
+                    </span>
+                  </div>
+                ` : ''}
+              </div>
             </div>
           </td>
           <td>
@@ -418,6 +427,16 @@ window.viewTeamModal = function(teamId) {
   const regBadge = document.getElementById('modalRegTypeBadge');
   regBadge.className = `badge ${regType === 'SPOT' ? 'badge-spot' : 'badge-confirmed'}`;
   regBadge.textContent = regType === 'SPOT' ? 'SPOT WALK-IN' : 'ONLINE VERIFIED';
+
+  const domainBadge = document.getElementById('modalDomainTrackBadge');
+  if (domainBadge) {
+    if (team.selectedTheme) {
+      domainBadge.textContent = team.selectedTheme;
+      domainBadge.style.display = 'inline-block';
+    } else {
+      domainBadge.style.display = 'none';
+    }
+  }
 
   // Logo
   const logoThumb = document.getElementById('modalTeamLogoThumb');
@@ -630,10 +649,19 @@ function initSpotRegistration() {
       const dept = document.getElementById('spotDept').value.trim();
       const college = document.getElementById('spotCollege').value.trim();
 
+      const spotThemeEl = document.getElementById('spotTheme');
+      const selectedTheme = spotThemeEl ? spotThemeEl.value.trim() : '';
+
+      if (!selectedTheme) {
+        window.CodevisionUtils.showToast('Please select a Problem Domain Track for the team.', 'warning');
+        return;
+      }
+
       const payload = {
         teamName,
         teamLogo: teamLogo,
         teamSize,
+        selectedTheme,
         leader: {
           name: leaderName,
           rollNo: leaderRoll,
@@ -679,6 +707,12 @@ function initSpotRegistration() {
 }
 
 window.openSpotRegistrationModal = function() {
+  const spotThemeEl = document.getElementById('spotTheme');
+  if (spotThemeEl && allThemes) {
+    const cur = spotThemeEl.value;
+    spotThemeEl.innerHTML = `<option value="" disabled ${!cur ? 'selected' : ''}>-- Select Problem Domain Track --</option>` +
+      allThemes.map((t, idx) => `<option value="${escapeHtml(t.title)}" ${cur === t.title ? 'selected' : ''}>${t.number ? `Track ${t.number}: ` : ''}${escapeHtml(t.title)}</option>`).join('');
+  }
   window.CodevisionUtils.openModal('spotRegModal');
 };
 

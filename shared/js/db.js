@@ -14,7 +14,8 @@
     TEAMS: 'codevision_data_teams',
     COORDINATORS: 'codevision_data_coordinators',
     EVENT_SCHEDULE: 'codevision_data_event_schedule',
-    ADMIN_SESSION: 'codevision_admin_session'
+    ADMIN_SESSION: 'codevision_admin_session',
+    CHECKINS: 'codevision_data_gate_checkins'
   };
 
   // Supabase Configuration
@@ -38,6 +39,7 @@
   const scheduleListeners = new Set();
   const singleTeamListeners = new Map(); // teamId -> Set of callbacks
   const authListeners = new Set();
+  const checkinListeners = new Set();
 
   // Initial Seed Data — Challenge Themes
   const INITIAL_THEMES = [
@@ -381,6 +383,18 @@
     localStorage.setItem(STORAGE_KEYS.EVENT_SCHEDULE, JSON.stringify(schedule));
   }
 
+  function getStoredCheckins() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.CHECKINS);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return [];
+  }
+
+  function saveStoredCheckins(list) {
+    localStorage.setItem(STORAGE_KEYS.CHECKINS, JSON.stringify(list));
+  }
+
   // Realtime notification dispatcher
   function notifyChange(type, payload = {}) {
     if (broadcastChannel) {
@@ -426,6 +440,13 @@
       const schedule = getStoredSchedule();
       scheduleListeners.forEach(cb => {
         try { cb(schedule); } catch (e) { console.error(e); }
+      });
+    }
+
+    if (type.startsWith('CHECKIN_')) {
+      const checkins = getStoredCheckins();
+      checkinListeners.forEach(cb => {
+        try { cb(checkins); } catch (e) { console.error(e); }
       });
     }
   }
@@ -486,18 +507,25 @@
     const size = Number(t.teamSize || (m3 ? 3 : 2));
 
     let notesText = t.notes || (t.registrationType === 'SPOT' ? 'Spot Registration at Help Desk' : 'Online Registration Confirmed');
+    const meta = {};
     if (m3 && (m3.name || m3.rollNo)) {
-      const meta = {
-        actualTeamSize: 3,
-        member3: {
-          name: (m3.name || '').trim(),
-          rollNo: (m3.rollNo || '').trim().toUpperCase(),
-          email: (m3.email || '').trim().toLowerCase(),
-          phone: (m3.phone || '').trim(),
-          classYear: (m3.classYear || leaderClassYear).trim(),
-          section: (m3.section || leaderSection).trim().toUpperCase()
-        }
+      meta.actualTeamSize = 3;
+      meta.member3 = {
+        name: (m3.name || '').trim(),
+        rollNo: (m3.rollNo || '').trim().toUpperCase(),
+        email: (m3.email || '').trim().toLowerCase(),
+        phone: (m3.phone || '').trim(),
+        classYear: (m3.classYear || leaderClassYear).trim(),
+        section: (m3.section || leaderSection).trim().toUpperCase()
       };
+    }
+    if (t.selectedTheme) {
+      meta.selectedTheme = t.selectedTheme;
+    }
+    if (t.themeId) {
+      meta.themeId = t.themeId;
+    }
+    if (Object.keys(meta).length > 0) {
       notesText = `[CV_META:${JSON.stringify(meta)}] ${notesText}`.trim();
     }
 
@@ -532,6 +560,8 @@
 
   function supabaseRowToTeam(r) {
     let parsedM3 = null;
+    let parsedSelectedTheme = '';
+    let parsedThemeId = '';
     let effectiveTeamSize = Number(r.team_size || 2);
     let cleanNotes = r.notes || '';
 
@@ -542,6 +572,8 @@
           const meta = JSON.parse(match[1]);
           if (meta.member3) parsedM3 = meta.member3;
           if (meta.actualTeamSize) effectiveTeamSize = meta.actualTeamSize;
+          if (meta.selectedTheme) parsedSelectedTheme = meta.selectedTheme;
+          if (meta.themeId) parsedThemeId = meta.themeId;
           cleanNotes = cleanNotes.replace(/\[CV_META:.*?\]\s*/, '');
         }
       } catch (err) {
@@ -566,6 +598,8 @@
       teamName: r.team_name,
       teamLogo: r.team_logo || 'CV',
       teamSize: effectiveTeamSize,
+      selectedTheme: parsedSelectedTheme || r.selected_theme || '',
+      themeId: parsedThemeId || r.theme_id || '',
       leader: {
         name: r.leader_name || '',
         email: r.leader_email || '',
@@ -878,6 +912,8 @@
         teamName: (teamData.teamName || '').trim(),
         teamLogo: teamData.teamLogo || 'CV',
         teamSize,
+        selectedTheme: (teamData.selectedTheme || teamData.themeTitle || '').trim(),
+        themeId: teamData.themeId || '',
         leader: {
           name: leaderName.trim(),
           email: leaderEmail.trim().toLowerCase(),
@@ -1208,7 +1244,7 @@
 
       return {
         success: false,
-        error: 'Invalid credentials. Please enter username: codevision and password: codevision2026'
+        error: 'Invalid credentials. Please try again.'
       };
     },
 
@@ -1270,6 +1306,57 @@
       scheduleListeners.add(callback);
       DB.getEventSchedule().then(sched => callback(sched));
       return () => scheduleListeners.delete(callback);
+    },
+
+    // ----------------------------------------
+    // 7. GATE CHECK-IN TRACKING & AUDIT LOG
+    // ----------------------------------------
+    recordCheckIn(entry) {
+      const checkins = getStoredCheckins();
+      const newEntry = {
+        checkInId: 'CHK_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        scannedAt: new Date().toISOString(),
+        scannedAtFormatted: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        type: entry.type || 'TEAM', // 'TEAM' or 'COORDINATOR'
+        id: entry.id,
+        name: entry.name,
+        leaderName: entry.leaderName || '',
+        leaderRollNo: entry.leaderRollNo || '',
+        member2Name: entry.member2Name || '',
+        member3Name: entry.member3Name || '',
+        college: entry.college || '',
+        department: entry.department || '',
+        regType: entry.regType || 'ONLINE',
+        deskOrLab: entry.deskOrLab || 'CSE Block B — Lab 3 Workstations',
+        scannedBy: entry.scannedBy || 'Gate Scanner'
+      };
+
+      // Check if already checked in
+      const existing = checkins.find(c => c.id && c.id.toUpperCase() === entry.id.toUpperCase());
+      if (existing) {
+        return { success: true, isDuplicate: true, checkIn: existing };
+      }
+
+      checkins.unshift(newEntry);
+      saveStoredCheckins(checkins);
+      notifyChange('CHECKIN_ADDED', { checkIn: newEntry });
+      return { success: true, isDuplicate: false, checkIn: newEntry };
+    },
+
+    getCheckIns() {
+      return getStoredCheckins();
+    },
+
+    clearCheckIns() {
+      saveStoredCheckins([]);
+      notifyChange('CHECKIN_CLEARED', {});
+      return true;
+    },
+
+    onCheckInsChange(callback) {
+      checkinListeners.add(callback);
+      callback(getStoredCheckins());
+      return () => checkinListeners.delete(callback);
     },
 
     // Reset helper

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Team Registration — CODEVISION 2026 | Vemu Institute of Technology</title>
   
   <!-- Favicon -->
@@ -69,7 +69,7 @@
           <span class="badge badge-blue">2–3 Members</span>
           <span class="badge badge-violet">HTML5 + CSS3</span>
           <span class="badge badge-confirmed">100% Free Entry • No Fees</span>
-          <span class="badge" style="background:#FFFFFF; color:var(--text-main); border:1px solid var(--border);">Sat, Oct 24, 2026</span>
+          <span class="badge" id="regPosterDateBadge" style="background:#FFFFFF; color:var(--text-main); border:1px solid var(--border);">Sat, Oct 24, 2026</span>
         </div>
       </div>
 
@@ -94,6 +94,65 @@
         <p style="font-size: 0.9375rem; color: var(--text-muted);">
           Fill in your team credentials below. Once submitted, your official <strong>Team ID Card &amp; Gate Entry Pass</strong> will be generated immediately.
         </p>
+      </div>
+
+      <!-- Mandatory Event Rules & Guidelines Notice -->
+      <div class="mandatory-rules-banner" id="mandatoryRulesBanner">
+        <div class="rules-banner-header">
+          <div class="rules-icon-pill">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>MANDATORY EVENT RULES &amp; REGULATIONS</span>
+          </div>
+          <span class="rules-banner-sub">All participating candidates must strictly adhere to the following 4 rules:</span>
+        </div>
+        <div class="rules-banner-grid">
+          <div class="rule-box-item">
+            <div class="rule-box-num">1</div>
+            <div class="rule-box-content">
+              <strong>Bring Own Laptop &amp; Belongings</strong>
+              <p>Every team must bring their own laptop, charger &amp; accessories. College management will not provide personal systems.</p>
+            </div>
+          </div>
+          <div class="rule-box-item">
+            <div class="rule-box-num">2</div>
+            <div class="rule-box-content">
+              <strong>Maintain Strict Discipline</strong>
+              <p>Strict campus discipline, professional decorum, and compliance with lab protocols must be maintained throughout.</p>
+            </div>
+          </div>
+          <div class="rule-box-item">
+            <div class="rule-box-num">3</div>
+            <div class="rule-box-content">
+              <strong>No Mobile Phones Allowed</strong>
+              <p>Mobile phones are strictly not allowed during the live coding competition session.</p>
+            </div>
+          </div>
+          <div class="rule-box-item">
+            <div class="rule-box-num">4</div>
+            <div class="rule-box-content">
+              <strong>Report Strictly In-Time</strong>
+              <p>Teams must report in-time (09:30 AM) at the registration gate and present their verified Team ID Card / Entry Pass.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Problem Domains Revealed Banner -->
+      <div class="domains-reveal-banner" id="domainsRevealBanner">
+        <div class="domains-banner-header">
+          <div class="domains-header-title">
+            <span class="badge badge-blue">OFFICIAL PROBLEM TRACKS</span>
+            <h3 style="margin: 4px 0 0; font-size: 1.125rem; font-weight: 800; color: var(--text-main);">
+              Key Challenge Domains Revealed
+            </h3>
+          </div>
+          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 4px;">
+            Click any domain card to select it for your team below, or choose directly from the dropdown in Section 1.
+          </p>
+        </div>
+        <div class="reg-domains-grid" id="regPageDomainsList">
+          <!-- Populated live via CodevisionDB.onThemesChange -->
+        </div>
       </div>
 
       <form id="teamRegistrationForm" novalidate>
@@ -157,6 +216,22 @@
             </div>
             <input type="hidden" id="selectedLogoData" value="">
             <span class="form-error" id="selectedLogoData-error"></span>
+          </div>
+
+          <!-- Problem Domain / Track Selection -->
+          <div class="form-group" style="margin-top: 24px; padding-top: 18px; border-top: 1px dashed var(--border-medium);">
+            <label class="form-label" for="selectedTheme">
+              <span>Challenge Problem Domain / Track <span class="required">*</span></span>
+              <span class="optional">Choose the official problem domain your team will build for</span>
+            </label>
+            <select id="selectedTheme" class="form-select font-bold" required>
+              <option value="" disabled selected>-- Loading Official Challenge Domains... --</option>
+            </select>
+            <span class="form-error" id="selectedTheme-error"></span>
+            <div id="selectedThemePreview" style="display: none; margin-top: 10px; padding: 12px 16px; background: #F8FAFC; border: 1.5px solid rgba(37, 99, 235, 0.2); border-radius: var(--radius-md);">
+              <span class="badge badge-blue" id="selectedThemeBadge" style="margin-bottom: 4px; display: inline-block;">Track 01</span>
+              <p id="selectedThemeDesc" style="font-size: 0.8125rem; color: var(--text-muted); margin: 0; line-height: 1.4;"></p>
+            </div>
           </div>
         </div>
 

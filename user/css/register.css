@@ -432,7 +432,161 @@
   gap: 16px;
 }
 
-/* Responsive Overrides */
+/* ==========================================================================
+   Mandatory Event Rules Banner
+   ========================================================================== */
+.mandatory-rules-banner {
+  background: #FFFBEB;
+  border: 1.5px solid #FDE68A;
+  border-radius: var(--radius-xl);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.06);
+}
+
+.rules-banner-header {
+  margin-bottom: 14px;
+}
+
+.rules-icon-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FCD34D;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.rules-banner-sub {
+  display: block;
+  font-size: 0.8125rem;
+  color: #92400E;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.rules-banner-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.rule-box-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #FFFFFF;
+  border: 1px solid #FDE68A;
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+}
+
+.rule-box-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #F59E0B;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rule-box-content strong {
+  display: block;
+  font-size: 0.875rem;
+  color: #78350F;
+  margin-bottom: 2px;
+}
+
+.rule-box-content p {
+  font-size: 0.8125rem;
+  color: #92400E;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Problem Domains Reveal Banner (Registration Page)
+   ========================================================================== */
+.domains-reveal-banner {
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+
+.domains-banner-header {
+  margin-bottom: 16px;
+}
+
+.reg-domains-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.reg-domain-card {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reg-domain-card:hover {
+  border-color: var(--primary);
+  background: #F8FAFF;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.1);
+}
+
+.reg-domain-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reg-domain-diff {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.reg-domain-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.reg-domain-desc {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Mobile Responsive Overrides & Viewport Auto-Zoom Fix
+   ========================================================================== */
 @media (max-width: 860px) {
   .landscape-poster-card {
     height: auto;
@@ -443,21 +597,22 @@
   }
   .poster-header-content {
     max-width: 100%;
-    padding: 28px 24px 12px;
+    padding: 24px 20px 10px;
   }
   .poster-stage {
     width: 100%;
-    height: 220px;
-    padding: 12px 24px 28px;
+    height: 200px;
+    padding: 10px 20px 24px;
   }
   .registration-card {
-    padding: 28px 20px;
+    padding: 24px 16px;
   }
   .form-block-section {
-    padding: 20px 16px;
+    padding: 18px 14px;
   }
   .form-row-2 {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
   .team-size-selector {
     grid-template-columns: 1fr;
@@ -472,6 +627,51 @@
   }
   .form-submit-actions .btn {
     width: 100%;
+    justify-content: center;
+  }
+  .rules-banner-grid,
+  .reg-domains-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Prevent iOS Safari / Android Chrome automatic zooming upon tapping inputs */
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 16px !important;
+  }
+
+  .register-page-wrap {
+    margin: 16px auto 60px;
+    padding: 0 12px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .poster-header-title {
+    font-size: 1.625rem;
+  }
+
+  .poster-quick-badges {
+    gap: 6px;
+  }
+
+  .logo-upload-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    padding: 16px 12px;
+  }
+
+  .logo-upload-info {
+    align-items: center;
+  }
+
+  .logo-upload-actions {
+    flex-wrap: wrap;
     justify-content: center;
   }
 }

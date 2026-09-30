@@ -479,6 +479,7 @@
             <div style="display: flex; align-items: center; gap: 8px;">
               <span class="font-mono" id="modalTeamId" style="font-weight: 800; color: var(--primary); font-size: 0.9375rem;">—</span>
               <span id="modalRegTypeBadge" class="badge badge-confirmed">ONLINE</span>
+              <span id="modalDomainTrackBadge" class="badge badge-blue" style="display: none;">Track</span>
             </div>
           </div>
         </div>
@@ -597,6 +598,14 @@
                 <input type="hidden" id="spotLogoData" value="CV">
               </div>
             </div>
+          </div>
+
+          <!-- Problem Domain Track Selection -->
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label class="form-label" for="spotTheme">Problem Domain Track <span class="required">*</span></label>
+            <select id="spotTheme" class="form-select" required>
+              <option value="" disabled selected>-- Select Problem Domain Track --</option>
+            </select>
           </div>
 
           <!-- Team Composition: 2 or 3 Members Only -->
