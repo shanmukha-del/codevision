@@ -766,19 +766,30 @@ function initCoordinatorManager() {
 
       const name = document.getElementById('coordName') ? document.getElementById('coordName').value.trim() : '';
       const rollOrEmpId = document.getElementById('coordRollEmpId') ? document.getElementById('coordRollEmpId').value.trim().toUpperCase() : '';
-      const role = document.getElementById('coordCategory') ? document.getElementById('coordCategory').value : 'Event Coordinator';
-      const designation = document.getElementById('coordDesignation') ? document.getElementById('coordDesignation').value.trim() : '';
-      const email = document.getElementById('coordEmail') ? document.getElementById('coordEmail').value.trim().toLowerCase() : '';
       const phone = document.getElementById('coordPhone') ? document.getElementById('coordPhone').value.trim() : '';
-      const dept = document.getElementById('coordDept') ? document.getElementById('coordDept').value.trim() : 'Computer Science & Engineering';
-      const desk = document.getElementById('coordDesk') ? document.getElementById('coordDesk').value.trim() : '';
       const avatarEl = document.getElementById('coordAvatarData');
       const avatar = avatarEl && avatarEl.value ? avatarEl.value : '';
 
-      if (!name || !email) {
-        window.CodevisionUtils.showToast('Please fill in Name and Email.', 'warning');
+      if (!name) {
+        window.CodevisionUtils.showToast('Please enter the Coordinator Full Name.', 'warning');
         return;
       }
+      if (!rollOrEmpId) {
+        window.CodevisionUtils.showToast('Please enter the Roll Number or Employee ID.', 'warning');
+        return;
+      }
+      if (!phone || phone.length < 10) {
+        window.CodevisionUtils.showToast('Please enter a valid 10-digit Mobile Number.', 'warning');
+        return;
+      }
+
+      // Automatically deduce role and defaults
+      const isEmp = rollOrEmpId.toUpperCase().includes('EMP') || rollOrEmpId.toUpperCase().startsWith('FAC');
+      const role = isEmp ? 'Faculty Coordinator' : 'Student Coordinator';
+      const designation = isEmp ? 'Coordinator' : 'Student Lead';
+      const dept = 'Computer Science & Engineering';
+      const desk = 'Central Registration Desk';
+      const email = `${rollOrEmpId.toLowerCase()}@vemu.org`;
 
       const submitBtn = document.getElementById('btnSaveCoord');
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saving...'; }
@@ -789,6 +800,7 @@ function initCoordinatorManager() {
         });
         window.CodevisionUtils.showToast(`Coordinator ${newCoord.name} registered! Virtual badge generated.`, 'success', 2500);
         closeCoordRegModal();
+        if (form) form.reset();
         viewCoordBadgeModal(newCoord.coordId);
       } catch (err) {
         console.error(err);

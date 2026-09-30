@@ -751,52 +751,19 @@
         <button type="button" class="modal-close" onclick="window.closeCoordRegModal()">&times;</button>
       </div>
       <form id="coordForm">
-        <div class="modal-body">
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="coordName">Full Name <span class="required">*</span></label>
-              <input type="text" id="coordName" class="form-input" placeholder="e.g. Dr. A. Suresh" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="coordCategory">Role Category <span class="required">*</span></label>
-              <select id="coordCategory" class="form-select" required>
-                <option value="faculty">Faculty Coordinator</option>
-                <option value="student">Student Lead Coordinator</option>
-                <option value="volunteer">Technical Volunteer</option>
-              </select>
-            </div>
+          <div class="form-group">
+            <label class="form-label" for="coordName">Full Name <span class="required">*</span></label>
+            <input type="text" id="coordName" class="form-input" placeholder="e.g. Dr. A. Suresh / K. Rahul" required autofocus>
           </div>
 
           <div class="form-row-2">
             <div class="form-group">
-              <label class="form-label" for="coordRollEmpId">Roll or Employee ID <span class="required">*</span></label>
-              <input type="text" id="coordRollEmpId" class="form-input font-mono" placeholder="e.g. EMP-CSE-42" required>
+              <label class="form-label" for="coordRollEmpId">Roll Number / Employee ID <span class="required">*</span></label>
+              <input type="text" id="coordRollEmpId" class="form-input font-mono" placeholder="e.g. 234M1A0501 / EMP-CSE-42" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="coordDesignation">Designation <span class="required">*</span></label>
-              <input type="text" id="coordDesignation" class="form-input" placeholder="e.g. Associate Professor" required>
-            </div>
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="coordEmail">Email Address <span class="required">*</span></label>
-              <input type="email" id="coordEmail" class="form-input" placeholder="coord@vemu.org" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="coordPhone">Phone Number <span class="required">*</span></label>
-              <input type="tel" id="coordPhone" class="form-input" placeholder="10 Digits" maxlength="10" required>
-            </div>
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="coordDept">Department <span class="required">*</span></label>
-              <input type="text" id="coordDept" class="form-input" value="Computer Science &amp; Engineering" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="coordDesk">Assigned Desk / Lab <span class="required">*</span></label>
-              <input type="text" id="coordDesk" class="form-input" value="Central Registration Desk" required>
+              <label class="form-label" for="coordPhone">Mobile Number <span class="required">*</span></label>
+              <input type="tel" id="coordPhone" class="form-input" placeholder="10 Digits Mobile Number" maxlength="10" required>
             </div>
           </div>
 

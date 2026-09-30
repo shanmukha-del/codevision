@@ -194,21 +194,22 @@ function initHallTicketLookup() {
 
     // Dynamic Event Schedule & Timing
     if (window.CodevisionDB && window.CodevisionDB.getEventSchedule) {
-      const schedule = window.CodevisionDB.getEventSchedule();
-      if (schedule) {
-        const dateEl = document.getElementById('ticketEventDate');
-        if (dateEl && schedule.eventDateFormatted) {
-          dateEl.textContent = schedule.eventDateFormatted;
+      Promise.resolve(window.CodevisionDB.getEventSchedule()).then(schedule => {
+        if (schedule) {
+          const dateEl = document.getElementById('ticketEventDate');
+          if (dateEl && schedule.eventDateFormatted) {
+            dateEl.textContent = schedule.eventDateFormatted;
+          }
+          const timeEl = document.getElementById('ticketEventTiming');
+          if (timeEl && schedule.reportingTimeFormatted && schedule.startTimeFormatted && schedule.endTimeFormatted) {
+            timeEl.textContent = `${schedule.reportingTimeFormatted} (${schedule.startTimeFormatted} – ${schedule.endTimeFormatted})`;
+          }
+          const venueEl = document.getElementById('ticketEventVenue');
+          if (venueEl && schedule.venue) {
+            venueEl.textContent = schedule.venue;
+          }
         }
-        const timeEl = document.getElementById('ticketEventTiming');
-        if (timeEl && schedule.reportingTimeFormatted && schedule.startTimeFormatted && schedule.endTimeFormatted) {
-          timeEl.textContent = `${schedule.reportingTimeFormatted} (${schedule.startTimeFormatted} – ${schedule.endTimeFormatted})`;
-        }
-        const venueEl = document.getElementById('ticketEventVenue');
-        if (venueEl && schedule.venue) {
-          venueEl.textContent = schedule.venue;
-        }
-      }
+      }).catch(err => console.warn('Schedule fetch error:', err));
     }
 
     // 7. Security QR Code: CODEVISION|{teamId}
@@ -250,7 +251,7 @@ function initHallTicketLookup() {
     }
 
     // Auto-dispatch confirmation email if newly registered
-    if (isNew && window.CodevisionEmail && window.CodevisionEmail.dispatchTeamConfirmation) {
+    if (isNewlyRegistered && window.CodevisionEmail && window.CodevisionEmail.dispatchTeamConfirmation) {
       window.CodevisionEmail.dispatchTeamConfirmation(team);
     }
   }
