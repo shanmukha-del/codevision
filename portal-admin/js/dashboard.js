@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initThemeManager();
   initScheduleManager();
   initGateScanner();
+  initBulkMailManager();
   initSettingsModal();
 });
 
@@ -498,6 +499,10 @@ window.viewTeamModal = function(teamId) {
   const modalActions = document.getElementById('teamModalActions');
   modalActions.innerHTML = `
     <button type="button" class="btn btn-secondary" onclick="closeTeamDetailModal()">Close</button>
+    <button type="button" class="btn btn-secondary" onclick="sendEmailToSingleTeam('${team.teamId}')" style="display: inline-flex; align-items: center; gap: 6px; color: #1E40AF; background: #EFF6FF; border: 1px solid #BFDBFE;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <span>Send Email to Team</span>
+    </button>
     <a href="hall-ticket.html?teamId=${encodeURIComponent(team.teamId)}" target="_blank" class="btn btn-primary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       <span>Print / Open Team ID Card ↗</span>
@@ -1654,4 +1659,148 @@ function escapeHtml(str) {
     '"': '&quot;',
     "'": '&#039;'
   }[m]));
+}
+
+/* ==========================================================================
+   Admin Bulk & Single Email Dispatcher (Direct from kshanmukhaswaroop79@gmail.com)
+   ========================================================================== */
+function initBulkMailManager() {
+  const openBtn = document.getElementById('btnOpenBulkMailModal');
+  const sendGmailBtn = document.getElementById('btnSendViaGmail');
+  const launchMailtoBtn = document.getElementById('btnLaunchMailtoApp');
+  const copyTextBtn = document.getElementById('btnCopyEmailText');
+  const copyEmailsBtn = document.getElementById('btnCopyAllEmails');
+
+  const senderEmail = "kshanmukhaswaroop79@gmail.com";
+  const defaultSubject = "Official Registration Confirmation & Instructions — CODEVISION 2026 | Vemu IT";
+
+  if (openBtn) {
+    openBtn.addEventListener('click', () => {
+      window.openBulkMailModal();
+    });
+  }
+
+  function getRecipients() {
+    const emailSet = new Set();
+    allTeams.forEach(t => {
+      const leaderEmail = t.leader && t.leader.email ? t.leader.email.trim() : (t.email ? t.email.trim() : '');
+      if (leaderEmail && leaderEmail.includes('@')) emailSet.add(leaderEmail);
+      if (t.member2 && typeof t.member2 === 'object' && t.member2.email && t.member2.email.includes('@')) {
+        emailSet.add(t.member2.email.trim());
+      }
+      if (t.member3 && typeof t.member3 === 'object' && t.member3.email && t.member3.email.includes('@')) {
+        emailSet.add(t.member3.email.trim());
+      }
+    });
+    return Array.from(emailSet);
+  }
+
+  function getOfficialEmailBody(teamName) {
+    const tName = teamName || "{Team Name}";
+    return `Dear Team ${tName},
+
+We are pleased to inform you that your team has successfully registered for Codevision 2026, the technical event conducted by the CSE Department, Vemu Institute of Technology.
+
+📅 Event Date: 06 October 2026 (Tuesday)
+
+Please take note of the following instructions:
+
+• Bring your own laptop(s) for participating in the event.  
+• All participants are expected to maintain discipline and follow the event rules and instructions throughout the event.  
+• Please report to the venue on time and cooperate with the coordinators.
+
+We look forward to having your team at Codevision 2026.
+
+Thank you,  
+Codevision 2026 Team  
+CSE Department  
+Vemu Institute of Technology`;
+  }
+
+  window.openBulkMailModal = function() {
+    const recipients = getRecipients();
+    const countEl = document.getElementById('bulkMailRecipientCount');
+    const listEl = document.getElementById('bulkMailRecipientsList');
+    const previewEl = document.getElementById('bulkMailBodyPreview');
+
+    if (countEl) countEl.textContent = `${recipients.length} Registered Emails (${allTeams.length} Teams)`;
+    if (listEl) listEl.textContent = recipients.join(', ') || 'No registered participant emails found.';
+    if (previewEl) previewEl.textContent = getOfficialEmailBody('{Team Name}');
+
+    window.CodevisionUtils.openModal('adminBulkMailModal');
+  };
+
+  window.closeBulkMailModal = function() {
+    window.CodevisionUtils.closeModal('adminBulkMailModal');
+  };
+
+  if (sendGmailBtn) {
+    sendGmailBtn.addEventListener('click', () => {
+      const recipients = getRecipients();
+      if (recipients.length === 0) {
+        window.CodevisionUtils.showToast('No registered team emails found to send.', 'warning');
+        return;
+      }
+      const bcc = recipients.join(',');
+      const body = getOfficialEmailBody('{Team Name}');
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&authuser=${encodeURIComponent(senderEmail)}&to=${encodeURIComponent(senderEmail)}&bcc=${encodeURIComponent(bcc)}&su=${encodeURIComponent(defaultSubject)}&body=${encodeURIComponent(body)}`;
+      window.open(gmailUrl, '_blank');
+      window.CodevisionUtils.showToast(`Opened Gmail compose with ${recipients.length} recipient addresses!`, 'success', 3000);
+    });
+  }
+
+  if (launchMailtoBtn) {
+    launchMailtoBtn.addEventListener('click', () => {
+      const recipients = getRecipients();
+      if (recipients.length === 0) {
+        window.CodevisionUtils.showToast('No registered team emails found.', 'warning');
+        return;
+      }
+      const bcc = recipients.join(',');
+      const body = getOfficialEmailBody('{Team Name}');
+      const mailtoUrl = `mailto:${encodeURIComponent(senderEmail)}?bcc=${encodeURIComponent(bcc)}&subject=${encodeURIComponent(defaultSubject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoUrl;
+    });
+  }
+
+  if (copyTextBtn) {
+    copyTextBtn.addEventListener('click', () => {
+      const text = getOfficialEmailBody('{Team Name}');
+      navigator.clipboard.writeText(text).then(() => {
+        window.CodevisionUtils.showToast('Official email message copied to clipboard!', 'success');
+      }).catch(() => {
+        window.CodevisionUtils.showToast('Could not copy automatically. Please select and copy text.', 'info');
+      });
+    });
+  }
+
+  if (copyEmailsBtn) {
+    copyEmailsBtn.addEventListener('click', () => {
+      const recipients = getRecipients();
+      navigator.clipboard.writeText(recipients.join(', ')).then(() => {
+        window.CodevisionUtils.showToast(`Copied ${recipients.length} email addresses to clipboard!`, 'success');
+      }).catch(() => {
+        window.CodevisionUtils.showToast('Could not copy emails automatically.', 'info');
+      });
+    });
+  }
+
+  window.sendEmailToSingleTeam = function(teamId) {
+    const team = allTeams.find(t => t.teamId === teamId);
+    if (!team) return;
+
+    const leader = team.leader || {};
+    const recipientEmail = leader.email || team.email || '';
+    if (!recipientEmail) {
+      window.CodevisionUtils.showToast(`No email address found for Team "${team.teamName}".`, 'warning');
+      return;
+    }
+
+    const teamSubject = `Official Registration Confirmation & Instructions — CODEVISION 2026 [${team.teamName}]`;
+    const teamBody = getOfficialEmailBody(team.teamName);
+
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&authuser=${encodeURIComponent(senderEmail)}&to=${encodeURIComponent(recipientEmail)}&su=${encodeURIComponent(teamSubject)}&body=${encodeURIComponent(teamBody)}`;
+    window.open(gmailUrl, '_blank');
+    window.CodevisionUtils.showToast(`Opened Gmail compose for Team "${team.teamName}" (${recipientEmail})!`, 'success', 3000);
+  };
 }

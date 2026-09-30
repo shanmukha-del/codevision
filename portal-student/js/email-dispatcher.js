@@ -78,78 +78,48 @@
    * Dispatches official confirmation email for registered team
    * @param {Object} team - The registered team object
    */
+  function getOfficialTeamEmailBody(teamName) {
+    const tName = teamName || "{Team Name}";
+    return `Dear Team ${tName},
+
+We are pleased to inform you that your team has successfully registered for Codevision 2026, the technical event conducted by the CSE Department, Vemu Institute of Technology.
+
+📅 Event Date: 06 October 2026 (Tuesday)
+
+Please take note of the following instructions:
+
+• Bring your own laptop(s) for participating in the event.  
+• All participants are expected to maintain discipline and follow the event rules and instructions throughout the event.  
+• Please report to the venue on time and cooperate with the coordinators.
+
+We look forward to having your team at Codevision 2026.
+
+Thank you,  
+Codevision 2026 Team  
+CSE Department  
+Vemu Institute of Technology`;
+  }
+
+  /**
+   * Dispatches official confirmation email for registered team
+   * @param {Object} team - The registered team object
+   */
   function dispatchTeamConfirmationEmail(team) {
     if (!team) return;
 
     const leader = team.leader || {};
-    const member2 = team.member2;
-    const recipientEmail = leader.email || '';
+    const recipientEmail = leader.email || team.email || '';
     const teamId = team.teamId || 'CV26-ONLINE';
     const teamName = team.teamName || 'Participant Team';
 
-    const subject = `Official Confirmation: CODEVISION 2026 Registration [Team ID: ${teamId}]`;
+    const subject = `Official Registration Confirmation: CODEVISION 2026 [Team: ${teamName}]`;
+    const bodyText = getOfficialTeamEmailBody(teamName);
 
-    const bodyText = `Dear ${leader.name || 'Team Leader'},
+    console.log(`[Email Dispatcher] Prepared official confirmation email from ${OFFICIAL_SENDER} to ${recipientEmail}`);
 
-Congratulations! Your team "${teamName}" has been OFFICIALLY REGISTERED for CODEVISION 2026 — National Level Frontend Coding Challenge at Vemu Institute of Technology.
-
-Your registration is 100% CONFIRMED with ZERO registration fees. You are cordially invited to participate in the grand event!
-
-==================================================
-EVENT DETAILS & REPORTING INFORMATION
-==================================================
-Event: CODEVISION 2026 — Frontend Coding Challenge
-Venue: CSE Department Computer Labs, Vemu Institute of Technology
-Location: P.Kothakota, Near Pakala, Chittoor District, AP - 517112
-Reporting Time: 08:30 AM
-Inauguration: 09:30 AM
-Challenge Hackathon: 10:00 AM - 03:00 PM (5 Hours)
-
-==================================================
-CONFIRMED TEAM CREDENTIALS
-==================================================
-Team ID: ${teamId}
-Team Name: ${teamName}
-Department: ${team.department || 'Computer Science & Engineering'}
-College: ${team.college || 'Vemu Institute of Technology'}
-
-Leader: ${leader.name || ''} (${leader.rollNo || ''})
-Leader Section: ${leader.section || 'A'}
-Leader Phone: ${leader.phone || ''}
-${member2 ? `Member 2: ${member2.name || ''} (${member2.rollNo || ''}, Sec: ${member2.section || 'A'})` : ''}
-${team.member3 ? `Member 3: ${team.member3.name || ''} (${team.member3.rollNo || ''}, Sec: ${team.member3.section || 'A'})` : ''}
-Team Composition: ${team.teamSize || (team.member3 ? 3 : 2)} Members (${team.teamSize === 3 ? 'Trio Team' : 'Duo Team'})
-
-==================================================
-MANDATORY EVENT DAY CHECKLIST
-==================================================
-1. Carry your Original College Identity Card.
-2. Carry your Official CODEVISION Team ID Card & Gate Pass (Generated PDF attached / downloaded).
-3. Teams will be provided with high-speed development machines and internet access in the CSE Department Labs.
-4. Lunch, refreshment coupons, and participation kits will be provided at the registration desk upon scanning your Team ID barcode.
-
-==================================================
-PATRON & LEADERSHIP
-==================================================
-Principal: Prof. Nithin Killari
-Head of Department (CSE): Dr. P. Nirupama
-Official Helpline & Dispatcher: ${OFFICIAL_SENDER}
-
-We look forward to witnessing your frontend innovation!
-
-Best Regards,
-CODEVISION 2026 Organizing Committee
-Department of Computer Science & Engineering
-Vemu Institute of Technology
-Email: ${OFFICIAL_SENDER}`;
-
-    // 1. Log and attempt background dispatch
-    console.log(`[Email Dispatcher] Sending official confirmation email from ${OFFICIAL_SENDER} to ${recipientEmail}`);
-
-    // 2. Prepare mailto URI
     const mailtoUrl = `mailto:${encodeURIComponent(recipientEmail)}?from=${encodeURIComponent(OFFICIAL_SENDER)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
 
-    // 3. Render modern non-intrusive confirmation dialog
+    // Render non-intrusive modal when explicitly called
     showEmailConfirmationModal({
       type: 'team',
       recipient: recipientEmail,
@@ -292,6 +262,7 @@ Email: ${OFFICIAL_SENDER}`;
   // Export to window
   window.CodevisionEmail = {
     sender: OFFICIAL_SENDER,
+    getOfficialTeamEmailBody: getOfficialTeamEmailBody,
     dispatchTeamConfirmation: dispatchTeamConfirmationEmail,
     dispatchCoordinatorConfirmation: dispatchCoordinatorConfirmationEmail,
     downloadTeamCardPDF: downloadTeamCardPDF,

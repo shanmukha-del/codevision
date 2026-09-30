@@ -103,6 +103,18 @@ function initHallTicketLookup() {
     document.getElementById('ticketTeamName').textContent = team.teamName;
     document.getElementById('ticketQrIdLabel').textContent = team.teamId;
 
+    // Domain Track Badge
+    const domainWrap = document.getElementById('ticketDomainBadgeWrap');
+    const domainTitle = document.getElementById('ticketDomainTitle');
+    if (domainWrap && domainTitle) {
+      if (team.selectedTheme) {
+        domainTitle.textContent = team.selectedTheme;
+        domainWrap.style.display = 'block';
+      } else {
+        domainWrap.style.display = 'none';
+      }
+    }
+
     // 2. Team Logo (Custom image or preset emblem)
     const logoIcon = document.getElementById('ticketLogoIcon');
     const logoImg = document.getElementById('ticketLogoImg');
@@ -248,11 +260,6 @@ function initHallTicketLookup() {
       printBtn.onclick = () => {
         window.print();
       };
-    }
-
-    // Auto-dispatch confirmation email if newly registered
-    if (isNewlyRegistered && window.CodevisionEmail && window.CodevisionEmail.dispatchTeamConfirmation) {
-      window.CodevisionEmail.dispatchTeamConfirmation(team);
     }
   }
 }

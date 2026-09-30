@@ -414,11 +414,6 @@ function initRegistrationForm() {
       }
       window.CodevisionUtils.showToast(`Team ${registeredTeam.teamName} registered successfully! Generating ID Card...`, 'success', 2500);
 
-      // Trigger official confirmation email dispatch from kshanmukhaswaroop79@gmail.com
-      if (window.CodevisionEmail && window.CodevisionEmail.dispatchTeamConfirmation) {
-        window.CodevisionEmail.dispatchTeamConfirmation(registeredTeam);
-      }
-
       const inlineTicketSection = document.getElementById('ticketResultSection');
       if (inlineTicketSection && typeof renderVirtualTeamIdCard === 'function') {
         renderVirtualTeamIdCard(registeredTeam);

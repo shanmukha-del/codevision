@@ -226,6 +226,10 @@
                 <button type="button" class="btn btn-primary btn-sm" id="btnOpenSpotModal">
                   + Spot Registration
                 </button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btnOpenBulkMailModal" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: #1E40AF; background: #EFF6FF; border: 1px solid #BFDBFE;" title="Send official confirmation email to all registered teams">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <span>Send Mail</span>
+                </button>
                 <button type="button" class="btn btn-outline btn-sm" id="btnExportCsv" title="Export CSV Sheet">
                   Export CSV
                 </button>
@@ -556,6 +560,100 @@
       </div>
       <div class="modal-footer" id="teamModalActions">
         <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: SEND OFFICIAL EMAIL TO REGISTERED TEAMS
+       ========================================================================== -->
+  <div class="modal-backdrop" id="adminBulkMailModal" role="dialog" aria-modal="true" aria-label="Send Official Email">
+    <div class="modal-container" style="max-width: 680px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #EFF6FF; color: var(--primary); display: flex; align-items: center; justify-content: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <h3 class="modal-title" style="margin: 0; font-size: 1.1875rem;">Send Email to Registered Teams</h3>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Direct dispatcher from: <strong>kshanmukhaswaroop79@gmail.com</strong></span>
+          </div>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeBulkMailModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 20px 24px;">
+        <!-- Sender & Recipient Summary -->
+        <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <span style="font-size: 0.6875rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); display: block;">Official Sender Account:</span>
+            <strong class="font-mono" style="font-size: 0.8125rem; color: var(--primary);">kshanmukhaswaroop79@gmail.com</strong>
+          </div>
+          <div>
+            <span style="font-size: 0.6875rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); display: block;">Registered Team Recipients:</span>
+            <strong id="bulkMailRecipientCount" style="font-size: 0.8125rem; color: #059669;">Loading recipients...</strong>
+          </div>
+        </div>
+
+        <!-- Subject Line -->
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label class="form-label" for="bulkMailSubject" style="font-size: 0.8125rem; font-weight: 700;">Email Subject</label>
+          <input type="text" id="bulkMailSubject" class="form-input font-bold" value="Official Confirmation &amp; Instructions — CODEVISION 2026 | Vemu IT" readonly style="background: #F8FAFC; font-size: 0.875rem;">
+        </div>
+
+        <!-- Email Body Preview -->
+        <div class="form-group" style="margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+            <label class="form-label" style="margin: 0; font-size: 0.8125rem; font-weight: 700;">Official Message Content</label>
+            <button type="button" class="btn btn-outline btn-sm" id="btnCopyEmailText" style="padding: 2px 8px; font-size: 0.6875rem;">
+              📋 Copy Message
+            </button>
+          </div>
+          <div id="bulkMailBodyPreview" style="background: #FFFFFF; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; font-size: 0.8125rem; color: #1E293B; line-height: 1.55; white-space: pre-wrap; font-family: inherit; max-height: 220px; overflow-y: auto;">
+Dear Team {Team Name},
+
+We are pleased to inform you that your team has successfully registered for Codevision 2026, the technical event conducted by the CSE Department, Vemu Institute of Technology.
+
+📅 Event Date: 06 October 2026 (Tuesday)
+
+Please take note of the following instructions:
+
+• Bring your own laptop(s) for participating in the event.  
+• All participants are expected to maintain discipline and follow the event rules and instructions throughout the event.  
+• Please report to the venue on time and cooperate with the coordinators.
+
+We look forward to having your team at Codevision 2026.
+
+Thank you,  
+Codevision 2026 Team  
+CSE Department  
+Vemu Institute of Technology</div>
+        </div>
+
+        <!-- Recipient Emails Preview -->
+        <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius-md); padding: 10px 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: #1E40AF;">BCC Recipient Emails:</span>
+            <button type="button" class="btn btn-outline btn-sm" id="btnCopyAllEmails" style="padding: 2px 8px; font-size: 0.6875rem; background: #FFFFFF;">
+              📋 Copy All Emails
+            </button>
+          </div>
+          <p id="bulkMailRecipientsList" class="font-mono" style="margin: 4px 0 0; font-size: 0.6875rem; color: #1E3A8A; word-break: break-all; max-height: 50px; overflow-y: auto;"></p>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <button type="button" class="btn btn-secondary" onclick="window.closeBulkMailModal()">Cancel</button>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" class="btn btn-outline" id="btnLaunchMailtoApp" style="display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <span>Open in Mail App</span>
+          </button>
+          <button type="button" class="btn btn-primary" id="btnSendViaGmail" style="display: inline-flex; align-items: center; gap: 6px; background: #EA4335; border-color: #EA4335;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+            <span>Send Direct via Gmail</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

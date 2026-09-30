@@ -261,11 +261,6 @@ function initHallTicketLookup() {
         window.print();
       };
     }
-
-    // Auto-dispatch confirmation email if newly registered
-    if (isNewlyRegistered && window.CodevisionEmail && window.CodevisionEmail.dispatchTeamConfirmation) {
-      window.CodevisionEmail.dispatchTeamConfirmation(team);
-    }
   }
 }
 
