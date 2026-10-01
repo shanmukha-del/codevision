@@ -262,61 +262,180 @@
     updatedAt: new Date().toISOString()
   };
 
-  // Initialize localStorage if empty
+  // In-memory runtime caches to guarantee instant data availability and prevent localStorage quota issues
+  let memoryCachedThemes = null;
+  let memoryCachedTeams = null;
+  let memoryCachedCoordinators = null;
+  let memoryCachedSchedule = null;
+  let memoryCachedCheckins = null;
+
+  // Lightweight sanitizers for localStorage cache to prevent quota exceeded errors
+  function sanitizeTeamForStorage(t) {
+    if (!t) return t;
+    const copy = { ...t };
+    if (copy.teamLogo && typeof copy.teamLogo === 'string' && copy.teamLogo.length > 5000) {
+      copy.teamLogo = 'CV';
+    }
+    if (copy.leaderPhotoUrl && typeof copy.leaderPhotoUrl === 'string' && copy.leaderPhotoUrl.length > 5000) {
+      copy.leaderPhotoUrl = null;
+    }
+    if (copy.member2PhotoUrl && typeof copy.member2PhotoUrl === 'string' && copy.member2PhotoUrl.length > 5000) {
+      copy.member2PhotoUrl = null;
+    }
+    if (copy.leader && copy.leader.photoUrl && typeof copy.leader.photoUrl === 'string' && copy.leader.photoUrl.length > 5000) {
+      copy.leader = { ...copy.leader, photoUrl: null };
+    }
+    if (copy.member2 && copy.member2.photoUrl && typeof copy.member2.photoUrl === 'string' && copy.member2.photoUrl.length > 5000) {
+      copy.member2 = { ...copy.member2, photoUrl: null };
+    }
+    if (copy.member3 && copy.member3.photoUrl && typeof copy.member3.photoUrl === 'string' && copy.member3.photoUrl.length > 5000) {
+      copy.member3 = { ...copy.member3, photoUrl: null };
+    }
+    return copy;
+  }
+
+  function sanitizeCoordForStorage(c) {
+    if (!c) return c;
+    const copy = { ...c };
+    if (copy.avatar && typeof copy.avatar === 'string' && copy.avatar.length > 5000) {
+      copy.avatar = 'CV';
+    }
+    if (copy.imageUrl && typeof copy.imageUrl === 'string' && copy.imageUrl.length > 5000) {
+      copy.imageUrl = null;
+    }
+    return copy;
+  }
+
+  // Initialize localStorage if empty or polluted with bloated data
   function initLocalStorageData() {
-    if (!localStorage.getItem(STORAGE_KEYS.THEMES)) {
-      localStorage.setItem(STORAGE_KEYS.THEMES, JSON.stringify(INITIAL_THEMES));
-    }
-    if (!localStorage.getItem(STORAGE_KEYS.TEAMS)) {
-      localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify(INITIAL_TEAMS));
-    }
-    if (!localStorage.getItem(STORAGE_KEYS.COORDINATORS)) {
-      localStorage.setItem(STORAGE_KEYS.COORDINATORS, JSON.stringify(INITIAL_COORDINATORS));
-    }
-    if (!localStorage.getItem(STORAGE_KEYS.EVENT_SCHEDULE)) {
-      localStorage.setItem(STORAGE_KEYS.EVENT_SCHEDULE, JSON.stringify(DEFAULT_EVENT_SCHEDULE));
+    try {
+      const existingTeamsRaw = localStorage.getItem(STORAGE_KEYS.TEAMS);
+      if (existingTeamsRaw && existingTeamsRaw.length > 250000) {
+        try {
+          const parsed = JSON.parse(existingTeamsRaw);
+          if (Array.isArray(parsed)) {
+            const cleaned = parsed.map(sanitizeTeamForStorage);
+            localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify(cleaned));
+          }
+        } catch (_) {
+          localStorage.removeItem(STORAGE_KEYS.TEAMS);
+        }
+      }
+    } catch (_) {}
+
+    try {
+      if (!localStorage.getItem(STORAGE_KEYS.THEMES)) {
+        localStorage.setItem(STORAGE_KEYS.THEMES, JSON.stringify(INITIAL_THEMES));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.TEAMS)) {
+        localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify(INITIAL_TEAMS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.COORDINATORS)) {
+        localStorage.setItem(STORAGE_KEYS.COORDINATORS, JSON.stringify(INITIAL_COORDINATORS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.EVENT_SCHEDULE)) {
+        localStorage.setItem(STORAGE_KEYS.EVENT_SCHEDULE, JSON.stringify(DEFAULT_EVENT_SCHEDULE));
+      }
+    } catch (e) {
+      console.warn("Storage quota notice during initialization:", e.message);
     }
   }
   initLocalStorageData();
 
-  // Storage getters/setters
+  // Storage getters/setters with memory cache and quota safety
   function getStoredThemes() {
+    if (Array.isArray(memoryCachedThemes) && memoryCachedThemes.length > 0) {
+      return memoryCachedThemes;
+    }
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.THEMES);
-      return raw ? JSON.parse(raw) : INITIAL_THEMES;
+      const parsed = raw ? JSON.parse(raw) : INITIAL_THEMES;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        memoryCachedThemes = parsed;
+        return parsed;
+      }
+      return INITIAL_THEMES;
     } catch (e) {
       return INITIAL_THEMES;
     }
   }
 
   function saveStoredThemes(themes) {
-    localStorage.setItem(STORAGE_KEYS.THEMES, JSON.stringify(themes));
+    memoryCachedThemes = themes;
+    try {
+      localStorage.setItem(STORAGE_KEYS.THEMES, JSON.stringify(themes));
+    } catch (e) {
+      console.warn("localStorage quota notice (themes):", e.message);
+    }
   }
 
   function getStoredTeams() {
+    if (Array.isArray(memoryCachedTeams) && memoryCachedTeams.length > 0) {
+      return memoryCachedTeams;
+    }
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.TEAMS);
-      return raw ? JSON.parse(raw) : INITIAL_TEAMS;
+      const parsed = raw ? JSON.parse(raw) : INITIAL_TEAMS;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        memoryCachedTeams = parsed;
+        return parsed;
+      }
+      return INITIAL_TEAMS;
     } catch (e) {
       return INITIAL_TEAMS;
     }
   }
 
   function saveStoredTeams(teams) {
-    localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify(teams));
+    memoryCachedTeams = teams;
+    try {
+      const sanitized = Array.isArray(teams) ? teams.map(sanitizeTeamForStorage) : teams;
+      localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify(sanitized));
+    } catch (e) {
+      console.warn("localStorage quota reached for teams cache. In-memory cache preserved.", e.message);
+      try {
+        const lightweight = Array.isArray(teams) ? teams.slice(0, 15).map(t => ({
+          teamId: t.teamId,
+          teamName: t.teamName,
+          selectedTheme: t.selectedTheme,
+          leader: { name: t.leader ? t.leader.name : t.member1, rollNo: t.leader ? t.leader.rollNo : t.rollNo, email: t.email, phone: t.phone },
+          registrationType: t.registrationType,
+          status: t.status,
+          createdAt: t.createdAt
+        })) : [];
+        localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify(lightweight));
+      } catch (err) {
+        try { localStorage.removeItem(STORAGE_KEYS.TEAMS); } catch (_) {}
+      }
+    }
   }
 
   function getStoredCoordinators() {
+    if (Array.isArray(memoryCachedCoordinators) && memoryCachedCoordinators.length > 0) {
+      return memoryCachedCoordinators;
+    }
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.COORDINATORS);
-      return raw ? JSON.parse(raw) : INITIAL_COORDINATORS;
+      const parsed = raw ? JSON.parse(raw) : INITIAL_COORDINATORS;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        memoryCachedCoordinators = parsed;
+        return parsed;
+      }
+      return INITIAL_COORDINATORS;
     } catch (e) {
       return INITIAL_COORDINATORS;
     }
   }
 
   function saveStoredCoordinators(coords) {
-    localStorage.setItem(STORAGE_KEYS.COORDINATORS, JSON.stringify(coords));
+    memoryCachedCoordinators = coords;
+    try {
+      const sanitized = Array.isArray(coords) ? coords.map(sanitizeCoordForStorage) : coords;
+      localStorage.setItem(STORAGE_KEYS.COORDINATORS, JSON.stringify(sanitized));
+    } catch (e) {
+      console.warn("localStorage quota notice (coordinators):", e.message);
+      try { localStorage.removeItem(STORAGE_KEYS.COORDINATORS); } catch (_) {}
+    }
   }
 
   function formatScheduleObject(input) {
@@ -376,27 +495,48 @@
   }
 
   function getStoredSchedule() {
+    if (memoryCachedSchedule) return memoryCachedSchedule;
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.EVENT_SCHEDULE);
-      if (raw) return formatScheduleObject(JSON.parse(raw));
+      if (raw) {
+        const parsed = formatScheduleObject(JSON.parse(raw));
+        memoryCachedSchedule = parsed;
+        return parsed;
+      }
     } catch (e) {}
     return DEFAULT_EVENT_SCHEDULE;
   }
 
   function saveStoredSchedule(schedule) {
-    localStorage.setItem(STORAGE_KEYS.EVENT_SCHEDULE, JSON.stringify(schedule));
+    memoryCachedSchedule = schedule;
+    try {
+      localStorage.setItem(STORAGE_KEYS.EVENT_SCHEDULE, JSON.stringify(schedule));
+    } catch (e) {
+      console.warn("localStorage quota notice (schedule):", e.message);
+    }
   }
 
   function getStoredCheckins() {
+    if (Array.isArray(memoryCachedCheckins)) return memoryCachedCheckins;
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.CHECKINS);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        memoryCachedCheckins = parsed;
+        return parsed;
+      }
     } catch (e) {}
     return [];
   }
 
   function saveStoredCheckins(list) {
-    localStorage.setItem(STORAGE_KEYS.CHECKINS, JSON.stringify(list));
+    memoryCachedCheckins = list;
+    try {
+      localStorage.setItem(STORAGE_KEYS.CHECKINS, JSON.stringify(list));
+    } catch (e) {
+      console.warn("localStorage quota notice (checkins):", e.message);
+      try { localStorage.removeItem(STORAGE_KEYS.CHECKINS); } catch (_) {}
+    }
   }
 
   // Realtime notification dispatcher
@@ -749,9 +889,17 @@
   let realtimeSubscribed = false;
   function initSupabaseRealtime() {
     if (realtimeSubscribed) return;
-    if (window.supabase && typeof window.supabase.createClient === 'function') {
-      try {
-        const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    try {
+      let client = null;
+      if (window.CodevisionSupabase && typeof window.CodevisionSupabase.getClient === 'function') {
+        client = window.CodevisionSupabase.getClient();
+      }
+      if (!client && window.supabase && typeof window.supabase.createClient === 'function') {
+        client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+          auth: { persistSession: false, autoRefreshToken: false }
+        });
+      }
+      if (client) {
         client.channel('public_codevision_realtime')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, async () => {
             await DB.getAllTeams();
@@ -774,9 +922,9 @@
               realtimeSubscribed = true;
             }
           });
-      } catch (e) {
-        console.warn("Could not attach Supabase Realtime", e);
       }
+    } catch (e) {
+      console.warn("Could not attach Supabase Realtime", e);
     }
   }
 
@@ -796,7 +944,10 @@
         const rows = await supabaseRequest('themes?select=*&order=number.asc');
         if (Array.isArray(rows) && rows.length > 0) {
           const list = rows.map(supabaseRowToTheme);
-          saveStoredThemes(list);
+          memoryCachedThemes = list;
+          try {
+            saveStoredThemes(list);
+          } catch (_) {}
           return onlyActive ? list.filter(t => t.active !== false) : list;
         }
       } catch (err) {
@@ -1063,11 +1214,16 @@
         const rows = await supabaseRequest('teams?select=*&order=created_at.desc');
         if (Array.isArray(rows) && rows.length > 0) {
           const list = rows.map(supabaseRowToTeam);
-          saveStoredTeams(list);
+          memoryCachedTeams = list;
+          try {
+            saveStoredTeams(list);
+          } catch (storageErr) {
+            console.warn("Storage caching notice (teams):", storageErr.message);
+          }
           return list;
         }
       } catch (err) {
-        console.warn("Supabase getAllTeams error, using local cache:", err.message);
+        console.warn("Supabase getAllTeams fetch error, using local cache:", err.message);
       }
 
       return getStoredTeams().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -1126,11 +1282,16 @@
         const rows = await supabaseRequest('coordinators?select=*&order=display_order.asc');
         if (Array.isArray(rows) && rows.length > 0) {
           const list = rows.map(supabaseRowToCoord);
-          saveStoredCoordinators(list);
+          memoryCachedCoordinators = list;
+          try {
+            saveStoredCoordinators(list);
+          } catch (storageErr) {
+            console.warn("Storage caching notice (coordinators):", storageErr.message);
+          }
           return list;
         }
       } catch (err) {
-        console.warn("Supabase getCoordinators error, using local cache:", err.message);
+        console.warn("Supabase getCoordinators fetch error, using local cache:", err.message);
       }
 
       return getStoredCoordinators().sort((a, b) => (a.coordId || '').localeCompare(b.coordId || ''));
@@ -1302,7 +1463,12 @@
         const rows = await supabaseRequest('event_schedule?id=eq.current&select=*');
         if (Array.isArray(rows) && rows.length > 0) {
           const sched = supabaseRowToSchedule(rows[0]);
-          saveStoredSchedule(sched);
+          memoryCachedSchedule = sched;
+          try {
+            saveStoredSchedule(sched);
+          } catch (storageErr) {
+            console.warn("Storage caching notice (schedule):", storageErr.message);
+          }
           return sched;
         }
       } catch (err) {
