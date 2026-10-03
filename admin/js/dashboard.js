@@ -21,8 +21,118 @@ let allTeams = [];
 let allThemes = [];
 let allCoordinators = [];
 let currentFilter = 'all';
+let currentThemeFilter = 'all';
 let searchQuery = '';
 let activeEditingThemeId = null;
+let activeViewThemeId = null;
+let themeModalSearchQuery = '';
+
+/**
+ * Robust matcher between a team and a theme object.
+ * Checks themeId, full title, track number, and key domain keywords.
+ */
+function matchTeamToTheme(team, theme) {
+  if (!team || !theme) return false;
+  if (team.themeId && theme.themeId && String(team.themeId).trim() === String(theme.themeId).trim()) {
+    return true;
+  }
+
+  const selected = (team.selectedTheme || '').trim().toLowerCase();
+  if (!selected) return false;
+
+  const title = (theme.title || '').trim().toLowerCase();
+  const trackNum = (theme.number || '').trim().toLowerCase();
+
+  if (selected === title) return true;
+  if (title && (selected.includes(title) || title.includes(selected))) return true;
+
+  if (trackNum) {
+    const numInt = parseInt(trackNum, 10);
+    if (selected.includes('track ' + trackNum) || (!isNaN(numInt) && selected.includes('track ' + numInt))) {
+      return true;
+    }
+  }
+
+  // Keywords match (e.g., campus, healthcare, ecommerce, productivity)
+  const keywords = title
+    .replace(/[^a-z0-9]/g, ' ')
+    .split(/\s+/)
+    .filter(w => w.length > 3 && !['track', 'challenge', 'domain', 'smart', 'interfaces'].includes(w));
+  if (keywords.length > 0 && keywords.some(k => selected.includes(k))) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Reusable CSV exporter for teams
+ */
+function exportTeamsToCsv(teamsList, defaultFilename) {
+  if (!teamsList || teamsList.length === 0) {
+    window.CodevisionUtils.showToast('No teams to export.', 'warning');
+    return;
+  }
+
+  const headers = [
+    'Team ID', 'Team Name', 'Problem Domain Track', 'Registration Type', 'Status',
+    'Leader Name', 'Leader Email', 'Leader Phone', 'Leader Roll No', 'Leader Class', 'Leader Section',
+    'Member2 Name', 'Member2 Email', 'Member2 Phone', 'Member2 Roll No', 'Member2 Class', 'Member2 Section',
+    'Member3 Name', 'Member3 Roll No', 'Member3 Class', 'Member3 Section',
+    'College', 'Department', 'Registered At'
+  ];
+
+  function csvEscape(val) {
+    if (val === null || val === undefined) return '';
+    const str = String(val).replace(/"/g, '""');
+    return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
+  }
+
+  const rows = teamsList.map(t => {
+    const leader = t.leader || {};
+    const m2 = t.member2 || {};
+    const m3 = t.member3 || {};
+    return [
+      csvEscape(t.teamId),
+      csvEscape(t.teamName),
+      csvEscape(t.selectedTheme || 'Unassigned'),
+      csvEscape(t.registrationType || 'ONLINE'),
+      csvEscape(t.status || 'confirmed'),
+      csvEscape(leader.name || t.leaderName || ''),
+      csvEscape(leader.email || t.leaderEmail || ''),
+      csvEscape(leader.phone || t.leaderPhone || ''),
+      csvEscape(leader.rollNo || t.leaderRollNo || ''),
+      csvEscape(leader.classYear || t.leaderClassYear || ''),
+      csvEscape(leader.section || t.leaderSection || ''),
+      csvEscape(typeof m2 === 'object' ? m2.name : (m2 || '')),
+      csvEscape(typeof m2 === 'object' ? (m2.email || '') : ''),
+      csvEscape(typeof m2 === 'object' ? (m2.phone || '') : ''),
+      csvEscape(typeof m2 === 'object' ? (m2.rollNo || '') : ''),
+      csvEscape(typeof m2 === 'object' ? (m2.classYear || '') : ''),
+      csvEscape(typeof m2 === 'object' ? (m2.section || '') : ''),
+      csvEscape(typeof m3 === 'object' ? (m3.name || '') : ''),
+      csvEscape(typeof m3 === 'object' ? (m3.rollNo || '') : ''),
+      csvEscape(typeof m3 === 'object' ? (m3.classYear || '') : ''),
+      csvEscape(typeof m3 === 'object' ? (m3.section || '') : ''),
+      csvEscape(t.college || ''),
+      csvEscape(t.department || ''),
+      csvEscape(t.createdAt ? new Date(t.createdAt).toLocaleString('en-IN') : '')
+    ].join(',');
+  });
+
+  const csvContent = [headers.join(','), ...rows].join('\r\n');
+  const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = defaultFilename || `CODEVISION_2026_Registrations_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  window.CodevisionUtils.showToast(`Exported ${teamsList.length} teams to CSV!`, 'success', 3000);
+}
 
 /* ==========================================================================
    Navigation Tabs & Mobile Sidebar
@@ -113,72 +223,60 @@ function initStatsAndTeams() {
     });
   }
 
+  // Problem Domain Track filter dropdown
+  const themeFilterSelect = document.getElementById('themeFilterSelect');
+  if (themeFilterSelect) {
+    themeFilterSelect.addEventListener('change', (e) => {
+      currentThemeFilter = e.target.value;
+      renderTeamsTable();
+    });
+  }
+
   // Export CSV
   const exportCsvBtn = document.getElementById('btnExportCsv');
   if (exportCsvBtn) {
     exportCsvBtn.addEventListener('click', () => {
-      if (!allTeams || allTeams.length === 0) {
-        window.CodevisionUtils.showToast('No teams to export yet.', 'warning');
-        return;
+      exportTeamsToCsv(allTeams, `CODEVISION_2026_All_Registrations_${new Date().toISOString().slice(0,10)}.csv`);
+    });
+  }
+
+  // Topbar Cloud Refresh Button
+  const btnRefreshData = document.getElementById('btnRefreshData');
+  if (btnRefreshData) {
+    btnRefreshData.addEventListener('click', async () => {
+      btnRefreshData.disabled = true;
+      btnRefreshData.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin" style="margin-right: 4px; vertical-align: middle;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span>Syncing Cloud...</span>`;
+
+      try {
+        if (window.CodevisionDB && window.CodevisionDB.getAllTeams) {
+          const freshTeams = await window.CodevisionDB.getAllTeams(true);
+          if (Array.isArray(freshTeams)) {
+            allTeams = freshTeams;
+          }
+        }
+        if (window.CodevisionDB && window.CodevisionDB.getThemes) {
+          const freshThemes = await window.CodevisionDB.getThemes(false);
+          if (Array.isArray(freshThemes)) {
+            allThemes = freshThemes;
+          }
+        }
+        updateStats();
+        updateThemeFilterDropdown();
+        renderTeamsTable();
+        if (typeof window.renderAdminThemes === 'function') {
+          window.renderAdminThemes();
+        }
+        if (activeViewThemeId && typeof window.renderThemeTeamsModalContent === 'function') {
+          window.renderThemeTeamsModalContent(activeViewThemeId);
+        }
+        window.CodevisionUtils.showToast(`🟢 Synced ${allTeams.length} confirmed teams directly from Supabase Cloud!`, 'success', 3000);
+      } catch (e) {
+        console.error("Manual refresh error:", e);
+        window.CodevisionUtils.showToast('Could not fetch cloud data. Check internet connection.', 'error', 3000);
+      } finally {
+        btnRefreshData.disabled = false;
+        btnRefreshData.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px; vertical-align: middle;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span>Refresh</span>`;
       }
-
-      const headers = [
-        'Team ID', 'Team Name', 'Registration Type', 'Status',
-        'Leader Name', 'Leader Email', 'Leader Phone', 'Leader Roll No', 'Leader Class', 'Leader Section',
-        'Member2 Name', 'Member2 Email', 'Member2 Phone', 'Member2 Roll No', 'Member2 Class', 'Member2 Section',
-        'Member3 Name', 'Member3 Roll No', 'Member3 Class', 'Member3 Section',
-        'College', 'Department', 'Registered At'
-      ];
-
-      function csvEscape(val) {
-        if (val === null || val === undefined) return '';
-        const str = String(val).replace(/"/g, '""');
-        return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
-      }
-
-      const rows = allTeams.map(t => {
-        const leader = t.leader || {};
-        const m2 = t.member2 || {};
-        const m3 = t.member3 || {};
-        return [
-          csvEscape(t.teamId),
-          csvEscape(t.teamName),
-          csvEscape(t.registrationType || 'ONLINE'),
-          csvEscape(t.status || 'confirmed'),
-          csvEscape(leader.name || t.leaderName || ''),
-          csvEscape(leader.email || t.leaderEmail || ''),
-          csvEscape(leader.phone || t.leaderPhone || ''),
-          csvEscape(leader.rollNo || t.leaderRollNo || ''),
-          csvEscape(leader.classYear || t.leaderClassYear || ''),
-          csvEscape(leader.section || t.leaderSection || ''),
-          csvEscape(typeof m2 === 'object' ? m2.name : (m2 || '')),
-          csvEscape(typeof m2 === 'object' ? (m2.email || '') : ''),
-          csvEscape(typeof m2 === 'object' ? (m2.phone || '') : ''),
-          csvEscape(typeof m2 === 'object' ? (m2.rollNo || '') : ''),
-          csvEscape(typeof m2 === 'object' ? (m2.classYear || '') : ''),
-          csvEscape(typeof m2 === 'object' ? (m2.section || '') : ''),
-          csvEscape(typeof m3 === 'object' ? (m3.name || '') : ''),
-          csvEscape(typeof m3 === 'object' ? (m3.rollNo || '') : ''),
-          csvEscape(typeof m3 === 'object' ? (m3.classYear || '') : ''),
-          csvEscape(typeof m3 === 'object' ? (m3.section || '') : ''),
-          csvEscape(t.college || ''),
-          csvEscape(t.department || ''),
-          csvEscape(t.createdAt ? new Date(t.createdAt).toLocaleString('en-IN') : '')
-        ].join(',');
-      });
-
-      const csvContent = [headers.join(','), ...rows].join('\r\n');
-      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `CODEVISION_2026_Registrations_${new Date().toISOString().slice(0,10)}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      window.CodevisionUtils.showToast(`Exported ${allTeams.length} team registrations as CSV!`, 'success', 3000);
     });
   }
 
@@ -187,7 +285,14 @@ function initStatsAndTeams() {
     window.CodevisionDB.onAllTeamsChange((teams) => {
       allTeams = teams;
       updateStats();
+      updateThemeFilterDropdown();
       renderTeamsTable();
+      if (typeof window.renderAdminThemes === 'function') {
+        window.renderAdminThemes();
+      }
+      if (activeViewThemeId && typeof window.renderThemeTeamsModalContent === 'function') {
+        window.renderThemeTeamsModalContent(activeViewThemeId);
+      }
     });
   }
 
@@ -198,6 +303,34 @@ function initStatsAndTeams() {
       updateStats();
     });
   }
+
+  function updateThemeFilterDropdown() {
+    const sel = document.getElementById('themeFilterSelect');
+    if (!sel) return;
+
+    const currentVal = currentThemeFilter || 'all';
+    let html = `<option value="all">All Domains / Tracks (${allTeams.length})</option>`;
+
+    allThemes.forEach(th => {
+      const count = allTeams.filter(t => matchTeamToTheme(t, th)).length;
+      const numLabel = th.number ? `Track ${th.number}: ` : '';
+      html += `<option value="${escapeHtml(th.themeId)}">${numLabel}${escapeHtml(th.title)} (${count})</option>`;
+    });
+
+    const unassignedCount = allTeams.filter(t => !allThemes.some(th => matchTeamToTheme(t, th))).length;
+    if (unassignedCount > 0) {
+      html += `<option value="__unassigned__">⚠️ Unassigned / Other (${unassignedCount})</option>`;
+    }
+
+    sel.innerHTML = html;
+    if ([...sel.options].some(o => o.value === currentVal)) {
+      sel.value = currentVal;
+    } else {
+      sel.value = 'all';
+      currentThemeFilter = 'all';
+    }
+  }
+  window.updateThemeFilterDropdown = updateThemeFilterDropdown;
 
   function updateStats() {
     const total = allTeams.length;
@@ -228,6 +361,9 @@ function initStatsAndTeams() {
     if (countAll) countAll.textContent = `(${total})`;
     if (countOnline) countOnline.textContent = `(${online})`;
     if (countSpot) countSpot.textContent = `(${spot})`;
+
+    // Update track filter options count
+    updateThemeFilterDropdown();
   }
 
   function renderTeamsTable() {
@@ -240,6 +376,20 @@ function initStatsAndTeams() {
       filtered = filtered.filter(t => (t.registrationType || 'ONLINE').toUpperCase() === 'ONLINE');
     } else if (currentFilter === 'spot') {
       filtered = filtered.filter(t => (t.registrationType || '').toUpperCase() === 'SPOT');
+    }
+
+    // Problem Domain / Track filter
+    if (currentThemeFilter && currentThemeFilter !== 'all') {
+      if (currentThemeFilter === '__unassigned__') {
+        filtered = filtered.filter(t => !allThemes.some(th => matchTeamToTheme(t, th)));
+      } else {
+        const themeObj = allThemes.find(th => th.themeId === currentThemeFilter);
+        if (themeObj) {
+          filtered = filtered.filter(t => matchTeamToTheme(t, themeObj));
+        } else {
+          filtered = filtered.filter(t => (t.selectedTheme || '').toLowerCase() === currentThemeFilter.toLowerCase());
+        }
+      }
     }
 
     // Search query filter
@@ -904,21 +1054,128 @@ function initThemeManager() {
   const themesContainer = document.getElementById('adminThemesList') || document.getElementById('adminThemesGrid');
   const addThemeBtn = document.getElementById('btnOpenAddTheme');
   const themeForm = document.getElementById('themeForm');
+  const trackStatsRow = document.getElementById('themeTrackStatsRow');
+  const themeTeamSearchInput = document.getElementById('themeTeamSearchInput');
+  const btnExportThemeTeamsCsv = document.getElementById('btnExportThemeTeamsCsv');
+  const btnFilterThisThemeInMainTable = document.getElementById('btnFilterThisThemeInMainTable');
 
   if (window.CodevisionDB && window.CodevisionDB.onThemesChange) {
     window.CodevisionDB.onThemesChange((themes) => {
       allThemes = themes;
       renderAdminThemes();
+      if (typeof window.updateThemeFilterDropdown === 'function') {
+        window.updateThemeFilterDropdown();
+      }
+      if (activeViewThemeId && typeof window.renderThemeTeamsModalContent === 'function') {
+        window.renderThemeTeamsModalContent(activeViewThemeId);
+      }
     }, false);
   }
 
   function renderAdminThemes() {
+    // 1. Render Summary Metrics in #themeTrackStatsRow
+    if (trackStatsRow) {
+      const totalCount = allTeams.length;
+      let summaryCardsHtml = '';
+
+      // Overall Card
+      summaryCardsHtml += `
+        <div style="background: linear-gradient(135deg, #1E293B, #0F172A); color: #FFFFFF; padding: 16px 18px; border-radius: 12px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-size: 0.6875rem; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; color: #94A3B8;">All Domains</span>
+              <span style="font-size: 1.125rem;">🌐</span>
+            </div>
+            <div style="font-size: 1.75rem; font-weight: 900; line-height: 1; margin-bottom: 4px;">${totalCount}</div>
+            <div style="font-size: 0.75rem; color: #94A3B8; font-weight: 600;">Total Registered Teams</div>
+          </div>
+          <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.6875rem; color: #38BDF8; font-weight: 700;">
+            Across ${allThemes.length} Active Problem Tracks
+          </div>
+        </div>
+      `;
+
+      // Track-by-track cards
+      const trackColors = [
+        { border: '#3B82F6', badge: '#EFF6FF', text: '#1D4ED8', bg: '#FFFFFF' },
+        { border: '#10B981', badge: '#ECFDF5', text: '#047857', bg: '#FFFFFF' },
+        { border: '#F59E0B', badge: '#FFFBEB', text: '#B45309', bg: '#FFFFFF' },
+        { border: '#8B5CF6', badge: '#F5F3FF', text: '#6D28D9', bg: '#FFFFFF' },
+        { border: '#EC4899', badge: '#FDF2F8', text: '#BE185D', bg: '#FFFFFF' }
+      ];
+
+      allThemes.forEach((theme, idx) => {
+        const matching = allTeams.filter(t => matchTeamToTheme(t, theme));
+        const count = matching.length;
+        const pct = totalCount > 0 ? Math.round((count / totalCount) * 100) : 0;
+        const color = trackColors[idx % trackColors.length];
+
+        summaryCardsHtml += `
+          <div style="background: ${color.bg}; border: 1.5px solid ${color.border}; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 0.6875rem; font-weight: 800; background: ${color.badge}; color: ${color.text}; padding: 2px 8px; border-radius: 999px;">
+                  Track ${escapeHtml(theme.number || '0' + (idx + 1))}
+                </span>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">${pct}%</span>
+              </div>
+              <h4 style="font-size: 0.875rem; font-weight: 800; color: #0F172A; margin: 0 0 6px 0; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;" title="${escapeHtml(theme.title)}">
+                ${escapeHtml(theme.title)}
+              </h4>
+              <div style="font-size: 1.625rem; font-weight: 900; color: ${color.text}; line-height: 1.1; margin-bottom: 2px;">
+                ${count} <span style="font-size: 0.8125rem; font-weight: 600; color: var(--text-muted);">Teams</span>
+              </div>
+            </div>
+            <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); display: flex; gap: 6px;">
+              <button type="button" class="btn btn-sm btn-primary" style="flex: 1; font-size: 0.6875rem; padding: 5px 8px; font-weight: 700;" onclick="window.viewThemeTeamsModal('${escapeHtml(theme.themeId)}')">
+                View Teams (${count})
+              </button>
+              <button type="button" class="btn btn-sm btn-outline" style="font-size: 0.6875rem; padding: 5px 8px; font-weight: 700;" onclick="window.filterTeamsByTheme('${escapeHtml(theme.themeId)}')" title="Filter in Registered Teams table">
+                &rarr;
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      // Unassigned / Other card if any
+      const unassignedTeams = allTeams.filter(t => !allThemes.some(th => matchTeamToTheme(t, th)));
+      if (unassignedTeams.length > 0) {
+        summaryCardsHtml += `
+          <div style="background: #FFFBEB; border: 1.5px solid #FCD34D; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 0.6875rem; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 999px;">
+                  ⚠️ Other / Unassigned
+                </span>
+              </div>
+              <h4 style="font-size: 0.875rem; font-weight: 800; color: #92400E; margin: 0 0 6px 0;">Pending Domain Assign</h4>
+              <div style="font-size: 1.625rem; font-weight: 900; color: #B45309; line-height: 1.1;">
+                ${unassignedTeams.length} <span style="font-size: 0.8125rem; font-weight: 600; color: var(--text-muted);">Teams</span>
+              </div>
+            </div>
+            <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #FCD34D; display: flex; gap: 6px;">
+              <button type="button" class="btn btn-sm btn-outline" style="flex: 1; font-size: 0.6875rem; padding: 5px 8px; font-weight: 700; color: #92400E; border-color: #FCD34D;" onclick="window.viewThemeTeamsModal('__unassigned__')">
+                View (${unassignedTeams.length})
+              </button>
+              <button type="button" class="btn btn-sm btn-outline" style="font-size: 0.6875rem; padding: 5px 8px; font-weight: 700;" onclick="window.filterTeamsByTheme('__unassigned__')" title="Filter in Registered Teams table">
+                &rarr;
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      trackStatsRow.innerHTML = summaryCardsHtml;
+    }
+
+    // 2. Render Theme Cards in #adminThemesList
     if (!themesContainer) return;
 
     if (allThemes.length === 0) {
       themesContainer.innerHTML = `
-        <div style="text-align: center; padding: 40px; color: var(--text-muted);">
-          No themes prepared yet. Click "+ Add New Theme" to prepare secret event tracks.
+        <div style="text-align: center; padding: 40px; color: var(--text-muted); grid-column: 1 / -1;">
+          No themes prepared yet. Click "+ Add New Theme" to prepare event tracks.
         </div>
       `;
       return;
@@ -926,31 +1183,104 @@ function initThemeManager() {
 
     themesContainer.innerHTML = allThemes.map(theme => {
       const difficultyClass = `difficulty-${(theme.difficulty || 'intermediate').toLowerCase()}`;
+      const matchingTeams = allTeams.filter(t => matchTeamToTheme(t, theme));
+      const count = matchingTeams.length;
 
       return `
-        <div class="theme-admin-card" data-theme-id="${theme.themeId}">
-          <div class="theme-admin-header">
-            <span class="badge badge-blue">Track ${theme.number}</span>
-            <span class="theme-difficulty ${difficultyClass}">${theme.difficulty}</span>
-          </div>
-          <h3 class="theme-admin-title">${escapeHtml(theme.title)}</h3>
-          <p class="theme-admin-desc">${escapeHtml(theme.description)}</p>
-          
-          <div class="theme-admin-actions">
-            <span style="font-size: 0.75rem; color: #D97706; font-weight: 700;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block; vertical-align:middle; margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Unsealed Oct 24
-            </span>
-            <div style="display: flex; gap: 6px;">
-              <button type="button" class="btn btn-outline btn-sm" style="color: var(--danger); border-color: rgba(220,38,38,0.3);" onclick="deleteThemeConfirm('${theme.themeId}')">
-                Delete
+        <div class="theme-admin-card" data-theme-id="${theme.themeId}" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="theme-admin-header" style="margin-bottom: 8px;">
+              <span class="badge badge-blue">Track ${escapeHtml(theme.number || '01')}</span>
+              <span class="theme-difficulty ${difficultyClass}">${escapeHtml(theme.difficulty || 'Intermediate')}</span>
+            </div>
+            <h3 class="theme-admin-title" style="font-size: 1.0625rem; font-weight: 800; margin-bottom: 6px; color: #0F172A;">
+              ${escapeHtml(theme.title)}
+            </h3>
+            <p class="theme-admin-desc" style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.45;">
+              ${escapeHtml(theme.description || theme.title)}
+            </p>
+
+            <!-- Live Registration Status Banner -->
+            <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 9px 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 1rem;">👥</span>
+                <span style="font-size: 0.8125rem; font-weight: 800; color: #166534;">
+                  ${count} ${count === 1 ? 'Team' : 'Teams'} Registered
+                </span>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline" style="font-size: 0.75rem; padding: 3px 9px; font-weight: 700; border-color: #86EFAC; color: #15803D; background: #FFFFFF;" onclick="window.viewThemeTeamsModal('${escapeHtml(theme.themeId)}')">
+                View Roster &rarr;
               </button>
             </div>
+          </div>
+
+          <div class="theme-admin-actions" style="margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="btn btn-primary btn-sm" style="font-weight: 700; font-size: 0.75rem;" onclick="window.viewThemeTeamsModal('${escapeHtml(theme.themeId)}')">
+                View Teams (${count})
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" style="font-weight: 700; font-size: 0.75rem;" onclick="window.filterTeamsByTheme('${escapeHtml(theme.themeId)}')" title="Filter this track in registered teams table">
+                Filter in Table &rarr;
+              </button>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="color: var(--danger); border-color: rgba(220,38,38,0.3); font-size: 0.75rem;" onclick="deleteThemeConfirm('${escapeHtml(theme.themeId)}')">
+              Delete
+            </button>
           </div>
         </div>
       `;
     }).join('');
   }
+  window.renderAdminThemes = renderAdminThemes;
 
+  // Search in Theme Teams Modal
+  if (themeTeamSearchInput) {
+    themeTeamSearchInput.addEventListener('input', (e) => {
+      themeModalSearchQuery = e.target.value.toLowerCase().trim();
+      if (activeViewThemeId && typeof window.renderThemeTeamsModalContent === 'function') {
+        window.renderThemeTeamsModalContent(activeViewThemeId);
+      }
+    });
+  }
+
+  // Export Track CSV button in modal
+  if (btnExportThemeTeamsCsv) {
+    btnExportThemeTeamsCsv.addEventListener('click', () => {
+      if (!activeViewThemeId) return;
+      let targetTeams = [];
+      let filename = 'CODEVISION_2026_Track_Teams.csv';
+
+      if (activeViewThemeId === '__unassigned__') {
+        targetTeams = allTeams.filter(t => !allThemes.some(th => matchTeamToTheme(t, th)));
+        filename = `CODEVISION_2026_Unassigned_Teams_${new Date().toISOString().slice(0,10)}.csv`;
+      } else {
+        const theme = allThemes.find(th => th.themeId === activeViewThemeId);
+        if (theme) {
+          targetTeams = allTeams.filter(t => matchTeamToTheme(t, theme));
+          const safeName = (theme.title || 'Track').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 30);
+          filename = `CODEVISION_2026_Track_${theme.number || '01'}_${safeName}.csv`;
+        }
+      }
+
+      if (targetTeams.length === 0) {
+        window.CodevisionUtils.showToast('No registered teams in this track to export.', 'warning');
+        return;
+      }
+
+      exportTeamsToCsv(targetTeams, filename);
+    });
+  }
+
+  // "Open in Main Table" button in modal
+  if (btnFilterThisThemeInMainTable) {
+    btnFilterThisThemeInMainTable.addEventListener('click', () => {
+      if (activeViewThemeId) {
+        window.filterTeamsByTheme(activeViewThemeId);
+      }
+    });
+  }
+
+  // Add Theme Button
   if (addThemeBtn) {
     addThemeBtn.addEventListener('click', () => {
       activeEditingThemeId = null;
@@ -962,6 +1292,7 @@ function initThemeManager() {
     });
   }
 
+  // Save Theme Form
   if (themeForm) {
     themeForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1006,6 +1337,221 @@ window.deleteThemeConfirm = async function(themeId) {
       window.CodevisionUtils.showToast('Track deleted.', 'info');
     } catch (err) {
       console.error(err);
+    }
+  }
+};
+
+window.viewThemeTeamsModal = function(themeId) {
+  activeViewThemeId = themeId;
+  themeModalSearchQuery = '';
+  const searchInput = document.getElementById('themeTeamSearchInput');
+  if (searchInput) searchInput.value = '';
+  window.renderThemeTeamsModalContent(themeId);
+  window.CodevisionUtils.openModal('themeTeamsModal');
+};
+
+window.renderThemeTeamsModalContent = function(themeId) {
+  const container = document.getElementById('themeTeamsListContainer');
+  const trackBadge = document.getElementById('themeModalTrackBadge');
+  const countBadge = document.getElementById('themeModalTeamCountBadge');
+  const trackTitle = document.getElementById('themeModalTrackTitle');
+  if (!container) return;
+
+  let themeObj = null;
+  let matchingTeams = [];
+  let trackName = 'Track Problem Domain';
+  let trackNumText = 'TRACK';
+
+  if (themeId === '__unassigned__') {
+    matchingTeams = allTeams.filter(t => !allThemes.some(th => matchTeamToTheme(t, th)));
+    trackName = 'Unassigned / Other Domain Registrations';
+    trackNumText = 'UNASSIGNED';
+  } else {
+    themeObj = allThemes.find(th => th.themeId === themeId);
+    if (themeObj) {
+      matchingTeams = allTeams.filter(t => matchTeamToTheme(t, themeObj));
+      trackName = themeObj.title;
+      trackNumText = themeObj.number ? `TRACK ${themeObj.number}` : 'TRACK';
+    } else {
+      matchingTeams = allTeams.filter(t => (t.selectedTheme || '').toLowerCase() === String(themeId).toLowerCase());
+      trackName = String(themeId);
+    }
+  }
+
+  if (trackBadge) trackBadge.textContent = trackNumText;
+  if (countBadge) countBadge.textContent = `${matchingTeams.length} Teams Registered`;
+  if (trackTitle) trackTitle.textContent = trackName;
+
+  // Search filter inside modal
+  let displayedTeams = matchingTeams;
+  if (themeModalSearchQuery) {
+    displayedTeams = displayedTeams.filter(t => {
+      const tid = (t.teamId || '').toLowerCase();
+      const tname = (t.teamName || '').toLowerCase();
+      const lName = (t.leader ? t.leader.name : (t.member1 || '')).toLowerCase();
+      const lRoll = (t.leader ? t.leader.rollNo : (t.rollNo || '')).toLowerCase();
+      const m2Name = (t.member2 ? (typeof t.member2 === 'object' ? t.member2.name : t.member2) : '').toLowerCase();
+      const m2Roll = (t.member2 && typeof t.member2 === 'object' ? (t.member2.rollNo || '') : '').toLowerCase();
+      return tid.includes(themeModalSearchQuery) ||
+             tname.includes(themeModalSearchQuery) ||
+             lName.includes(themeModalSearchQuery) ||
+             lRoll.includes(themeModalSearchQuery) ||
+             m2Name.includes(themeModalSearchQuery) ||
+             m2Roll.includes(themeModalSearchQuery);
+    });
+  }
+
+  if (displayedTeams.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 48px 16px; background: #F8FAFC; border: 1px dashed var(--border); border-radius: 12px; margin-top: 10px;">
+        <div style="font-size: 2rem; margin-bottom: 8px;">📋</div>
+        <h4 style="font-size: 1rem; font-weight: 800; color: #1E293B; margin-bottom: 4px;">
+          ${themeModalSearchQuery ? 'No matching teams found in this track' : 'No teams have registered for this domain yet'}
+        </h4>
+        <p style="font-size: 0.8125rem; color: var(--text-muted); margin: 0;">
+          ${themeModalSearchQuery ? 'Try clearing or modifying your search terms.' : 'As candidates select this track on the registration page, their rosters will update here live.'}
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  // Render responsive roster table
+  container.innerHTML = `
+    <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 8px;">
+      <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.8125rem;">
+        <thead style="background: #F8FAFC; border-bottom: 1.5px solid var(--border);">
+          <tr>
+            <th style="padding: 10px 14px; text-align: left; font-weight: 700; color: var(--text-muted); width: 110px;">Team ID</th>
+            <th style="padding: 10px 14px; text-align: left; font-weight: 700; color: var(--text-muted);">Team Name</th>
+            <th style="padding: 10px 14px; text-align: left; font-weight: 700; color: var(--text-muted);">Team Leader</th>
+            <th style="padding: 10px 14px; text-align: left; font-weight: 700; color: var(--text-muted);">Members</th>
+            <th style="padding: 10px 14px; text-align: left; font-weight: 700; color: var(--text-muted); width: 90px;">Type</th>
+            <th style="padding: 10px 14px; text-align: center; font-weight: 700; color: var(--text-muted); width: 100px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${displayedTeams.map((team, idx) => {
+            const leader = team.leader || { name: team.member1 || 'Leader', rollNo: team.rollNo || '—', classYear: team.classYear || '', section: team.section || '' };
+            const m2 = team.member2;
+            const m2Name = m2 ? (typeof m2 === 'object' ? m2.name : m2) : null;
+            const m2Roll = m2 && typeof m2 === 'object' ? m2.rollNo : null;
+            const m3 = team.member3;
+            const m3Name = m3 && typeof m3 === 'object' ? m3.name : null;
+            const m3Roll = m3 && typeof m3 === 'object' ? m3.rollNo : null;
+            const regType = (team.registrationType || 'ONLINE').toUpperCase();
+            const badgeClass = regType === 'SPOT' ? 'badge-spot' : 'badge-confirmed';
+
+            return `
+              <tr style="border-bottom: 1px solid var(--border-light); ${idx % 2 === 1 ? 'background: #FAFCFF;' : 'background: #FFFFFF;'}">
+                <td style="padding: 10px 14px; font-weight: 800; font-family: monospace; color: var(--primary);">
+                  ${escapeHtml(team.teamId)}
+                </td>
+                <td style="padding: 10px 14px;">
+                  <span class="team-name-link" style="font-weight: 700; cursor: pointer; color: #0F172A;" onclick="viewTeamModal('${escapeHtml(team.teamId)}')" title="View complete dossier">
+                    ${escapeHtml(team.teamName)}
+                  </span>
+                  <div style="font-size: 0.6875rem; color: var(--text-muted); margin-top: 2px;">
+                    ${escapeHtml(team.college || 'Vemu Institute of Technology')}
+                  </div>
+                </td>
+                <td style="padding: 10px 14px;">
+                  <div style="font-weight: 700; color: #1E293B;">${escapeHtml(leader.name)}</div>
+                  <div style="font-size: 0.6875rem; color: var(--text-muted); font-family: monospace;">
+                    <span style="color: var(--primary); font-weight: 700;">${escapeHtml(leader.rollNo || '—')}</span>
+                    ${leader.section ? ` • Sec ${escapeHtml(leader.section)}` : ''}
+                  </div>
+                </td>
+                <td style="padding: 10px 14px;">
+                  ${m2Name ? `
+                    <div style="font-size: 0.75rem; font-weight: 600;">${escapeHtml(m2Name)} <span class="font-mono" style="color: var(--text-muted); font-size: 0.6875rem;">(${escapeHtml(m2Roll || '—')})</span></div>
+                  ` : '<span style="color: var(--text-muted);">—</span>'}
+                  ${m3Name ? `
+                    <div style="font-size: 0.75rem; font-weight: 600; color: #7C3AED; margin-top: 2px;">${escapeHtml(m3Name)} <span class="font-mono" style="font-size: 0.6875rem;">(${escapeHtml(m3Roll || '—')})</span></div>
+                  ` : ''}
+                </td>
+                <td style="padding: 10px 14px;">
+                  <span class="badge ${badgeClass}" style="font-size: 0.6875rem;">${regType}</span>
+                </td>
+                <td style="padding: 10px 14px; text-align: center;">
+                  <button type="button" class="btn btn-sm btn-outline" style="font-size: 0.6875rem; padding: 3px 8px; font-weight: 700;" onclick="viewTeamModal('${escapeHtml(team.teamId)}')" title="Open team dossier modal">
+                    Dossier
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+};
+
+window.filterTeamsByTheme = function(themeId) {
+  window.CodevisionUtils.closeModal('themeTeamsModal');
+  currentThemeFilter = themeId;
+
+  const sel = document.getElementById('themeFilterSelect');
+  if (sel) sel.value = themeId;
+
+  // Navigate to registrations tab
+  const regNav = document.querySelector('.admin-nav-item[data-target="panel-registrations"]') ||
+                 document.querySelector('.admin-nav-item[data-target="panel-overview"]');
+  if (regNav) regNav.click();
+
+  if (typeof renderTeamsTable === 'function') {
+    renderTeamsTable();
+  }
+
+  const tableCard = document.querySelector('.table-card');
+  if (tableCard) {
+    tableCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  let themeName = 'Track Domain';
+  if (themeId === '__unassigned__') {
+    themeName = 'Unassigned';
+  } else {
+    const found = allThemes.find(th => th.themeId === themeId);
+    if (found) themeName = (found.number ? `Track ${found.number}: ` : '') + found.title;
+  }
+
+  window.CodevisionUtils.showToast(`Filtered registered teams: ${themeName}`, 'info', 3000);
+};
+
+window.refreshThemesAndTeams = async function() {
+  const btn = document.getElementById('btnRefreshThemesStats');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin" style="margin-right: 4px; vertical-align: middle;"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Syncing...`;
+  }
+
+  try {
+    if (window.CodevisionDB) {
+      const [teams, themes] = await Promise.all([
+        window.CodevisionDB.getAllTeams ? window.CodevisionDB.getAllTeams() : Promise.resolve(allTeams),
+        window.CodevisionDB.getThemes ? window.CodevisionDB.getThemes(false) : Promise.resolve(allThemes)
+      ]);
+      if (teams && Array.isArray(teams)) allTeams = teams;
+      if (themes && Array.isArray(themes)) allThemes = themes;
+    }
+
+    if (typeof updateStats === 'function') updateStats();
+    if (typeof updateThemeFilterDropdown === 'function') updateThemeFilterDropdown();
+    if (typeof renderTeamsTable === 'function') renderTeamsTable();
+    if (typeof window.renderAdminThemes === 'function') window.renderAdminThemes();
+    if (activeViewThemeId && typeof window.renderThemeTeamsModalContent === 'function') {
+      window.renderThemeTeamsModalContent(activeViewThemeId);
+    }
+
+    window.CodevisionUtils.showToast('Problem Themes & Registered Teams updated successfully!', 'success', 3000);
+  } catch (err) {
+    console.error(err);
+    window.CodevisionUtils.showToast('Could not refresh themes/teams. Please check network.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: middle;"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Sync Counts`;
     }
   }
 };

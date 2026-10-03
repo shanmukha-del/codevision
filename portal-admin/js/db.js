@@ -89,107 +89,8 @@
     }
   ];
 
-  // Initial Seed Data — Sample Teams
-  const INITIAL_TEAMS = [
-    {
-      teamId: 'CV26-K9X42',
-      teamName: 'ByteCrafters',
-      teamLogo: 'CV',
-      teamSize: 2,
-      leader: {
-        name: 'A. Rajesh Kumar',
-        email: 'rajesh.bytecraft@gmail.com',
-        phone: '9848022334',
-        rollNo: '234M1A0501',
-        classYear: 'III B.Tech',
-        section: 'A'
-      },
-      member2: {
-        name: 'K. Sneha Reddy',
-        email: 'sneha.reddy@gmail.com',
-        phone: '9848099881',
-        rollNo: '234M1A0518',
-        classYear: 'III B.Tech',
-        section: 'A'
-      },
-      member1: 'A. Rajesh Kumar',
-      rollNo: '234M1A0501',
-      classYear: 'III B.Tech',
-      section: 'A',
-      email: 'rajesh.bytecraft@gmail.com',
-      phone: '9848022334',
-      college: 'Vemu Institute of Technology',
-      department: 'Computer Science & Engineering',
-      registrationType: 'ONLINE',
-      status: 'CONFIRMED',
-      notes: 'Online Verified Registration — CSE Lab 3',
-      createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
-      confirmedAt: new Date(Date.now() - 3600000 * 5).toISOString()
-    },
-    {
-      teamId: 'CV26-T3M81',
-      teamName: 'DevNinjas',
-      teamLogo: 'CV',
-      teamSize: 1,
-      leader: {
-        name: 'M. Dinesh Naidu',
-        email: 'dinesh.devninjas@gmail.com',
-        phone: '9123456789',
-        rollNo: '234M1A0535',
-        classYear: 'III B.Tech',
-        section: 'B'
-      },
-      member2: null,
-      member1: 'M. Dinesh Naidu',
-      rollNo: '234M1A0535',
-      classYear: 'III B.Tech',
-      section: 'B',
-      email: 'dinesh.devninjas@gmail.com',
-      phone: '9123456789',
-      college: 'Vemu Institute of Technology',
-      department: 'Computer Science & Engineering',
-      registrationType: 'ONLINE',
-      status: 'CONFIRMED',
-      notes: 'Solo Participant — CSE Lab 3',
-      createdAt: new Date(Date.now() - 3600000 * 12).toISOString(),
-      confirmedAt: new Date(Date.now() - 3600000 * 12).toISOString()
-    },
-    {
-      teamId: 'CV26-W5Z19',
-      teamName: 'PixelPioneers',
-      teamLogo: 'CV',
-      teamSize: 2,
-      leader: {
-        name: 'R. Tarun Teja',
-        email: 'tarun.pixel@gmail.com',
-        phone: '9876543210',
-        rollNo: '244M1A0562',
-        classYear: 'II B.Tech',
-        section: 'A'
-      },
-      member2: {
-        name: 'S. Bhavana',
-        email: 'bhavana.pixel@gmail.com',
-        phone: '9876509876',
-        rollNo: '244M1A0570',
-        classYear: 'II B.Tech',
-        section: 'A'
-      },
-      member1: 'R. Tarun Teja',
-      rollNo: '244M1A0562',
-      classYear: 'II B.Tech',
-      section: 'A',
-      email: 'tarun.pixel@gmail.com',
-      phone: '9876543210',
-      college: 'Vemu Institute of Technology',
-      department: 'Computer Science & Engineering',
-      registrationType: 'SPOT',
-      status: 'CONFIRMED',
-      notes: 'Spot Walk-in Registration — CSE Lab 4',
-      createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-      confirmedAt: new Date(Date.now() - 3600000 * 2).toISOString()
-    }
-  ];
+  // Initial Seed Data — No dummy sample teams. Starts 100% clean from Supabase cloud database.
+  const INITIAL_TEAMS = [];
 
   // Initial Seed Data — Event Coordinators
   const INITIAL_COORDINATORS = [
@@ -314,7 +215,10 @@
         try {
           const parsed = JSON.parse(existingTeamsRaw);
           if (Array.isArray(parsed)) {
-            const cleaned = parsed.map(sanitizeTeamForStorage);
+            // Automatically strip out the 3 legacy sample dummy teams if present
+            const cleaned = parsed
+              .filter(t => !['CV26-K9X42', 'CV26-T3M81', 'CV26-W5Z19'].includes(t.teamId))
+              .map(sanitizeTeamForStorage);
             localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify(cleaned));
           }
         } catch (_) {
@@ -328,7 +232,7 @@
         localStorage.setItem(STORAGE_KEYS.THEMES, JSON.stringify(INITIAL_THEMES));
       }
       if (!localStorage.getItem(STORAGE_KEYS.TEAMS)) {
-        localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify(INITIAL_TEAMS));
+        localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify([]));
       }
       if (!localStorage.getItem(STORAGE_KEYS.COORDINATORS)) {
         localStorage.setItem(STORAGE_KEYS.COORDINATORS, JSON.stringify(INITIAL_COORDINATORS));
@@ -371,18 +275,19 @@
 
   function getStoredTeams() {
     if (Array.isArray(memoryCachedTeams) && memoryCachedTeams.length > 0) {
-      return memoryCachedTeams;
+      return memoryCachedTeams.filter(t => !['CV26-K9X42', 'CV26-T3M81', 'CV26-W5Z19'].includes(t.teamId));
     }
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.TEAMS);
-      const parsed = raw ? JSON.parse(raw) : INITIAL_TEAMS;
+      const parsed = raw ? JSON.parse(raw) : [];
       if (Array.isArray(parsed) && parsed.length > 0) {
-        memoryCachedTeams = parsed;
-        return parsed;
+        const cleaned = parsed.filter(t => !['CV26-K9X42', 'CV26-T3M81', 'CV26-W5Z19'].includes(t.teamId));
+        memoryCachedTeams = cleaned;
+        return cleaned;
       }
-      return INITIAL_TEAMS;
+      return [];
     } catch (e) {
-      return INITIAL_TEAMS;
+      return [];
     }
   }
 
@@ -740,7 +645,7 @@
     return {
       teamId: r.team_id,
       teamName: r.team_name,
-      teamLogo: r.team_logo || 'CV',
+      teamLogo: r.team_logo || (r.team_name ? r.team_name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() : 'CV'),
       teamSize: effectiveTeamSize,
       selectedTheme: parsedSelectedTheme || r.selected_theme || '',
       themeId: parsedThemeId || r.theme_id || '',
@@ -1209,10 +1114,11 @@
       };
     },
 
-    async getAllTeams() {
+    async getAllTeams(forceCloud = false) {
       try {
-        const rows = await supabaseRequest('teams?select=*&order=created_at.desc');
-        if (Array.isArray(rows) && rows.length > 0) {
+        const bulkCols = 'id,team_id,team_name,team_size,leader_name,leader_email,leader_phone,leader_roll_no,leader_class_year,leader_section,member2_name,member2_email,member2_phone,member2_roll_no,member2_class_year,member2_section,college,department,registration_type,status,notes,created_at,confirmed_at';
+        const rows = await supabaseRequest(`teams?select=${bulkCols}&order=created_at.desc`);
+        if (Array.isArray(rows)) {
           const list = rows.map(supabaseRowToTeam);
           memoryCachedTeams = list;
           try {
@@ -1224,6 +1130,9 @@
         }
       } catch (err) {
         console.warn("Supabase getAllTeams fetch error, using local cache:", err.message);
+        if (typeof window !== 'undefined' && window.CodevisionUtils && window.CodevisionUtils.showToast) {
+          window.CodevisionUtils.showToast('⚠️ Cloud notice: Supabase fetch error. Showing local cache.', 'warning', 3500);
+        }
       }
 
       return getStoredTeams().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

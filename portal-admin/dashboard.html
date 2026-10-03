@@ -217,8 +217,16 @@
                 </button>
               </div>
 
+              <!-- Problem Domain Track Filter Dropdown -->
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="themeFilterSelect" style="font-size: 0.8125rem; font-weight: 700; color: var(--text-muted); white-space: nowrap;">Domain:</label>
+                <select id="themeFilterSelect" class="form-select font-mono" style="padding: 6px 12px; font-size: 0.8125rem; font-weight: 700; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-color); cursor: pointer; max-width: 250px;">
+                  <option value="all">All Domains (All Tracks)</option>
+                </select>
+              </div>
+
               <!-- Search Input & Spot Button -->
-              <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <div class="search-input-wrap">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                   <input type="text" id="teamSearchInput" placeholder="Search Team ID, Name, Roll No...">
@@ -306,16 +314,27 @@
              PANEL 4: DYNAMIC THEMES MANAGEMENT
              ==================================================================== -->
         <div class="dashboard-view-panel" id="panel-themes">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
             <div>
               <h2 style="font-size: 1.25rem; font-weight: 800;">Competition Problem Themes</h2>
-              <p style="font-size: 0.875rem; color: var(--text-muted);">
-                Manage tracks and themes. Controlled reveal to candidate portal on event morning.
+              <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0;">
+                Live registration tracking per track &amp; theme. Controlled reveal to candidate portal on event morning.
               </p>
             </div>
-            <button type="button" class="btn btn-primary" id="btnOpenAddTheme">
-              <span>+ Add New Theme</span>
-            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button type="button" class="btn btn-outline btn-sm" id="btnRefreshThemesStats" onclick="window.refreshThemesAndTeams()" style="font-weight: 700;" title="Refresh Themes &amp; Teams Count">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: middle;"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Sync Counts
+              </button>
+              <button type="button" class="btn btn-primary" id="btnOpenAddTheme">
+                <span>+ Add New Theme</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Problem Domain Track Stats Summary Cards -->
+          <div id="themeTrackStatsRow" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 24px;">
+            <!-- Populated dynamically with live track team metrics -->
           </div>
 
           <div id="adminThemesList" class="themes-admin-grid">
@@ -917,6 +936,47 @@ Vemu Institute of Technology</div>
       </div>
       <div style="text-align: center; margin-top: 14px;">
         <button type="button" class="btn btn-secondary" onclick="window.closeCoordBadgeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: PROBLEM DOMAIN / THEME REGISTERED TEAMS
+       ========================================================================== -->
+  <div class="modal-backdrop" id="themeTeamsModal" role="dialog" aria-modal="true" aria-label="Registered Teams in Theme">
+    <div class="modal-container" style="max-width: 960px; width: 95%;">
+      <div class="modal-header">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span class="badge badge-blue" id="themeModalTrackBadge">TRACK 01</span>
+            <span class="badge badge-confirmed font-mono" id="themeModalTeamCountBadge">0 Teams Registered</span>
+          </div>
+          <h3 class="modal-title" id="themeModalTrackTitle" style="font-size: 1.25rem; font-weight: 800;">Problem Domain Teams</h3>
+        </div>
+        <button type="button" class="modal-close" onclick="window.CodevisionUtils.closeModal('themeTeamsModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 20px; max-height: 72vh; overflow-y: auto;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div class="search-input-wrap" style="max-width: 320px; width: 100%;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="themeTeamSearchInput" placeholder="Search teams in this track..." style="padding: 7px 12px 7px 34px; font-size: 0.8125rem;">
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button type="button" class="btn btn-outline btn-sm" id="btnExportThemeTeamsCsv" style="font-weight: 700;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Track CSV
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnFilterThisThemeInMainTable" style="font-weight: 700;">
+              Open in Main Table &rarr;
+            </button>
+          </div>
+        </div>
+        <div id="themeTeamsListContainer">
+          <!-- Populated dynamically by dashboard.js -->
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: flex-end;">
+        <button type="button" class="btn btn-secondary" onclick="window.CodevisionUtils.closeModal('themeTeamsModal')">Close</button>
       </div>
     </div>
   </div>
